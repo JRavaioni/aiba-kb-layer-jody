@@ -34,7 +34,7 @@ class ScanContext:
         for temp_dir in self.temp_dirs:
             try:
                 if temp_dir.exists():  # Check if directory still exists
-                    shutil.rmtree(temp_dir)
+                    shutil.rmtree(temp_dir) # delete the directory
                     log.debug(f"Cleaned up temp directory: {temp_dir}")
                 else:
                     log.debug(f"Temp directory already removed: {temp_dir}")
@@ -53,7 +53,7 @@ class DocumentScanner:
         input_config: InputConfig,
         zip_config: ZipExtractionConfig,
     ):
-        self.input_config = input_config
+        self.input_config = input_config 
         self.zip_config = zip_config
         
         # Normalize format list to lowercase
@@ -77,6 +77,7 @@ class DocumentScanner:
         Yields:
             Tuples of (ScanContext, DocumentRef)
         """
+        # Scan input directory, if a zip file is found and zip extraction is enabled, it will be extracted in temp directory and scanned recursively.
         input_dir = Path(input_dir)
         if not input_dir.exists():
             raise ScanException(f"Input directory not found: {input_dir}")
@@ -223,6 +224,9 @@ class DocumentScanner:
         Returns:
             DocumentRef or None if format not supported
         """
+        # reads the file extension and checks if it's in the supported formats list, 
+        # if not returns None to skip it. If it is supported, it creates a DocumentRef
+        # with the logical path, real path, format, and basename.
         format_str = file_path.suffix.lstrip(".").lower()
         
         if format_str not in self.supported_formats:

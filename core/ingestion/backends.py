@@ -79,15 +79,6 @@ class FilesystemBackend(PersistenceBackend):
         doc_dir.mkdir(parents=True, exist_ok=True)
         
         # Persist artifacts based on config
-        if output_config.artifacts_original_file:
-            # Save original file as: <FULL_DOCUMENT_ID>.<original_extension>
-            # INGESTION REQUIREMENT: Original file must be renamed to document ID
-            filename = f"{document.metadata.doc_id}.{document.metadata.format}"
-            
-            file_path = doc_dir / filename
-            file_path.write_bytes(document.raw_bytes)
-            log.debug(f"Persisted original file as: {file_path}")
-        
         if output_config.artifacts_extracted_text and document.extracted_text:
             # Save extracted text
             text_path = doc_dir / "extracted.txt"
@@ -167,13 +158,6 @@ class FilesystemBackend(PersistenceBackend):
             output_config: Output configuration
         """
         issues = []
-        
-        # Check original file with new naming: <FULL_DOCUMENT_ID>.<extension>
-        if output_config.artifacts_original_file:
-            expected_filename = f"{document.metadata.doc_id}.{document.metadata.format}"
-            file_path = doc_dir / expected_filename
-            if not file_path.exists():
-                issues.append(f"Missing original file: {expected_filename}")
         
         # Check sidecar metadata with new naming: sc_<FULL_DOCUMENT_ID>.json
         if output_config.artifacts_document_metadata or output_config.artifacts_sidecar_metadata:

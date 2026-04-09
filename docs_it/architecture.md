@@ -25,7 +25,7 @@ Tutto il comportamento di ingestione è parametrizzato in YAML. Nessuna logica c
      ZIP     Multi-formato     Scoperta  UUID4    (Opzionale)
 ```
 
-#### 1. **DocumentScanner**
+#### 1. **Scanner**
 - **Responsabilità**: Scopre documenti input
 - **Comportamento**:
   - Cammina ricorsivamente filesystem (rispetta `max_depth`)
@@ -35,7 +35,7 @@ Tutto il comportamento di ingestione è parametrizzato in YAML. Nessuna logica c
   - Produce tuple `(ScanContext, DocumentRef)`
 - **Chiavi Config**: `input.*`, `zip_extraction.*`
 
-#### 2. **DocumentLoader**
+#### 2. **Loader**
 - **Responsabilità**: Normalizza contenuto documenti
 - **Comportamento**:
   - Legge byte raw dal file
@@ -45,7 +45,7 @@ Tutto il comportamento di ingestione è parametrizzato in YAML. Nessuna logica c
   - Restituisce `LoadedDocument` con byte + testo estratto
 - **Chiavi Config**: `loader.*`, `conversion.*`
 
-#### 3. **MetadataLoader (Sidecar)**
+#### 3. **Sidecar**
 - **Responsabilità**: Scopre file metadati accoppiati
 - **Comportamento**:
   - Applica strategie ricerca in ordine
