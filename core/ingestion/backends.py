@@ -113,6 +113,7 @@ class FilesystemBackend(PersistenceBackend):
         
         return str(doc_dir.relative_to(self.output_dir))
     
+    # fondamentalmente non fa nulla visto che non so come implementare la ricerca delle relations
     def _create_related_documents_index(self, doc_dir: Path, document: IngestedDocument) -> None:
         """
         Create related documents index for the current document.
@@ -140,6 +141,11 @@ class FilesystemBackend(PersistenceBackend):
         
         log.debug(f"Created related documents index: {rd_path} with {len(related_docs)} relations")
     
+    # function called after persist, it validate that all required artifacts were created with correct naming convention
+    # check if sidecar metadata exists with correct naming: sc_<FULL_DOCUMENT_ID>.json
+    # check if related documents index exists with correct naming: rd_<FULL_DOCUMENT_ID>.json
+    # check if extracted text exists if the format is text-extractable and artifacts_extracted
+
     def _validate_artifacts(
         self,
         doc_dir: Path,
@@ -190,6 +196,7 @@ class FilesystemBackend(PersistenceBackend):
         
         log.debug(f"Artifact validation passed for {document.metadata.doc_id}")
     
+    # save the manifest json
     def save_manifest(self, manifest: IngestManifest, output_config: OutputConfig) -> None:
         """
         Save ingestion manifest to JSON.
@@ -210,6 +217,8 @@ class FilesystemBackend(PersistenceBackend):
         
         log.info(f"Saved manifest: {manifest_path}")
 
+# create the backend based on the config
+# here the backend is just the component that saves the ingested documents
 
 class PersistenceBackendFactory:
     """Factory for creating persistence backends."""

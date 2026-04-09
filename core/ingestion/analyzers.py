@@ -259,7 +259,9 @@ class XmlParserAnalyzer(Analyzer):
 
 class JsonFormatterAnalyzer(Analyzer):
     """Format JSON text to a deterministic pretty-printed representation."""
-
+    # check the format, if not json skip
+    # if the json is valid, pretty print it with configured indent (configuration can be find the ingest.yaml file)
+    # if the json is invalid, return a warning but do not fail the analyzer
     def __init__(self, config: Dict[str, Any]):
         if not isinstance(config, dict):
             raise AnalyzerConfigurationException(
@@ -519,43 +521,3 @@ class AnalyzerPipeline:
                 # else: skip and continue
         
         return results
-
-
-class AnalyzerFactory:
-    """Factory for creating analyzers."""
-    
-    _analyzers: Dict[str, type] = {
-        "html_parser": HtmlParserAnalyzer,
-        "xml_parser": XmlParserAnalyzer,
-        "json_formatter": JsonFormatterAnalyzer,
-        "text_extractor": TextExtractorAnalyzer,
-    }
-    
-    @classmethod
-    def register(cls, name: str, analyzer_class: type) -> None:
-        """Register a custom analyzer."""
-        cls._analyzers[name] = analyzer_class
-    
-    @classmethod
-    def create(cls, name: str, config: Dict[str, Any]) -> Analyzer:
-        """
-        Create an analyzer.
-        
-        Args:
-            name: Analyzer name
-            config: Analyzer configuration
-        
-        Returns:
-            Configured analyzer instance
-        
-        Raises:
-            ValueError: If analyzer not found
-        """
-        if name not in cls._analyzers:
-            raise ValueError(
-                f"Unknown analyzer: {name}. "
-                f"Available: {list(cls._analyzers.keys())}"
-            )
-        
-        analyzer_class = cls._analyzers[name]
-        return analyzer_class(config)

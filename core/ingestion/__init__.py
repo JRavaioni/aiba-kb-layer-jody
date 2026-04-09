@@ -44,7 +44,6 @@ from .analyzers import (
     Analyzer,
     TextExtractorAnalyzer,
     AnalyzerPipeline,
-    AnalyzerFactory,
     HtmlParserAnalyzer,
     XmlParserAnalyzer,
     JsonFormatterAnalyzer,
@@ -93,7 +92,6 @@ __all__ = [
     "Analyzer",
     "TextExtractorAnalyzer",
     "AnalyzerPipeline",
-    "AnalyzerFactory",
     "HtmlParserAnalyzer",
     "XmlParserAnalyzer",
     "JsonFormatterAnalyzer",
@@ -166,13 +164,6 @@ class MyIDGenerator(IDGenerator):
         return f"custom_{hash(file_bytes)}"
 
 IDGeneratorFactory.register("custom", MyIDGenerator)
-
-# Custom analyzer
-class MyAnalyzer(Analyzer):
-    def analyze(self, document: IngestedDocument) -> dict:
-        return {"custom": True}
-
-AnalyzerFactory.register("my_analyzer", MyAnalyzer)
 
 # Custom backend
 class MyBackend(PersistenceBackend):

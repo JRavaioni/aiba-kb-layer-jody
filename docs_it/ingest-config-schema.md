@@ -516,28 +516,7 @@ if errors:
 
 ## Estensioni Personalizzate
 
-### Registrare Analizzatore Personalizzato
-
-```python
-from core.ingestion import Analyzer, AnalyzerFactory
-
-class MioAnalizzatore(Analyzer):
-    def analyze(self, document):
-        return {"campo_custom": "valore"}
-
-AnalyzerFactory.register("mio_analizzatore", MioAnalizzatore)
-```
-
-### Usare in Configurazione
-
-```yaml
-ingest:
-  analyzers:
-    pipeline:
-      - name: mio_analizzatore
-        enabled: true
-        config: {}
-```
+Le estensioni supportate attualmente sono il generatore ID e il backend di persistenza.
 
 ---
 

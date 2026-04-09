@@ -71,7 +71,7 @@ pipeline-ingestion/
 
 ### ✅ Architettura Plugin
 - **Generatori ID Personalizzati**: Registra a runtime
-- **Analizzatori Personalizzati**: Validazione testo, estrazione entità, ecc.
+- **Analizzatori Built-in**: Validazione testo, parsing HTML/XML, formattazione JSON
 - **Backend Personalizzati**: Archivia su database, cloud, S3, ecc.
 - **Zero Breaking Changes**: I plugin non modificano il core
 
@@ -83,7 +83,7 @@ pipeline-ingestion/
 ### ✅ Pipeline Analizzatore (Opzionale)
 - Post-elaborazione dei documenti
 - Validazione testo, rimozione null-byte
-- Estensibile: Concatena analizzatori personalizzati
+- Esegue pipeline configurabile di analizzatori built-in
 - Disabilitato per default (nessun overhead)
 
 ### ✅ Struttura Output Pulita
@@ -261,17 +261,6 @@ class MioGeneratoreID(IDGenerator):
         return f"custom_{hash(file_bytes)}"
 
 IDGeneratorFactory.register("mio_strategy", MioGeneratoreID)
-```
-
-### Registra Analizzatore Personalizzato
-```python
-from core.ingestion import Analyzer, AnalyzerFactory
-
-class MioAnalizzatore(Analyzer):
-    def analyze(self, document):
-        return {"campo_personalizzato": "valore"}
-
-AnalyzerFactory.register("mio_analizzatore", MioAnalizzatore)
 ```
 
 ### Registra Backend Personalizzato

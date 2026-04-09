@@ -231,19 +231,6 @@ IDGeneratorFactory.register("my_strategy", MyIDGen)
 # In config: strategy: my_strategy
 ```
 
-### Register Custom Analyzer
-```python
-from core.ingestion import Analyzer, AnalyzerFactory
-
-class MyAnalyzer(Analyzer):
-    def analyze(self, document):
-        return {"my_field": "value"}
-
-AnalyzerFactory.register("my_analyzer", MyAnalyzer)
-
-# In config: analyzers.pipeline[].name: my_analyzer
-```
-
 ### Register Custom Backend
 ```python
 from core.ingestion import PersistenceBackend, PersistenceBackendFactory

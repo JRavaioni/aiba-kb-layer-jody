@@ -157,33 +157,6 @@ service = IngestBuilder.from_dict(config).with_output_dir("output/").build()
 
 ---
 
-## Estendi con Analizzatore Personalizzato
-
-```python
-from core.ingestion import Analyzer, AnalyzerFactory, IngestBuilder
-
-class EstrattoreEntità(Analyzer):
-    def analyze(self, document):
-        # La tua logica qui
-        return {"entità": ["PERSONA", "ORG"]}
-
-AnalyzerFactory.register("entità", EstrattoreEntità)
-
-# Usa in config
-config = {
-    "ingest": {
-        "analyzers": {
-            "pipeline": [
-                {"name": "entità", "enabled": True, "config": {}}
-            ]
-        }
-    }
-}
-service = IngestBuilder.from_dict(config).with_output_dir("output/").build()
-```
-
----
-
 ## Elabora Batch Grandi
 
 ```python

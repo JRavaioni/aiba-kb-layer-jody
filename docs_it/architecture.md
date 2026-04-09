@@ -69,17 +69,17 @@ Tutto il comportamento di ingestione è parametrizzato in YAML. Nessuna logica c
   - Stesso input produce sempre stesso ID (deduplicazione)
 - **Chiavi Config**: `id_generation.*`
 
-#### 5. **AnalyzerPipeline** (Opzionale)
+#### 5. **Analyzer** (Opzionale)
 - **Responsabilità**: Post-elabora documenti
 - **Comportamento**:
-  - Esegue sequenza analizzatori pluggabili
+  - Esegue sequenza analizzatori built-in
   - Include esempio validazione testo
   - Può essere disabilitato
   - Strategie gestione errori (skip / fail_document / fail_all)
 - **Chiavi Config**: `analyzers.*`
-- **Estensibile**: Registra analizzatori personalizzati a runtime
+- **Scope**: analizzatori built-in definiti nel progetto
 
-#### 6. **PersistenceBackend** (Pluggabile)
+#### 6. **Backend** (Pluggabile)
 - **Responsabilità**: Archivia documenti ingestiti
 - **Comportamento**:
   - Backend filesystem (predefinito): scrive struttura directory
@@ -192,24 +192,9 @@ ingest:
     strategy: mia_strategy
 ```
 
-### Analizzatori Personalizzati
+### Analizzatori Disponibili
 
-```python
-from core.ingestion import Analyzer, AnalyzerFactory
-
-class MioAnalizzatore(Analyzer):
-    def analyze(self, document: IngestedDocument) -> dict:
-        return {"campo_personalizzato": "valore_personalizzato"}
-
-AnalyzerFactory.register("mio_analizzatore", MioAnalizzatore)
-
-# In config:
-ingest:
-  analyzers:
-    pipeline:
-      - name: mio_analizzatore
-        config: {}
-```
+La pipeline supporta gli analizzatori built-in definiti nel progetto e configurati in YAML.
 
 ### Backend Persistenza Personalizzati
 
