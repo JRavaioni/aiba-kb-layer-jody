@@ -26,7 +26,7 @@ def test_scanner_loader_integration_reads_discovered_documents(tmp_path: Path):
     scanner = DocumentScanner(config.input, config.zip_extraction)
     loader = DocumentLoader(LoaderConfig())
 
-    docs = [doc for _ctx, doc in scanner.scan(input_dir)]
+    docs = [result.document for result in scanner.scan(input_dir)]
     assert len(docs) == 2
 
     loaded = [loader.load(doc_ref) for doc_ref in docs]

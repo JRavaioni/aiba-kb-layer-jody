@@ -13,7 +13,7 @@ from core.ingestion.scanner import DocumentScanner
 
 
 def _collect_paths(scanner: DocumentScanner, root: Path) -> list[str]:
-    return [doc.logical_path for _ctx, doc in scanner.scan(root)]
+    return [result.document.logical_path for result in scanner.scan(root)]
 
 
 def test_scanner_symlink_to_file_is_handled(tmp_path: Path):

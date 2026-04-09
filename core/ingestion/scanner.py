@@ -13,7 +13,7 @@ import shutil
 import fnmatch
 
 from .config import InputConfig, ZipExtractionConfig
-from .types import DocumentRef, ScanException
+from .types import DocumentRef, ScanException, ScanResult
 from ..utils.directory_keeper import ensure_keepme_file
 
 log = logging.getLogger(__name__)
@@ -64,11 +64,11 @@ class DocumentScanner:
         self,
         input_dir: Path,
         temp_root_dir: Optional[Path] = None,
-    ) -> Iterator[tuple[ScanContext, DocumentRef]]:
+    ) -> Iterator[ScanResult]:
         """
         Scan input directory for documents.
         
-        Yields (context, DocumentRef) tuples. Caller must cleanup context
+        Yields named ScanResult items. Caller must cleanup context
         after iteration is complete or when done.
         
         Args:
@@ -76,7 +76,7 @@ class DocumentScanner:
             temp_root_dir: Root for temporary directories (default: system temp)
         
         Yields:
-            Tuples of (ScanContext, DocumentRef)
+            ScanResult items with explicit context and document fields
         """
         # Scan input directory, if a zip file is found and zip extraction is enabled, it will be extracted in temp directory and scanned recursively.
         input_dir = Path(input_dir)
@@ -106,7 +106,7 @@ class DocumentScanner:
         logical_prefix: str,
         depth: int,
         context: ScanContext,
-    ) -> Iterator[tuple[ScanContext, DocumentRef]]:
+    ) -> Iterator[ScanResult]:
         """
         Recursively scan directory for documents and ZIPs.
         
@@ -158,7 +158,7 @@ class DocumentScanner:
                     # Regular document file
                     doc_ref = self._make_document_ref(entry, logical_prefix)
                     if doc_ref:
-                        yield context, doc_ref
+                        yield ScanResult(context=context, document=doc_ref)
     
     def _extract_and_scan_zip(
         self,
@@ -166,7 +166,7 @@ class DocumentScanner:
         logical_prefix: str,
         depth: int,
         context: ScanContext,
-    ) -> Iterator[tuple[ScanContext, DocumentRef]]:
+    ) -> Iterator[ScanResult]:
         """
         Extract ZIP and scan its contents.
         

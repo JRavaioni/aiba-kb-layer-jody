@@ -4,8 +4,11 @@ Core data types for the ingestion module.
 from __future__ import annotations
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Optional, Dict, Any, List
+from typing import TYPE_CHECKING, Optional, Dict, Any, List
 from datetime import datetime, UTC
+
+if TYPE_CHECKING:
+    from .scanner import ScanContext
 
 
 @dataclass(frozen=True)
@@ -22,6 +25,18 @@ class DocumentRef:
     real_path: Path
     format: str
     basename: str
+
+
+@dataclass(frozen=True)
+class ScanResult:
+    """
+    Named result returned by scanner iteration.
+
+    - context: scan context used for temp directory lifecycle
+    - document: discovered document reference
+    """
+    context: ScanContext
+    document: DocumentRef
 
 
 @dataclass

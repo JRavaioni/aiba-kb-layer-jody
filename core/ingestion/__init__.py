@@ -14,6 +14,7 @@ This module provides a complete document ingestion system:
 from .config import IngestConfig
 from .types import (
     DocumentRef,
+    ScanResult,
     DocumentMetadata,
     IngestedDocument,
     IngestManifest,
@@ -55,6 +56,7 @@ __all__ = [
     
     # Core types
     "DocumentRef",
+    "ScanResult",
     "DocumentMetadata",
     "IngestedDocument",
     "IngestManifest",

@@ -30,7 +30,7 @@ Tutto il comportamento di ingestione è parametrizzato in YAML. Nessuna logica c
   - Estrae archivi ZIP in directory temporanee
   - Applica regole esclusione
   - Genera "path logici" per documenti annidati
-  - Produce tuple `(ScanContext, DocumentRef)`
+  - Produce oggetti `ScanResult` con campi espliciti (`context`, `document`)
 - **Chiavi Config**: `input.*`, `zip_extraction.*`
 
 #### 2. **Loader**
@@ -100,7 +100,8 @@ Tutto il comportamento di ingestione è parametrizzato in YAML. Nessuna logica c
 ```
 Directory Input
       ↓
-   Scanner ─────→ DocumentRef (logical_path, real_path, format, basename)
+  Scanner ─────→ ScanResult(context, document)
+            └─ document: DocumentRef (logical_path, real_path, format, basename)
       ↓
    Loader ───────→ LoadedDocument (raw_bytes, extracted_text, pages_count)
       ↓

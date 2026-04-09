@@ -98,8 +98,9 @@ class IngestService:
         
         try:
             # Scan for documents
-            for ctx, doc_ref in self.scanner.scan(input_dir, temp_root_dir):
-                scan_context = ctx
+            for scan_result in self.scanner.scan(input_dir, temp_root_dir):
+                scan_context = scan_result.context
+                doc_ref = scan_result.document
                 try:
                     log.debug(f"Processing: {doc_ref.logical_path}")
                     
