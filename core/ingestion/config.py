@@ -115,6 +115,28 @@ class OutputConfig:
 
 
 @dataclass
+class RelationshipRuleConfig:
+    """Single rule for extracting relationship references from document metadata."""
+    metadata_field: str   # dot-path into sidecar_metadata, e.g. "requestBody.zipName"
+    relationship_type: str  # label for the relationship, e.g. "attachment_of"
+
+
+@dataclass
+class DocumentTypeRelationshipConfig:
+    """Configuration for relationship detection on a specific document type."""
+    name: str
+    filename_pattern: str  # glob pattern matched against the first logical-path segment (zip stem or filename)
+    relationship_rules: List["RelationshipRuleConfig"] = field(default_factory=list)
+
+
+@dataclass
+class RelationshipsConfig:
+    """Configuration for inter-document relationship detection."""
+    enabled: bool = True
+    document_types: List["DocumentTypeRelationshipConfig"] = field(default_factory=list)
+
+
+@dataclass
 class AnalyzerConfig:
     """Analyzer pipeline configuration."""
     enabled: bool = True
@@ -150,6 +172,7 @@ class IngestConfig:
     metadata: MetadataConfig = field(default_factory=MetadataConfig)
     output: OutputConfig = field(default_factory=OutputConfig)
     analyzers: AnalyzerConfig = field(default_factory=AnalyzerConfig)
+    relationships: RelationshipsConfig = field(default_factory=RelationshipsConfig)
     logging: LoggingConfig = field(default_factory=LoggingConfig)
     advanced: AdvancedConfig = field(default_factory=AdvancedConfig)
     
@@ -282,6 +305,30 @@ class IngestConfig:
                 on_analyzer_error=analyzer_data.get("on_analyzer_error", "skip"),
             )
         
+        # Relationships
+        if "relationships" in data:
+            rel_data = data["relationships"]
+            doc_types = []
+            for dt in rel_data.get("document_types", []):
+                if not isinstance(dt, dict):
+                    continue
+                rules = []
+                for r in dt.get("relationship_rules", []):
+                    if isinstance(r, dict) and r.get("metadata_field") and r.get("relationship_type"):
+                        rules.append(RelationshipRuleConfig(
+                            metadata_field=r["metadata_field"],
+                            relationship_type=r["relationship_type"],
+                        ))
+                doc_types.append(DocumentTypeRelationshipConfig(
+                    name=dt.get("name", ""),
+                    filename_pattern=dt.get("filename_pattern", "*"),
+                    relationship_rules=rules,
+                ))
+            config.relationships = RelationshipsConfig(
+                enabled=rel_data.get("enabled", config.relationships.enabled),
+                document_types=doc_types,
+            )
+        
         # Logging
         if "logging" in data:
             log_data = data["logging"]
@@ -341,6 +388,23 @@ class IngestConfig:
         
         if self.logging.level not in ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]:
             errors.append(f"Invalid logging.level: {self.logging.level}")
+        
+        for idx, dt in enumerate(self.relationships.document_types):
+            if not dt.name:
+                errors.append(f"relationships.document_types[{idx}].name must be non-empty")
+            if not dt.filename_pattern:
+                errors.append(f"relationships.document_types[{idx}].filename_pattern must be non-empty")
+            for ridx, rule in enumerate(dt.relationship_rules):
+                if not rule.metadata_field:
+                    errors.append(
+                        f"relationships.document_types[{idx}].relationship_rules[{ridx}]"
+                        ".metadata_field must be non-empty"
+                    )
+                if not rule.relationship_type:
+                    errors.append(
+                        f"relationships.document_types[{idx}].relationship_rules[{ridx}]"
+                        ".relationship_type must be non-empty"
+                    )
         
         return errors
 

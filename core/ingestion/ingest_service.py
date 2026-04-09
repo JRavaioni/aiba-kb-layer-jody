@@ -5,6 +5,7 @@ Coordinates scanning, loading, analysis, and persistence.
 from __future__ import annotations
 from pathlib import Path
 from typing import Optional
+import json
 import logging
 import hashlib
 from datetime import datetime, UTC
@@ -16,6 +17,7 @@ from .sidecar import MetadataLoader
 from .id_generator import IDGeneratorFactory
 from .analyzers import AnalyzerPipeline
 from .backends import PersistenceBackendFactory
+from .related_indexes import RelatedDocumentsIndexer
 from .types import (
     IngestedDocument,
     DocumentMetadata,
@@ -88,6 +90,7 @@ class IngestService:
         self.id_generator = IDGeneratorFactory.create(config.id_generation)
         self.analyzer_pipeline = AnalyzerPipeline(config.analyzers)
         self.persistence = PersistenceBackendFactory.create(config.output, output_dir)
+        self.related_indexer = RelatedDocumentsIndexer(config.relationships)
         
         log.info(f"Initialized IngestService with output_dir={output_dir}, sidecar_base_paths={[str(p) for p in sidecar_base_paths]}")
     
@@ -179,8 +182,11 @@ class IngestService:
                     # Run analyzers
                     document.analyzer_output = self.analyzer_pipeline.run(document)
                     
-                    # Persist
-                    self.persistence.persist(document, self.config.output)
+                    # Find relationship hints for this document (Pass 1)
+                    relationships = self.related_indexer.find_related_documents(document)
+                    
+                    # Persist (writes rd_*.json with hints; resolved in Pass 2 below)
+                    self.persistence.persist(document, self.config.output, relationships)
                     
                     manifest.ingested[doc_ref.logical_path] = doc_id
                     log.info(f"Ingested: {doc_ref.logical_path} → {doc_id}")
@@ -204,6 +210,11 @@ class IngestService:
         finally:
             # Complete manifest
             manifest.completed_at = datetime.now(UTC)
+            
+            # Pass 2: resolve relationship references to actual doc IDs now that
+            # the full manifest is available.
+            if self.config.relationships.enabled:
+                self._resolve_all_relationships(manifest)
             
             # Save manifest
             try:
@@ -236,3 +247,54 @@ class IngestService:
         h = hashlib.new(algorithm)
         h.update(data)
         return h.hexdigest()
+
+    def _resolve_all_relationships(self, manifest: IngestManifest) -> None:
+        """
+        Post-ingestion pass: resolve relationship references to actual doc IDs.
+
+        For every successfully ingested document, reads its ``rd_<doc_id>.json``
+        file, resolves any ``related_document_reference`` hints to real
+        ``related_document_id`` values using the completed manifest, then
+        rewrites the file.
+
+        Args:
+            manifest: Completed ingestion manifest (all logical paths → doc IDs known)
+        """
+        log.info("Resolving inter-document relationships (Pass 2)…")
+        resolved_total = 0
+        unresolved_total = 0
+
+        for logical_path, doc_id in manifest.ingested.items():
+            rd_path = self.output_dir / doc_id / f"rd_{doc_id}.json"
+            if not rd_path.exists():
+                log.debug(f"No rd_*.json found for {doc_id}, skipping relationship resolution")
+                continue
+
+            try:
+                with open(rd_path, "r", encoding="utf-8") as f:
+                    hints = json.load(f)
+
+                if not hints:
+                    continue
+
+                resolved = self.related_indexer.resolve_relationships(
+                    hints, manifest.ingested
+                )
+                self.persistence.update_related_documents_index(doc_id, resolved)
+
+                n_resolved = sum(1 for r in resolved if "related_document_id" in r)
+                n_unresolved = len(resolved) - n_resolved
+                resolved_total += n_resolved
+                unresolved_total += n_unresolved
+                log.debug(
+                    f"Relationships for {doc_id}: "
+                    f"{n_resolved} resolved, {n_unresolved} unresolved"
+                )
+
+            except Exception as e:
+                log.warning(f"Failed to resolve relationships for {doc_id}: {e}")
+
+        log.info(
+            f"Relationship resolution complete: "
+            f"{resolved_total} resolved, {unresolved_total} unresolved"
+        )

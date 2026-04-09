@@ -5,7 +5,7 @@ Pluggable interface allows different storage strategies.
 from __future__ import annotations
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Dict, Any
+from typing import Any, Dict, List, Optional
 import json
 import logging
 
@@ -20,13 +20,19 @@ class PersistenceBackend(ABC):
     """Base class for document persistence."""
     
     @abstractmethod
-    def persist(self, document: IngestedDocument, output_config: OutputConfig) -> str:
+    def persist(
+        self,
+        document: IngestedDocument,
+        output_config: OutputConfig,
+        relationships: Optional[List[Dict[str, Any]]] = None,
+    ) -> str:
         """
         Persist a document.
         
         Args:
             document: Ingested document to persist
             output_config: Output configuration
+            relationships: Pre-computed relationship hints from the indexer
         
         Returns:
             Storage identifier/path
@@ -44,6 +50,21 @@ class PersistenceBackend(ABC):
         """
         pass
 
+    @abstractmethod
+    def update_related_documents_index(
+        self, doc_id: str, relationships: List[Dict[str, Any]]
+    ) -> None:
+        """
+        Overwrite the rd_<doc_id>.json file with fully-resolved relationships.
+
+        Called during the post-ingestion resolution pass once all doc IDs are known.
+
+        Args:
+            doc_id: Document ID whose index should be updated
+            relationships: Resolved relationship list
+        """
+        pass
+
 
 class FilesystemBackend(PersistenceBackend):
     """
@@ -54,7 +75,12 @@ class FilesystemBackend(PersistenceBackend):
     def __init__(self, output_dir: Path):
         self.output_dir = Path(output_dir)
     
-    def persist(self, document: IngestedDocument, output_config: OutputConfig) -> str:
+    def persist(
+        self,
+        document: IngestedDocument,
+        output_config: OutputConfig,
+        relationships: Optional[List[Dict[str, Any]]] = None,
+    ) -> str:
         """
         Persist document to filesystem.
         
@@ -67,6 +93,7 @@ class FilesystemBackend(PersistenceBackend):
         Args:
             document: Document to persist
             output_config: Output configuration
+            relationships: Pre-computed relationship hints (written to rd_*.json)
         
         Returns:
             Relative path to document directory
@@ -106,39 +133,40 @@ class FilesystemBackend(PersistenceBackend):
         
         # Create related documents index: rd_<FULL_DOCUMENT_ID>.json
         # INGESTION REQUIREMENT: Related documents index must be created for each document
-        self._create_related_documents_index(doc_dir, document)
+        self._create_related_documents_index(doc_dir, document, relationships or [])
         
         # Validate required artifacts were created
         self._validate_artifacts(doc_dir, document, output_config)
         
         return str(doc_dir.relative_to(self.output_dir))
     
-    def _create_related_documents_index(self, doc_dir: Path, document: IngestedDocument) -> None:
+    def _create_related_documents_index(
+        self,
+        doc_dir: Path,
+        document: IngestedDocument,
+        relationships: List[Dict[str, Any]],
+    ) -> None:
         """
-        Create related documents index for the current document.
+        Write the related documents index for the current document.
         
         INGESTION REQUIREMENT: Related documents index must be created
         Format: rd_<FULL_DOCUMENT_ID>.json
-        Contains list of related document references with relationship types
+        Contains list of relationship hint dicts; unresolved references are updated
+        later by the post-ingestion resolution pass.
         
         Args:
             doc_dir: Document directory
             document: Ingested document
+            relationships: Pre-computed hints from RelatedDocumentsIndexer
         """
-        from .related_indexes import RelatedDocumentsIndexer
-        
-        # Create indexer and generate related documents
-        indexer = RelatedDocumentsIndexer()
-        related_docs = indexer.find_related_documents(document)
-        
         # Save as rd_<FULL_DOCUMENT_ID>.json
         rd_filename = f"rd_{document.metadata.doc_id}.json"
         rd_path = doc_dir / rd_filename
         
         with open(rd_path, "w", encoding="utf-8") as f:
-            json.dump(related_docs, f, indent=2, default=str)
+            json.dump(relationships, f, indent=2, default=str)
         
-        log.debug(f"Created related documents index: {rd_path} with {len(related_docs)} relations")
+        log.debug(f"Created related documents index: {rd_path} with {len(relationships)} relation(s)")
     
     def _validate_artifacts(
         self,
@@ -209,6 +237,23 @@ class FilesystemBackend(PersistenceBackend):
             json.dump(manifest_dict, f, indent=2)
         
         log.info(f"Saved manifest: {manifest_path}")
+
+    def update_related_documents_index(
+        self, doc_id: str, relationships: List[Dict[str, Any]]
+    ) -> None:
+        """
+        Overwrite rd_<doc_id>.json with fully-resolved relationships.
+
+        Called during the post-ingestion resolution pass once all doc IDs are known.
+
+        Args:
+            doc_id: Document ID whose index should be updated
+            relationships: Resolved relationship list
+        """
+        rd_path = self.output_dir / doc_id / f"rd_{doc_id}.json"
+        with open(rd_path, "w", encoding="utf-8") as f:
+            json.dump(relationships, f, indent=2, default=str)
+        log.debug(f"Updated related documents index: {rd_path} with {len(relationships)} relation(s)")
 
 
 class PersistenceBackendFactory:

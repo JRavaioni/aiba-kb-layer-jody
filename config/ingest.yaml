@@ -149,6 +149,44 @@ ingest:
     on_analyzer_error: skip  # skip, fail_document, fail_all
   
   # ============================================================================
+  # DOCUMENT RELATIONSHIPS
+  # ============================================================================
+  # Configures how inter-document relationships are detected and indexed.
+  # Each document type entry maps a filename glob pattern to one or more rules
+  # that extract relationship references from that document's sidecar metadata
+  # using a dot-path field notation (e.g. "requestBody.zipName").
+  #
+  # Output: each ingested document gets an rd_<DOC_ID>.json file containing
+  # a list of relationship dicts:
+  #   [{"related_document_id": "<id>", "relationship_type": "<type>"}, ...]
+  # Unresolvable references are stored as:
+  #   [{"related_document_reference": "<ref>", "relationship_type": "<type>",
+  #     "resolved": false}, ...]
+  relationships:
+    enabled: true
+    document_types:
+      # ABCBDT web pages (main product/service pages from the ABC bank portal)
+      - name: abcbdt_page
+        filename_pattern: "ABCBDT_0_*"
+        relationship_rules:
+          - metadata_field: "requestBody.zipName"
+            relationship_type: "related_page"
+
+      # ABCBDT attachment documents (PDFs and other attachments linked to portal pages)
+      - name: abcbdt_attachment
+        filename_pattern: "ABCBDT_ATT_*"
+        relationship_rules:
+          - metadata_field: "requestBody.zipName"
+            relationship_type: "attachment_of"
+
+      # Confluence pages (wiki pages exported from Confluence)
+      - name: confluence_page
+        filename_pattern: "CONFL_*"
+        relationship_rules:
+          - metadata_field: "requestBody.zipName"
+            relationship_type: "related_page"
+
+  # ============================================================================
   # LOGGING & DEBUGGING
   # ============================================================================
   logging:
