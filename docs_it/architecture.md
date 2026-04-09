@@ -2,13 +2,11 @@
 
 ## Panoramica
 
-Il modulo di ingestione è un **sistema basato su configurazione, plugin-based** per standardizzare documenti da varie fonti e formati in una struttura output normalizzata e pulita.
+Il modulo di ingestione per standardizzare documenti da varie fonti e formati in una struttura output normalizzata.
 
 ### Principio Core
 
-**La Configurazione è la Fonte Unica di Verità**
-
-Tutto il comportamento di ingestione è parametrizzato in YAML. Nessuna logica client-specifica, nessun path hardcoded, nessuna assunzione dominio-specifica. Questo permette al modulo di essere riutilizzato in qualsiasi progetto.
+Tutto il comportamento di ingestione è parametrizzato in YAML. Nessuna logica client-specifica, nessun path hardcoded, nessuna assunzione dominio-specifica.
 
 ## Architettura
 
@@ -106,7 +104,7 @@ Directory Input
       ↓
    Loader ───────→ LoadedDocument (raw_bytes, extracted_text, pages_count)
       ↓
-  MetadataLoader → Dict[str, Any] (metadati sidecar o vuoto)
+  Sidecar → Dict[str, Any] (metadati sidecar o vuoto)
       ↓
   IDGenerator ───→ doc_id (deterministico: "b784e2c8dbba8d15")
       ↓

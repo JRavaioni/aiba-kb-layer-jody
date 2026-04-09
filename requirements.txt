@@ -1,0 +1,10 @@
+# Core runtime dependencies
+PyYAML>=6.0
+pypdf>=4.0.0
+beautifulsoup4>=4.12.0
+python-docx>=1.1.0
+pywin32>=306; platform_system == "Windows"
+
+# Testing dependencies
+pytest>=8.0.0
+pytest-cov>=5.0.0
