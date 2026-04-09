@@ -30,26 +30,7 @@ log = logging.getLogger(__name__)
 
 class IngestService:
     """
-    Main ingestion service with STRICT correctness enforcement.
-    
-    INGESTION CORRECTNESS PRINCIPLES:
-    - Ingestion phase is responsible for data validation and quality gates
-    - Invalid or corrupted documents MUST fail ingestion explicitly
-    - No partial success allowed - document either ingests completely or fails
-    - Fail fast prevents downstream processing of invalid data
-    - Correctness takes priority over completeness
-    
-    HTML INGESTION CONTRACT:
-    - HTML documents MUST produce valid extracted text (>0 length, visible chars)
-    - Empty or invalid text extraction = ingestion failure for that document
-    - No fallback outputs, no invented content, no silent degradation
-    - Each document fails individually (other documents can still succeed)
-    
-    WHY FAILING FAST IS MANDATORY:
-    - Prevents corrupted data from entering downstream processing
-    - Ensures search/indexing operates on valid content only
-    - Maintains data integrity across the entire pipeline
-    - Forces explicit handling of extraction failures rather than hiding them
+    Main ingestion service
     """
     
     def __init__(self, config: IngestConfig, output_dir: Path):

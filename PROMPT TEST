@@ -1,0 +1,378 @@
+# Complete Test Suite Analysis & Generation
+
+## Project Context
+- **Repository**: JRavaioni/aiba-kb-layer-jody
+- **Language Composition**: HTML (65.4%), Python (34.1%), PowerShell (0.5%)
+- **Primary Type**: Document Ingestion Pipeline (Python-based)
+- **Core Module**: core/ingestion/ with 13 modules (config, scanner, loader, sidecar, id_generator, ingest_service, analyzers, backends, builder, types, related_indexes)
+- **Current Test Structure**: test/ directory with contract/, e2e/, unit/, integration/ subdirectories
+- **Test Framework**: pytest (configured in pytest.ini)
+
+## Main Components to Test
+1. **config.py** - YAML configuration parsing and validation
+2. **scanner.py** - Filesystem & ZIP file scanning
+3. **loader.py** - Multi-format document text extraction (PDF, HTML, TXT, JSON, XML, DOCX, DOC)
+4. **sidecar.py** - Metadata sidecar discovery and loading
+5. **id_generator.py** - Deterministic ID generation (SHA256-16/32, UUID, custom)
+6. **ingest_service.py** - Main orchestration service
+7. **analyzers.py** - HTML/XML/JSON parsing and text analysis
+8. **backends.py** - Persistence (filesystem, pluggable)
+9. **builder.py** - Factory pattern for service creation
+10. **types.py** - Data models and type definitions
+11. **main.py** - CLI entry point
+
+## Existing Tests (Review & Deprecation)
+- `test/contract/t_determinism.py` - ID determinism contracts
+- `test/contract/t_metadata_sidecar.py` - Metadata discovery contracts
+- `test/contract/t_yaml_config.py` - Configuration parsing contracts
+- `test/contract/t_loader_formats.py` - Format loading contracts
+- `test/contract/t_safety_invariants.py` - Data integrity contracts
+- `test/contract/t_output_contract.py` - Output structure contracts
+- `test/contract/t_fail_fast.py` - Error handling contracts
+- `test/unit/t_analyzers_unit.py` - Analyzer unit tests
+- `test/e2e/t_ingestion_e2e.py` - End-to-end ingestion tests
+
+**ACTION**: Audit these files for deprecation status and mark for deletion if obsolete.
+
+## Complete Test Matrix Required
+
+### CATEGORY 1: CONTRACT TESTS
+These verify contracts/invariants - what MUST remain true.
+
+#### 1.1 Configuration Contracts
+- Valid YAML loading from file and dict
+- Invalid strategy rejection (ID generation strategies)
+- Missing required fields validation
+- Duplicate analyzer names detection
+- Configuration default values
+- Type coercion (strings to numbers, booleans)
+- Nested configuration validation
+- Environment variable override mechanisms
+- Schema completeness validation
+
+#### 1.2 ID Generation Contracts
+- Deterministic generation: same content → same ID
+- Different content → different IDs
+- ID format validation (SHA256-16 must be 16 chars hex, SHA256-32 must be 32 chars, UUID4 format)
+- Prefix/suffix preservation
+- Hash strategy correctness
+- Custom strategy registration
+- Invalid strategy rejection
+- Empty content handling
+- Large content handling (>100MB)
+
+#### 1.3 Metadata Sidecar Contracts
+- Exact match discovery (basename.json)
+- Wildcard discovery (*.json in directory)
+- Parent directory search
+- Malformed JSON graceful failure
+- Missing metadata returns None (not invented data)
+- Metadata precedence when multiple strategies match
+- Encoding fallback for metadata files
+- Empty metadata file handling
+
+#### 1.4 Output Structure Contracts
+- manifest.json exists at root
+- Each document has its own directory
+- No loose documents in output root (only manifest.json and .keepme)
+- Directory naming uses document ID
+- File naming conventions (doc_id.ext, extracted.txt, rd_*.json, sc_*.json)
+- Manifest JSON schema validation
+- Success rate calculation accuracy
+- Duplicate tracking in manifest
+- Error summary completeness
+
+#### 1.5 Safety Invariants
+- raw_bytes never modified during processing
+- Metadata never invented (only found or None)
+- HTML loading does not execute scripts
+- PDF loading preserves content
+- No data leakage between documents
+- Concurrent processing safety (if enabled)
+- File permissions preservation
+- Encoding preservation (input → output bytes identical hash)
+
+#### 1.6 Document Loader Contracts
+- Text extraction matches format:
+  - PDF: text + images → extracted text
+  - HTML: visible text only, scripts/styles removed
+  - TXT: raw text with encoding fallback
+  - JSON: pretty-printed or raw per config
+  - XML: flattened structure
+  - DOCX: text preserved
+  - DOC: conversion or rejection if unavailable
+- max_text_length enforced (truncation or error)
+- Encoding detection and fallback
+- Binary format rejection for text extractors
+- Empty document handling
+
+#### 1.7 Scanner Contracts
+- Filesystem discovery with depth limits
+- ZIP extraction with configurable max depth
+- Supported format filtering
+- Directory traversal security (no ../ escaping)
+- Duplicate file detection
+- Symlink handling (follow/skip)
+- Permission error handling
+- Pattern matching (glob patterns if supported)
+
+#### 1.8 Analyzer Pipeline Contracts
+- HTML analyzer removes scripts when configured
+- XML analyzer flattens to text
+- JSON analyzer pretty-prints valid JSON
+- Analyzer chain execution order
+- Disabled analyzers skipped
+- Error in one analyzer doesn't fail pipeline
+- Analyzer results captured in manifest
+
+### CATEGORY 2: E2E (END-TO-END) TESTS
+These verify complete workflows with real data/systems.
+
+#### 2.1 Full Ingestion Workflow
+- Complete directory ingestion (50+ documents)
+- Multi-format mix (HTML, TXT, JSON, XML, PDF)
+- With metadata sidecar files
+- With error documents (corrupted, unsupported)
+- Output directory structure validation
+- Manifest accuracy
+- Success rate calculation
+- Duplicates detected
+- **Test Data Required**: ingestion_test_data/raw with 50+ varied documents
+
+#### 2.2 ZIP Extraction E2E
+- Nested ZIP files extracted recursively
+- Max depth respected
+- Extracted documents processed as if from filesystem
+- ZIP internal paths converted to logical paths
+- Errors in ZIP don't fail entire batch
+- Empty ZIPs handled gracefully
+- Corrupted ZIP handling
+
+#### 2.3 Metadata Sidecar E2E
+- Documents with sidecars ingested with metadata attached
+- Multiple strategy matching (priority)
+- Sidecar updates tracked in manifest
+- Sidecar not found handled gracefully
+
+#### 2.4 Error Resilience E2E
+- Invalid PDF skipped (not fatal)
+- Unsupported format skipped
+- Missing encoding handled (fallback)
+- Disk full scenarios (if graceful handling exists)
+- Permission errors on files (skip vs error)
+- Batch continues despite errors
+
+#### 2.5 Performance E2E
+- Large document handling (100MB+)
+- Many documents (1000+)
+- Deep directory structures (20+ levels)
+- Large ZIP archives
+- Memory usage reasonable (no unbounded growth)
+- Execution time within acceptable bounds
+
+#### 2.6 Integration with CLI
+- `python main.py --config config/ingest.yaml --output output/` succeeds
+- Multiple input dirs from config processed sequentially
+- Non-existent input dirs skipped with warning
+- Output directory created if missing
+- Exit code 0 on success, 1 on errors
+
+### CATEGORY 3: UNIT TESTS
+These verify individual components in isolation.
+
+#### 3.1 Configuration Unit Tests
+- IngestConfig class methods
+- LoaderConfig initialization
+- MetadataConfig initialization
+- IDGenerationConfig initialization
+- from_yaml() method
+- from_dict() method
+- validate() method
+- get_default() for all config types
+- YAML parsing error handling
+- Type conversion logic
+
+#### 3.2 Scanner Unit Tests
+- DocumentRef creation
+- File discovery without ZIP
+- Supported format filtering
+- Path normalization
+- Logical path generation
+- depth limit enforcement
+- Iterator behavior
+- Empty directory handling
+- Single file scanning
+
+#### 3.3 Loader Unit Tests
+- DocumentLoader initialization
+- load() method for each format
+- TXT decoding with fallback
+- HTML to text conversion
+- JSON validation and formatting
+- XML parsing
+- PDF text extraction
+- Encoding detection
+- max_text_length enforcement
+- raw_bytes preservation
+- Error handling per format
+
+#### 3.4 ID Generator Unit Tests
+- IDGeneratorFactory.create()
+- SHA256-16 generation
+- SHA256-32 generation
+- UUID4 generation
+- Custom strategy registration
+- generate() method determinism
+- Prefix/suffix application
+- Invalid strategy error
+- Edge cases (empty bytes, very large, special chars)
+
+#### 3.5 Metadata Loader Unit Tests
+- MetadataLoader initialization
+- load() method success
+- load() method not found
+- load() method malformed JSON
+- Strategy priority
+- Path resolution
+- JSON deserialization
+
+#### 3.6 Sidecar Unit Tests
+- MetadataSearchStrategy creation
+- Pattern matching logic
+- Exact match rule
+- Wildcard rule
+- Custom rule evaluation
+
+#### 3.7 Ingest Service Unit Tests
+- IngestService initialization
+- ingest() method (with mock components)
+- Manifest creation
+- Error collection
+- Success tracking
+- Deduplication logic
+- Component orchestration
+
+#### 3.8 Analyzer Unit Tests (Already Exists - Expand)
+- HtmlParserAnalyzer.analyze()
+- XmlParserAnalyzer.analyze()
+- JsonFormatterAnalyzer.analyze()
+- Analyzer status codes
+- Analyzer warnings
+- Analyzer payloads
+
+#### 3.9 Backend Unit Tests
+- FilesystemBackend.persist()
+- Directory creation
+- File writing
+- Manifest writing
+- Custom backend interface
+- Error handling
+
+#### 3.10 Builder Unit Tests
+- IngestBuilder.from_config()
+- IngestBuilder.from_dict()
+- with_output_dir()
+- with_config_value()
+- enable_analyzers()
+- build() method
+- Method chaining
+- Override behavior
+
+#### 3.11 Types Unit Tests
+- DocumentRef initialization
+- IngestedDocument initialization
+- DocumentMetadata initialization
+- IngestionManifest initialization
+- Serialization to dict/JSON
+- Deserialization from dict/JSON
+- Enum values (Format, IDStrategy)
+
+#### 3.12 Main.py Unit Tests
+- Argument parsing
+- Config loading
+- Input dir validation
+- Service creation
+- Manifest reporting
+
+### CATEGORY 4: INTEGRATION TESTS
+These verify multiple components working together (not full E2E).
+
+#### 4.1 Scanner + Loader Integration
+- Scan directory → get DocumentRefs
+- Load each document → IngestedDocument
+- Error in load doesn't break scanner iteration
+- Manifest partial success
+
+#### 4.2 Scanner + Metadata Integration
+- Scan finds documents
+- Metadata loader finds sidecars
+- Combine results
+
+#### 4.3 Loader + ID Generator Integration
+- Load document
+- Generate ID from content
+- Determinism verified
+
+#### 4.4 ID Generator + Backend Integration
+- Generate ID
+- Create output directory with ID name
+- Persist document to ID directory
+
+#### 4.5 Config + Service Integration
+- Load config from YAML
+- Create service with config
+- Config applied to all components
+
+#### 4.6 Analyzer Pipeline Integration
+- Service with analyzers enabled
+- Multiple analyzers in sequence
+- Results tracked in manifest
+
+#### 4.7 ZIP + Loader Integration
+- ZIP extracted
+- Extracted files scanned
+- Documents loaded
+- Handled as normal documents
+
+#### 4.8 Error Handling Integration
+- Invalid document encountered
+- Error logged
+- Batch continues
+- Manifest shows error
+
+#### 4.9 Metadata + Sidecar + Manifest Integration
+- Metadata loaded alongside document
+- Sidecar persisted
+- Recorded in manifest
+
+#### 4.10 CLI + Service Integration
+- Args parsed
+- Config loaded
+- Service created
+- Ingestion executed
+- Results reported
+
+---
+
+## Test Organization & Naming
+- **Location**: Organize tests in `test/contract/`, `test/unit/`, `test/e2e/`, `test/integration/`
+- **Naming**: `t_<component>_<test_type>.py` (e.g., `t_loader_formats.py`)
+- **Functions**: `test_<scenario>_<expected>()` (e.g., `test_load_pdf_extracts_text()`)
+- **Classes**: `Test<Component>` per module
+
+## Deprecation Review Checklist
+- [ ] Are current contract tests still valid for refactored code?
+- [ ] Are unit tests testing current component interfaces?
+- [ ] Are E2E tests using current test data structure?
+- [ ] Integration tests compatible with current architecture?
+- [ ] Remove tests for deleted/refactored components
+- [ ] Update fixtures if component signatures changed
+
+## Test Execution Commands
+```bash
+pytest test/ -v                    # All tests
+pytest test/contract/ -v           # Contract tests only
+pytest test/unit/ -v               # Unit tests only
+pytest test/e2e/ -v                # E2E tests only
+pytest test/integration/ -v        # Integration tests only
+pytest test/ --cov=core/ingestion  # Coverage
