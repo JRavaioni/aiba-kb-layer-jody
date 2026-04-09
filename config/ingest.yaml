@@ -1,5 +1,5 @@
 # Default Ingestion Configuration
-# See docs/ingest-config-schema.md for complete documentation
+# See docs_it/ingest-config-schema.md for complete documentation
 
 ingest:
   # ============================================================================

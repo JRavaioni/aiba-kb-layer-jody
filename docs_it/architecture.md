@@ -41,7 +41,7 @@ Tutto il comportamento di ingestione è parametrizzato in YAML. Nessuna logica c
   - Gestisce fallback encoding
   - Forza limite lunghezza testo massima
   - Restituisce `LoadedDocument` con byte + testo estratto
-- **Chiavi Config**: `loader.*`, `conversion.*`
+- **Chiavi Config**: `loader.*`
 
 #### 3. **Sidecar**
 - **Responsabilità**: Scopre file metadati accoppiati
@@ -138,7 +138,7 @@ SUPPORTED_FORMATS = {"pdf", "docx", "html"}
 ```yaml
 ingest:
   input:
-    supported_formats: [pdf, docx, html, xlsx, json]
+    supported_formats: [pdf, docx, html, txt, xml, md, json]
 ```
 
 ### Esempio: Cambiare Generazione ID
@@ -183,8 +183,9 @@ class MioGeneratoreID(IDGenerator):
         return f"custom_{hash(file_bytes)}"
 
 IDGeneratorFactory.register("mia_strategy", MioGeneratoreID)
+```
 
-# In config:
+```yaml
 ingest:
   id_generation:
     strategy: mia_strategy
@@ -197,7 +198,12 @@ La pipeline supporta gli analizzatori built-in definiti nel progetto e configura
 ### Backend Persistenza Personalizzati
 
 ```python
-from core.ingestion import PersistenceBackend, PersistenceBackendFactory
+from core.ingestion import (
+  IngestedDocument,
+  IngestManifest,
+  PersistenceBackend,
+  PersistenceBackendFactory,
+)
 
 class MioBackend(PersistenceBackend):
     def persist(self, document: IngestedDocument, config):
@@ -208,8 +214,9 @@ class MioBackend(PersistenceBackend):
         pass
 
 PersistenceBackendFactory.register("mio_backend", MioBackend)
+```
 
-# In config:
+```yaml
 ingest:
   output:
     backend: mio_backend
@@ -273,12 +280,19 @@ ingest:
 ```
 test/
   unit/
-    test_ingestion.py       # Logica core
-    test_config.py          # Caricamento configurazione
-    test_id_generator.py    # Generazione ID
-  
+    t_config_unit.py
+    t_id_generator_unit.py
+    t_main_unit.py
+  contract/
+    t_determinism.py
+    t_output_contract.py
+    t_safety_invariants.py
   integration/
-    test_ingest_pipeline.py # End-to-end
+    t_component_integration.py
+  
+  e2e/
+    t_ingestion_e2e.py
+    t_zip_resilience_e2e.py
 ```
 
 Esegui test:
@@ -324,7 +338,7 @@ ingest:
 
 ### Problema: Nessun testo estratto
 **Controlla**:
-- `loader.<format>.extract_text: true`
+- `loader.pdf.extract_text: true`
 - Librerie richieste installate (pypdf, beautifulsoup4)
 - File non corrotto
 

@@ -10,7 +10,7 @@ ingest:
   # SCOPERTA INPUT
   # ============================================================================
   input:
-    supported_formats: [pdf, docx, doc, html, htm, txt]
+    supported_formats: [pdf, docx, doc, html, htm, txt, xml, md, json]
     max_depth: 10
     exclude_paths: [".git", "__pycache__", "node_modules"]
 
@@ -26,38 +26,21 @@ ingest:
   # GENERAZIONE ID (DETERMINISTICA)
   # ============================================================================
   id_generation:
-    strategy: sha256-16  # sha256-16, sha256-32, uuid4
-    prefix: ""            # NESSUN PREFISSO - usa ID documento completo
+    strategy: sha256-16  # sha256-16, sha256-32, uuid4, custom
+    prefix: "doc_"
     suffix: ""
 
   # ============================================================================
   # CARICAMENTO DOCUMENTI & ESTRAZIONE TESTO
   # ============================================================================
   loader:
-    encoding_fallback: [utf-8, latin-1, cp1252, iso-8859-1]
+    encoding_fallback: [utf-8, latin-1, cp1252]
     max_text_length: 1000000
 
-    # Impostazioni estrazione testo per formato specifico
+    # Impostazioni estrazione testo supportate
     pdf:
       extract_text: true
       max_pages: 0
-    docx:
-      extract_text: true
-    doc:
-      extract_text: true
-    html:
-      extract_text: true
-      keep_html: false
-    txt:
-      extract_text: true
-
-  # ============================================================================
-  # CONVERSIONE DOCUMENTI
-  # ============================================================================
-  conversion:
-    doc_to_pdf: true
-    backend: auto
-    timeout: 60
 
   # ============================================================================
   # GESTIONE METADATI (FILE SIDECAR)
@@ -149,12 +132,12 @@ Controlla come vengono scoperti i documenti di input.
   ```
 
 #### `supported_formats` (array di stringhe)
-- **Default**: `[pdf, docx, doc, html, htm, txt]`
+- **Default**: `[pdf, docx, html, txt]` (valore dataclass)
 - **Descrizione**: Formati file supportati per l'ingestione
-- **Valori validi**: `pdf`, `docx`, `doc`, `html`, `htm`, `txt`
+- **Valori usati nel progetto**: `pdf`, `docx`, `doc`, `html`, `htm`, `txt`, `xml`, `md`, `json`
 - **Esempio**:
   ```yaml
-  supported_formats: [pdf, docx]
+  supported_formats: [pdf, docx, txt, json]
   ```
 
 #### `max_depth` (intero)
@@ -215,15 +198,16 @@ Controlla come vengono generati gli ID documento.
   - `sha256-16`: Primi 16 caratteri SHA256 (leggibile)
   - `sha256-32`: SHA256 completo (64 caratteri)
   - `uuid4`: UUID non-deterministico (per testing)
+  - `custom`: Strategia custom registrata a runtime
 - **Esempio**:
   ```yaml
   strategy: sha256-32
   ```
 
 #### `prefix` (stringa)
-- **Default**: `""`
+- **Default**: `"doc_"`
 - **Descrizione**: Prefisso aggiunto all'ID generato
-- **Nota**: Vuoto per usare ID documento completo senza prefisso
+- **Nota**: In `config/ingest.yaml` del progetto il prefisso e' impostato a stringa vuota
 - **Esempio**:
   ```yaml
   prefix: "doc_"
@@ -242,7 +226,7 @@ Controlla come vengono generati gli ID documento.
 Controlla l'estrazione testo dai documenti.
 
 #### `encoding_fallback` (array di stringhe)
-- **Default**: `[utf-8, latin-1, cp1252, iso-8859-1]`
+- **Default**: `[utf-8, latin-1, cp1252]`
 - **Descrizione**: Encoding da provare in ordine per file testo
 - **Esempio**:
   ```yaml
@@ -263,35 +247,6 @@ Controlla l'estrazione testo dai documenti.
 ##### `pdf`
 - `extract_text` (booleano, default: `true`): Estrai testo da PDF
 - `max_pages` (intero, default: `0`): Pagine massime (0 = tutte)
-
-##### `docx`
-- `extract_text` (booleano, default: `true`): Estrai testo da DOCX
-
-##### `doc`
-- `extract_text` (booleano, default: `true`): Estrai testo da DOC
-
-##### `html`
-- `extract_text` (booleano, default: `true`): Estrai testo da HTML
-- `keep_html` (booleano, default: `false`): Mantieni markup HTML
-
-##### `txt`
-- `extract_text` (booleano, default: `true`): Leggi file testo
-
-### Sezione `conversion`
-
-Controlla conversione documenti.
-
-#### `doc_to_pdf` (booleano)
-- **Default**: `true`
-- **Descrizione**: Converti DOC a PDF prima dell'estrazione testo
-
-#### `backend` (stringa)
-- **Default**: `auto`
-- **Descrizione**: Backend conversione da usare
-
-#### `timeout` (intero)
-- **Default**: `60`
-- **Descrizione**: Timeout conversione (secondi)
 
 ### Sezione `metadata`
 
@@ -446,11 +401,11 @@ Impostazioni avanzate/performance.
 
 #### `num_workers` (intero)
 - **Default**: `1`
-- **Descrizione**: Worker paralleli (futuro)
+- **Descrizione**: Parametro riservato; la pipeline corrente opera in modalita single-threaded
 
 #### `streaming_mode` (booleano)
 - **Default**: `false`
-- **Descrizione**: Modalità streaming per file grandi (futuro)
+- **Descrizione**: Parametro riservato per estensioni future
 
 ## Esempi Configurazione
 

@@ -26,14 +26,17 @@ pipeline-ingestion/
 ├── config/
 │   └── ingest.yaml                  # Configurazione predefinita
 │
-├── docs/
+├── docs_it/
 │   ├── ingest-config-schema.md      # Riferimento schema YAML
 │   ├── architecture.md              # Decisioni di design
-│   └── examples.md                  # Esempi di utilizzo
+│   ├── INVARIANTI.md                # Vincoli e contratti di correttezza
+│   └── PROJECT_SUMMARY.md           # Sintesi progetto e stato consegna
 │
 ├── test/
+│   ├── contract/
+│   ├── e2e/
+│   ├── integration/
 │   └── unit/
-│       └── test_ingestion.py        # Test unitari
 │
 ├── README.md                         # Panoramica
 ├── .env.example                      # Variabili d'ambiente
@@ -121,6 +124,8 @@ python main.py --config config/ingest.yaml --output output/
 python main.py --config my_config.yaml --output results/
 ```
 
+Nota: `.env.example` e' un template operativo/documentale. Il flusso runtime corrente usa argomenti CLI e file YAML (`--config`) come fonte di configurazione.
+
 ### Pattern Builder (Avanzato)
 ```python
 from core.ingestion import IngestBuilder
@@ -206,7 +211,7 @@ ingest:
 | Componente | Responsabilità | Config |
 |-----------|-----------------|--------|
 | **Scanner** | Trova documenti, estrae ZIP | `input.*`, `zip_extraction.*` |
-| **Loader** | Normalizza contenuto documenti | `loader.*`, `conversion.*` |
+| **Loader** | Normalizza contenuto documenti | `loader.*` |
 | **MetadataLoader** | Scopre metadati accoppiati | `metadata.*` |
 | **IDGenerator** | Assegna ID deterministici | `id_generation.*` |
 | **AnalyzerPipeline** | Post-elaborazione opzionale | `analyzers.*` |
@@ -265,7 +270,7 @@ IDGeneratorFactory.register("mio_strategy", MioGeneratoreID)
 
 ### Registra Backend Personalizzato
 ```python
-from core.ingestion import PersistenceBackend, PersistenceBackendFactory
+from core.ingestion import IngestedDocument, PersistenceBackend, PersistenceBackendFactory
 
 class MioBackend(PersistenceBackend):
     def persist(self, document: IngestedDocument, config):
@@ -282,9 +287,10 @@ PersistenceBackendFactory.register("mio_backend", MioBackend)
 | Documento | Scopo |
 |----------|---------|
 | **README.md** | Panoramica progetto, avvio rapido |
-| **docs/ingest-config-schema.md** | Riferimento schema YAML completo |
-| **docs/architecture.md** | Decisioni design, troubleshooting |
-| **docs/examples.md** | 10+ esempi utilizzo (base ad avanzato) |
+| **docs_it/ingest-config-schema.md** | Riferimento schema YAML completo |
+| **docs_it/architecture.md** | Decisioni design, troubleshooting |
+| **docs_it/INVARIANTI.md** | Invarianti e contratti del sistema |
+| **docs_it/PROJECT_SUMMARY.md** | Sintesi progetto e artefatti |
 
 ---
 
@@ -315,8 +321,8 @@ PersistenceBackendFactory.register("mio_backend", MioBackend)
 - Adatto per elaborazione batch su larga scala
 
 ### 6. Dipendenze Minime
-- Core: stdlib + dataclasses solo
-- Opzionali: plugin portano proprie dipendenze
+- Core runtime: stdlib + PyYAML
+- Opzionali per formato/funzionalita: pypdf, beautifulsoup4, python-docx, pywin32
 
 ---
 

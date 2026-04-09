@@ -148,7 +148,7 @@ pytest test/contract/t_safety_invariants.py -v
 
 # Test di integrità dati
 pytest test/contract/t_determinism.py -v
-pytest test/contract/t_deduplication.py -v
+pytest test/contract/t_scanner_contract.py -v
 
 # Test di contratto output
 pytest test/contract/t_output_contract.py -v
@@ -174,10 +174,10 @@ Questi DEVONO SEMPRE essere veri:
 | # | Invariante | Perché | Test |
 |----|-----------|--------|------|
 | 1 | Raw bytes non modificati | Integrità dati | `test_raw_bytes_never_modified` |
-| 2 | Nessuna esecuzione codice | Sicurezza | `test_no_code_execution_from_imports` |
+| 2 | Nessuna esecuzione codice | Sicurezza | `test_no_code_execution_during_html_loading` |
 | 3 | Fail-fast su documento invalido | Qualità | `test_empty_html_document_fails_explicitly` |
 | 4 | Metadata non inventato | Correttezza | `test_metadata_not_invented` |
-| 5 | ID deterministico | Deduplicazione | `test_sha256_id_deterministic` |
+| 5 | ID deterministico | Deduplicazione | `test_sha256_16_is_deterministic` |
 | 6 | Contratto output structure | Compatibilità downstream | `test_output_directory_structure_exists` |
 | 7 | Manifest accurato | Tracciamento | `test_ingest_produces_valid_manifest` |
 | 8 | Errore per documento | Robustezza | `test_valid_document_ingests_successfully` |
@@ -231,7 +231,7 @@ if not (output_dir / "manifest.json").exists():
 
 # Verifica invariante: almeno 1 documento
 manifest = json.load(...)
-if len(manifest["documents"]) == 0:
+if len(manifest["ingested"]) == 0:
     raise IngestException("INVARIANT VIOLATED: nessun documento ingerito")
 ```
 

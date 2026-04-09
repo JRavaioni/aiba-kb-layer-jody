@@ -28,14 +28,17 @@ pipeline-ingestion/
 ├── config/
 │   └── ingest.yaml                  # Configurazione predefinita
 │
-├── docs/
+├── docs_it/
 │   ├── ingest-config-schema.md      # Riferimento schema YAML
 │   ├── architecture.md              # Decisioni design
-│   └── examples.md                  # Esempi utilizzo
+│   ├── INVARIANTI.md                # Vincoli e contratti di correttezza
+│   └── PROJECT_SUMMARY.md           # Sintesi progetto e stato consegna
 │
 ├── test/
+│   ├── contract/
+│   ├── e2e/
+│   ├── integration/
 │   └── unit/
-│       └── test_ingestion.py        # Test unitari
 │
 ├── README.md                         # Panoramica
 ├── .env.example                      # Variabili ambiente
@@ -150,6 +153,8 @@ service = (
 manifest = service.ingest("input/")
 ```
 
+Nota: `.env.example` e' un template operativo/documentale. Il runtime corrente usa YAML + parametri CLI come fonte di configurazione.
+
 ---
 
 ## 🔧 Esempi Configurazione
@@ -199,7 +204,7 @@ ingest:
 | Componente | Responsabilità | Config |
 |-----------|-----------------|--------|
 | **Scanner** | Trova documenti, estrae ZIP | `input.*`, `zip_extraction.*` |
-| **Loader** | Normalizza contenuto documenti | `loader.*`, `conversion.*` |
+| **Loader** | Normalizza contenuto documenti | `loader.*` |
 | **MetadataLoader** | Scopre metadati accoppiati | `metadata.*` |
 | **IDGenerator** | Assegna ID deterministici | `id_generation.*` |
 | **AnalyzerPipeline** | Post-elaborazione opzionale | `analyzers.*` |
@@ -256,8 +261,9 @@ class MioGeneratoreID(IDGenerator):
         return f"COMPANY_{h}"
 
 IDGeneratorFactory.register("company", MioGeneratoreID)
+```
 
-# Usa in config
+```yaml
 ingest:
   id_generation:
     strategy: company
@@ -265,7 +271,7 @@ ingest:
 
 ### Registra Backend Personalizzato
 ```python
-from core.ingestion import PersistenceBackend, PersistenceBackendFactory
+from core.ingestion import IngestedDocument, PersistenceBackend, PersistenceBackendFactory
 
 class MioBackend(PersistenceBackend):
     def persist(self, document: IngestedDocument, config):
@@ -273,8 +279,9 @@ class MioBackend(PersistenceBackend):
         pass
 
 PersistenceBackendFactory.register("mio_backend", MioBackend)
+```
 
-# Usa in config
+```yaml
 ingest:
   output:
     backend: mio_backend
@@ -287,9 +294,10 @@ ingest:
 | Documento | Scopo |
 |----------|---------|
 | **README.md** | Panoramica progetto, avvio rapido |
-| **docs/ingest-config-schema.md** | Riferimento schema YAML completo |
-| **docs/architecture.md** | Design & decisioni |
-| **docs/examples.md** | 10+ esempi utilizzo (base ad avanzato) |
+| **docs_it/ingest-config-schema.md** | Riferimento schema YAML completo |
+| **docs_it/architecture.md** | Design & decisioni |
+| **docs_it/INVARIANTI.md** | Invarianti e contratti del sistema |
+| **docs_it/PROJECT_SUMMARY.md** | Sintesi progetto e artefatti |
 
 ---
 
@@ -320,8 +328,8 @@ ingest:
 - Adatto per elaborazione batch su larga scala
 
 ### 6. Dipendenze Minime
-- Core: stdlib + dataclasses solo
-- Opzionali: plugin portano proprie dipendenze
+- Core runtime: stdlib + PyYAML
+- Opzionali per formato/funzionalita: pypdf, beautifulsoup4, python-docx, pywin32
 
 ---
 
@@ -337,7 +345,7 @@ Dopo ingestione, documenti sono pronti per:
 
 ## 📦 Consegne
 
-### Codice (7 moduli)
+### Codice (10 moduli)
 - ✅ `types.py` - Strutture dati core
 - ✅ `config.py` - Schema configurazione & caricamento
 - ✅ `scanner.py` - Gestione filesystem + ZIP
@@ -354,12 +362,13 @@ Dopo ingestione, documenti sono pronti per:
 
 ### Documentazione
 - ✅ `README.md` - Panoramica & avvio rapido
-- ✅ `docs/ingest-config-schema.md` - Schema YAML (400+ linee)
-- ✅ `docs/architecture.md` - Design & decisioni
-- ✅ `docs/examples.md` - 10+ esempi utilizzo
+- ✅ `docs_it/ingest-config-schema.md` - Schema YAML completo
+- ✅ `docs_it/architecture.md` - Design & decisioni
+- ✅ `docs_it/INVARIANTI.md` - Invarianti e contratti
+- ✅ `docs_it/PROJECT_SUMMARY.md` - Riassunto progetto
 
 ### Testing
-- ✅ `test/unit/test_ingestion.py` - Test unitari
+- ✅ `test/` - Suite contract, e2e, integration e unit
 
 ### Infrastruttura
 - ✅ `.env.example` - Template variabili ambiente
