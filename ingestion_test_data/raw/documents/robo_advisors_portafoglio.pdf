@@ -1,0 +1,541 @@
+%PDF-1.4
+1 0 obj
+<<
+/Type /Catalog
+/Pages 2 0 R
+>>
+endobj
+
+2 0 obj
+<<
+/Type /Pages
+/Kids [3 0 R]
+/Count 1
+>>
+endobj
+
+3 0 obj
+<<
+/Type /Page
+/Parent 2 0 R
+/MediaBox [0 0 612 792]
+/Contents 4 0 R
+/Resources <<
+/Font <<
+/F1 5 0 R
+/F2 6 0 R
+/F3 7 0 R
+>>
+>>
+>>
+endobj
+
+4 0 obj
+<<
+/Length 8500
+>>
+stream
+BT
+/F1 24 Tf
+72 720 Td
+(Robo-Advisors e Gestione Automatica del Portafoglio) Tj
+ET
+
+BT
+/F2 12 Tf
+72 680 Td
+(Dr. Elena Bianchi - Università Bocconi) Tj
+72 660 Td
+(Milano, Italia - 2024) Tj
+ET
+
+BT
+/F1 18 Tf
+72 600 Td
+(1. Introduzione ai Robo-Advisors) Tj
+ET
+
+BT
+/F2 11 Tf
+72 570 Td
+(I robo-advisor rappresentano l'evoluzione della consulenza finanziaria tradizionale attraverso) Tj
+72 550 Td
+(l'integrazione di algoritmi avanzati, machine learning e interfacce utente intuitive.) Tj
+72 530 Td
+(Questi sistemi automatizzati offrono servizi di gestione del portafoglio a costi contenuti,) Tj
+72 510 Td
+(accedibili anche a investitori retail con capitali limitati.) Tj
+ET
+
+BT
+/F1 16 Tf
+72 460 Td
+(1.1 Evoluzione della Consulenza Finanziaria) Tj
+ET
+
+BT
+/F2 11 Tf
+72 430 Td
+(La consulenza finanziaria tradizionale si basava su relazioni personali tra consulenti e clienti,) Tj
+72 410 Td
+(con costi elevati e soggettività nelle decisioni. L'avvento dei robo-advisor ha democratizzato) Tj
+72 390 Td
+(l'accesso alla gestione professionale del portafoglio.) Tj
+ET
+
+BT
+/F1 16 Tf
+72 340 Td
+(1.2 Vantaggi dei Robo-Advisors) Tj
+ET
+
+BT
+/F2 11 Tf
+72 310 Td
+(• Costi contenuti: Commissioni dello 0.25% annuo vs 1-2% dei consulenti tradizionali) Tj
+72 290 Td
+(• Accessibilità 24/7: Piattaforme online senza vincoli orari) Tj
+72 270 Td
+(• Obiettività algoritmica: Eliminazione bias emotivi e soggettivi) Tj
+72 250 Td
+(• Personalizzazione: Portafogli tailor-made basati su profilo rischio/rendimento) Tj
+72 230 Td
+(• Trasparenza: Algoritmi chiari e reporting dettagliato) Tj
+ET
+
+BT
+/F1 18 Tf
+72 180 Td
+(2. Architettura Tecnologica) Tj
+ET
+
+BT
+/F2 11 Tf
+72 150 Td
+(I robo-advisor moderni integrano molteplici componenti tecnologiche per offrire) Tj
+72 130 Td
+(un servizio completo di gestione automatica del portafoglio.) Tj
+ET
+
+BT
+/F1 16 Tf
+72 100 Td
+(2.1 Componenti Core) Tj
+ET
+
+BT
+/F2 11 Tf
+72 70 Td
+(• Questionario di profiling rischio: Assessment capacità perdita e orizzonte temporale) Tj
+72 50 Td
+(• Algoritmi di asset allocation: Ottimizzazione portafoglio basata su teoria moderna) Tj
+72 30 Td
+(• Rebalancing automatico: Mantenimento allocazione target nel tempo) Tj
+72 10 Td
+(• Tax-loss harvesting: Ottimizzazione fiscale attraverso perdite compensate) Tj
+-10 -20 Td
+(• Reporting e analytics: Dashboard interattive e report periodici) Tj
+ET
+
+BT
+/F1 18 Tf
+400 720 Td
+(3. Strategie di Investimento) Tj
+ET
+
+BT
+/F2 11 Tf
+400 690 Td
+(I robo-advisor implementano diverse strategie di investimento,) Tj
+400 670 Td
+(adattate al profilo di rischio dell'investitore.) Tj
+ET
+
+BT
+/F1 16 Tf
+400 620 Td
+(3.1 Strategic Asset Allocation) Tj
+ET
+
+BT
+/F2 11 Tf
+400 590 Td
+(L'allocazione strategica definisce la composizione di lungo periodo) Tj
+400 570 Td
+(del portafoglio basata su expected returns e correlazioni storiche.) Tj
+ET
+
+BT
+/F3 10 Tf
+400 540 Td
+(Formula: E[R_portfolio] = Σ w_i * E[R_i]) Tj
+400 520 Td
+(Vincolo: Σ w_i = 1, w_i ≥ 0) Tj
+ET
+
+BT
+/F1 16 Tf
+400 470 Td
+(3.2 Tactical Asset Allocation) Tj
+ET
+
+BT
+/F2 11 Tf
+400 440 Td
+(L'allocazione tattica permette deviazioni temporanee dall'allocazione) Tj
+400 420 Td
+(strategica basate su valutazioni di mercato (valuation metrics).) Tj
+ET
+
+BT
+/F1 16 Tf
+400 370 Td
+(3.3 Risk Parity Approach) Tj
+ET
+
+BT
+/F2 11 Tf
+400 340 Td
+(La risk parity alloca capitale in modo che ogni asset contribuisca) Tj
+400 320 Td
+(ugualmente al rischio totale del portafoglio.) Tj
+ET
+
+BT
+/F3 10 Tf
+400 290 Td
+(Risk Contribution_i = w_i² * σ_i² + Σ w_i w_j σ_i σ_j ρ_ij) Tj
+ET
+
+BT
+/F1 18 Tf
+72 720 Td
+(4. Machine Learning nelle Decisioni) Tj
+ET
+
+BT
+/F2 11 Tf
+72 690 Td
+(I robo-advisor avanzati utilizzano tecniche di machine learning) Tj
+72 670 Td
+(per migliorare le decisioni di investimento.) Tj
+ET
+
+BT
+/F1 16 Tf
+72 620 Td
+(4.1 Predictive Modeling) Tj
+ET
+
+BT
+/F2 11 Tf
+72 590 Td
+(Modelli predittivi utilizzano dati storici per prevedere rendimenti) Tj
+72 570 Td
+(futuri e aggiustare l'allocazione di conseguenza.) Tj
+ET
+
+BT
+/F3 10 Tf
+72 540 Td
+(Features utilizzati:) Tj
+72 520 Td
+(• Rendimenti passati (1m, 3m, 6m, 12m)) Tj
+72 500 Td
+(• Volatilità storica) Tj
+72 480 Td
+(• Valuation metrics (P/E, P/B, dividend yield)) Tj
+72 460 Td
+(• Dati macroeconomici (tassi, inflazione)) Tj
+72 440 Td
+(• Sentiment analysis (news, social media)) Tj
+ET
+
+BT
+/F1 16 Tf
+72 390 Td
+(4.2 Reinforcement Learning) Tj
+ET
+
+BT
+/F2 11 Tf
+72 360 Td
+(Algoritmi di reinforcement learning apprendono strategie ottimali) Tj
+72 340 Td
+(attraverso trial-and-error in ambienti simulati.) Tj
+ET
+
+BT
+/F3 10 Tf
+72 310 Td
+(Q-Learning Update:) Tj
+72 290 Td
+(Q(s,a) ← Q(s,a) + α[r + γ max_a' Q(s',a') - Q(s,a)]) Tj
+ET
+
+BT
+/F1 18 Tf
+400 720 Td
+(5. Considerazioni di Rischio) Tj
+ET
+
+BT
+/F2 11 Tf
+400 690 Td
+(Nonostante i numerosi vantaggi, i robo-advisor presentano) Tj
+400 670 Td
+(rischi specifici che richiedono attenzione.) Tj
+ET
+
+BT
+/F1 16 Tf
+400 620 Td
+(5.1 Model Risk) Tj
+ET
+
+BT
+/F2 11 Tf
+400 590 Td
+(I modelli quantitativi possono fallire in condizioni di mercato) Tj
+400 570 Td
+(non osservate nei dati storici (black swan events).) Tj
+ET
+
+BT
+/F1 16 Tf
+400 520 Td
+(5.2 Liquidity Risk) Tj
+ET
+
+BT
+/F2 11 Tf
+400 490 Td
+(In periodi di stress di mercato, la liquidità può evaporare,) Tj
+400 470 Td
+(rendendo difficile l'esecuzione di rebalancing.) Tj
+ET
+
+BT
+/F1 16 Tf
+400 420 Td
+(5.3 Cybersecurity Risk) Tj
+ET
+
+BT
+/F2 11 Tf
+400 390 Td
+(Le piattaforme online sono target di attacchi informatici) Tj
+400 370 Td
+(che possono compromettere dati sensibili.) Tj
+ET
+
+BT
+/F1 18 Tf
+72 720 Td
+(6. Case Studies) Tj
+ET
+
+BT
+/F2 11 Tf
+72 690 Td
+(Analizziamo alcuni dei principali robo-advisor sul mercato.) Tj
+ET
+
+BT
+/F1 16 Tf
+72 640 Td
+(6.1 Betterment) Tj
+ET
+
+BT
+/F2 11 Tf
+72 610 Td
+(• Fondato: 2008) Tj
+72 590 Td
+(• AUM: $30+ miliardi) Tj
+72 570 Td
+(• Fee: 0.25% annuo) Tj
+72 550 Td
+(• Caratteristiche: Tax-loss harvesting automatico) Tj
+ET
+
+BT
+/F1 16 Tf
+72 500 Td
+(6.2 Wealthfront) Tj
+ET
+
+BT
+/F2 11 Tf
+72 470 Td
+(• Fondato: 2008) Tj
+72 450 Td
+(• AUM: $25+ miliardi) Tj
+72 430 Td
+(• Fee: 0.25% annuo) Tj
+72 410 Td
+(• Caratteristiche: Path-dependent tax-loss harvesting) Tj
+ET
+
+BT
+/F1 16 Tf
+72 360 Td
+(6.3 Vanguard Digital Advisor) Tj
+ET
+
+BT
+/F2 11 Tf
+72 330 Td
+(• Fee: 0.15% annuo (con Vanguard ETFs)) Tj
+72 310 Td
+(• Caratteristiche: Integrazione con fondi low-cost) Tj
+72 290 Td
+(• Performance: Tracking error minimo vs benchmark) Tj
+ET
+
+BT
+/F1 18 Tf
+400 720 Td
+(7. Futuro dei Robo-Advisors) Tj
+ET
+
+BT
+/F2 11 Tf
+400 690 Td
+(I robo-advisor continueranno ad evolversi integrando) Tj
+400 670 Td
+(tecnologie emergenti e ampliando le funzionalità.) Tj
+ET
+
+BT
+/F1 16 Tf
+400 620 Td
+(7.1 Integrazione AI) Tj
+ET
+
+BT
+/F2 11 Tf
+400 590 Td
+(L'intelligenza artificiale permetterà personalizzazione ancora) Tj
+400 570 Td
+(maggiore e previsione di eventi di mercato.) Tj
+ET
+
+BT
+/F1 16 Tf
+400 520 Td
+(7.2 ESG Integration) Tj
+ET
+
+BT
+/F2 11 Tf
+400 490 Td
+(L'integrazione di fattori ESG (Environmental, Social, Governance)) Tj
+400 470 Td
+(diventerà standard nelle allocazioni.) Tj
+ET
+
+BT
+/F1 16 Tf
+400 420 Td
+(7.3 Cryptocurrency Integration) Tj
+ET
+
+BT
+/F2 11 Tf
+400 390 Td
+(L'inclusione di criptovalute e asset digitali nei portafogli) Tj
+400 370 Td
+(tradizionali diventerà comune.) Tj
+ET
+
+BT
+/F1 18 Tf
+72 720 Td
+(8. Conclusioni) Tj
+ET
+
+BT
+/F2 11 Tf
+72 690 Td
+(I robo-advisor hanno rivoluzionato l'industria della gestione del portafoglio,) Tj
+72 670 Td
+(rendendo accessibile la consulenza professionale a un pubblico più ampio.) Tj
+72 650 Td
+(Mentre la tecnologia continua ad avanzare, ci aspettiamo ulteriori innovazioni) Tj
+72 630 Td
+(che renderanno questi sistemi ancora più sofisticati ed efficaci.) Tj
+ET
+
+BT
+/F1 16 Tf
+72 580 Td
+(Bibliografia) Tj
+ET
+
+BT
+/F2 10 Tf
+72 550 Td
+(1. Blanchett, D. (2020). Robo-advisors: A closer look. Journal of Financial Planning.) Tj
+72 530 Td
+(2. D'Acunto, F. et al. (2019). Diversification and Robo-advisors. Management Science.) Tj
+72 510 Td
+(3. Foerster, S. et al. (2017). Robo-advisors: Market dynamics and performance. SSRN.) Tj
+72 490 Td
+(4. Kramer, M. (2018). Financial advice for the 21st century. CFA Institute.) Tj
+ET
+
+BT
+/F2 8 Tf
+72 450 Td
+(Disclaimer: Questo documento è fornito esclusivamente a scopo informativo.) Tj
+72 430 Td
+(Le informazioni contenute non costituiscono consiglio di investimento.) Tj
+72 410 Td
+(Consultare un professionista qualificato prima di prendere decisioni finanziarie.) Tj
+ET
+endstream
+endobj
+
+5 0 obj
+<<
+/Type /Font
+/Subtype /Type1
+/BaseFont /Helvetica-Bold
+>>
+endobj
+
+6 0 obj
+<<
+/Type /Font
+/Subtype /Type1
+/BaseFont /Helvetica
+>>
+endobj
+
+7 0 obj
+<<
+/Type /Font
+/Subtype /Type1
+/BaseFont /Courier
+>>
+endobj
+
+xref
+0 8
+0000000000 65535 f
+0000000009 00000 n
+0000000058 00000 n
+0000000115 00000 n
+0000000272 00000 n
+0000008612 00000 n
+0000008669 00000 n
+0000008726 00000 n
+trailer
+<<
+/Size 8
+/Root 1 0 R
+>>
+startxref
+8783
+%%EOF

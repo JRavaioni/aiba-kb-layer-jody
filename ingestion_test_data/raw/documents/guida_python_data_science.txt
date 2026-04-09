@@ -1,0 +1,4371 @@
+GUIDA COMPLETA ALLA PROGRAMMAZIONE PYTHON PER DATA SCIENCE E MACHINE LEARNING
+
+INDICE DETTAGLIATO
+
+CAPITOLO 1: INTRODUZIONE A PYTHON
+1.1 Cos'è Python e perché è ideale per il Data Science
+1.2 Installazione e configurazione dell'ambiente di sviluppo
+1.3 Primi passi: variabili, tipi di dati e operazioni basilari
+1.4 Strutture di controllo: condizioni e cicli
+1.5 Funzioni e modularità del codice
+
+CAPITOLO 2: GESTIONE DEI DATI CON PANDAS
+2.1 Introduzione alle Series e DataFrame
+2.2 Importazione ed esportazione di dati
+2.3 Pulizia e preprocessing dei dati
+2.4 Operazioni di aggregazione e groupby
+2.5 Merge, join e concatenazione di dataset
+2.6 Gestione dei dati mancanti e outliers
+2.7 Ottimizzazione delle performance con pandas
+
+CAPITOLO 3: VISUALIZZAZIONE DEI DATI CON MATPLOTLIB E SEABORN
+3.1 Principi fondamentali della visualizzazione
+3.2 Grafici di base con matplotlib
+3.3 Grafici statistici avanzati
+3.4 Personalizzazione e temi
+3.5 Visualizzazioni interattive
+3.6 Best practices per la presentazione dei dati
+
+CAPITOLO 4: ANALISI STATISTICA CON SCIPY E STATSMODELS
+4.1 Concetti fondamentali di statistica descrittiva
+4.2 Test di ipotesi e inferenza statistica
+4.3 Analisi di regressione lineare e multipla
+4.4 Modelli di classificazione statistica
+4.5 Analisi di serie temporali
+4.6 Validazione e interpretazione dei risultati
+
+CAPITOLO 5: MACHINE LEARNING CON SCIKIT-LEARN
+5.1 Introduzione al Machine Learning supervisionato
+5.2 Preprocessing dei dati per ML
+5.3 Algoritmi di regressione
+5.4 Algoritmi di classificazione
+5.5 Clustering e apprendimento non supervisionato
+5.6 Valutazione delle performance dei modelli
+5.7 Ottimizzazione degli iperparametri
+
+CAPITOLO 6: DEEP LEARNING CON TENSORFLOW E KERAS
+6.1 Concetti fondamentali delle reti neurali
+6.2 Implementazione di reti neurali con Keras
+6.3 Convolutional Neural Networks per computer vision
+6.4 Recurrent Neural Networks per sequenze
+6.5 Transfer learning e fine-tuning
+6.6 Deployment di modelli deep learning
+
+CAPITOLO 7: BIG DATA E DISTRIBUTED COMPUTING
+7.1 Introduzione a PySpark
+7.2 Elaborazione distribuita di grandi dataset
+7.3 Machine Learning su larga scala
+7.4 Integrazione con cloud platforms
+7.5 Ottimizzazione delle performance
+
+CAPITOLO 8: PROGETTI PRATICI E CASE STUDIES
+8.1 Analisi di dati finanziari
+8.2 Sistemi di raccomandazione
+8.3 Analisi di immagini mediche
+8.4 Previsioni di serie temporali
+8.5 Natural Language Processing
+
+APPENDICE A: AMBIENTI DI SVILUPPO
+A.1 Jupyter Notebook e JupyterLab
+A.2 IDE specializzati per Data Science
+A.3 Gestione degli ambienti virtuali
+A.4 Containerizzazione con Docker
+
+APPENDICE B: RISORSE E COMUNITÀ
+B.1 Documentazione ufficiale
+B.2 Corsi online e piattaforme di apprendimento
+B.3 Community e forum di discussione
+B.4 Conferenze e eventi
+
+================================================================================
+CAPITOLO 1: INTRODUZIONE A PYTHON
+================================================================================
+
+1.1 Cos'è Python e perché è ideale per il Data Science
+
+Python è un linguaggio di programmazione ad alto livello, interpretato, orientato agli oggetti e con una sintassi chiara e leggibile. Creato da Guido van Rossum nel 1991, Python ha guadagnato popolarità grazie alla sua semplicità e versatilità.
+
+Perché Python è particolarmente adatto al Data Science? Ecco i motivi principali:
+
+1. **Sintassi Intuitiva**: Il codice Python è molto simile al linguaggio naturale, rendendo più facile la lettura e la scrittura.
+
+2. **Ecosistema Ricco**: Una vasta collezione di librerie specializzate per ogni aspetto del Data Science.
+
+3. **Comunità Attiva**: Una comunità globale di sviluppatori che contribuiscono continuamente al miglioramento degli strumenti.
+
+4. **Integrazione**: Facile integrazione con altri linguaggi e sistemi.
+
+5. **Produttività**: Riduce significativamente il tempo necessario per sviluppare applicazioni complesse.
+
+Le principali librerie Python per Data Science includono:
+
+- **NumPy**: Per il calcolo numerico e le operazioni con array multidimensionali
+- **Pandas**: Per la manipolazione e analisi dei dati strutturati
+- **Matplotlib**: Per la creazione di grafici e visualizzazioni
+- **Seaborn**: Per visualizzazioni statistiche avanzate
+- **Scikit-learn**: Per il Machine Learning classico
+- **TensorFlow/PyTorch**: Per il Deep Learning
+- **Jupyter**: Per l'analisi interattiva e la documentazione
+
+1.2 Installazione e configurazione dell'ambiente di sviluppo
+
+Prima di iniziare a programmare in Python per Data Science, è necessario configurare un ambiente di sviluppo appropriato. Esistono diverse opzioni, ciascuna con i suoi vantaggi.
+
+**Opzione 1: Anaconda Distribution**
+
+Anaconda è la distribuzione più popolare per Data Science. Include Python, oltre 250 pacchetti scientifici e il gestore di ambienti conda.
+
+Per installare Anaconda:
+
+1. Scaricare il programma di installazione dal sito ufficiale
+2. Eseguire l'installer seguendo le istruzioni
+3. Verificare l'installazione aprendo Anaconda Navigator
+
+**Opzione 2: Miniconda**
+
+Per un'installazione più leggera, Miniconda fornisce solo conda e Python, permettendo di installare i pacchetti necessari su richiesta.
+
+**Opzione 3: Python nativo + pip**
+
+Per gli utenti esperti, è possibile installare Python direttamente e gestire i pacchetti con pip.
+
+Configurazione dell'ambiente:
+
+```python
+# Creazione di un nuovo ambiente conda
+conda create -n data_science python=3.9
+
+# Attivazione dell'ambiente
+conda activate data_science
+
+# Installazione dei pacchetti principali
+conda install numpy pandas matplotlib seaborn scikit-learn jupyter
+```
+
+1.3 Primi passi: variabili, tipi di dati e operazioni basilari
+
+In Python, le variabili sono contenitori per memorizzare valori. A differenza di altri linguaggi, Python è dinamicamente tipizzato, il che significa che il tipo di una variabile può cambiare durante l'esecuzione.
+
+**Tipi di dati fondamentali:**
+
+- **int**: Numeri interi (es. 42, -10, 0)
+- **float**: Numeri decimali (es. 3.14, -2.5, 1.0)
+- **str**: Stringhe di testo (es. "Hello World", 'Python')
+- **bool**: Valori booleani (True, False)
+- **list**: Liste ordinate e modificabili
+- **tuple**: Tuple ordinate e immutabili
+- **dict**: Dizionari con coppie chiave-valore
+- **set**: Insiemi non ordinati di elementi unici
+
+**Esempi di operazioni basilari:**
+
+```python
+# Operazioni aritmetiche
+a = 10
+b = 3
+somma = a + b          # 13
+differenza = a - b     # 7
+prodotto = a * b       # 30
+quoziente = a / b      # 3.333...
+divisione_intera = a // b  # 3
+modulo = a % b         # 1
+potenza = a ** b       # 1000
+
+# Operazioni con stringhe
+nome = "Mario"
+cognome = "Rossi"
+nome_completo = nome + " " + cognome  # "Mario Rossi"
+ripetizione = nome * 3                # "MarioMarioMario"
+
+# Liste e dizionari
+numeri = [1, 2, 3, 4, 5]
+quadrati = [x**2 for x in numeri]  # [1, 4, 9, 16, 25]
+
+studente = {
+    "nome": "Anna",
+    "età": 25,
+    "corso": "Data Science"
+}
+```
+
+1.4 Strutture di controllo: condizioni e cicli
+
+Le strutture di controllo permettono di eseguire codice in base a condizioni o di ripetere operazioni.
+
+**Strutture condizionali:**
+
+```python
+età = 25
+if età < 18:
+    print("Minorenne")
+elif età < 65:
+    print("Adulto")
+else:
+    print("Senior")
+
+# Operatore ternario
+maggiorenne = "Sì" if età >= 18 else "No"
+```
+
+**Cicli:**
+
+```python
+# Ciclo for
+for i in range(5):
+    print(f"Iterazione {i}")
+
+# Ciclo for su lista
+frutti = ["mela", "banana", "arancia"]
+for frutto in frutti:
+    print(f"Mi piace la {frutto}")
+
+# Ciclo while
+contatore = 0
+while contatore < 10:
+    print(contatore)
+    contatore += 1
+
+# List comprehension
+quadrati = [x**2 for x in range(10) if x % 2 == 0]
+```
+
+**Controllo del flusso:**
+
+```python
+# break: interrompe il ciclo
+for numero in range(100):
+    if numero == 5:
+        break
+    print(numero)
+
+# continue: salta all'iterazione successiva
+for numero in range(10):
+    if numero % 2 == 0:
+        continue
+    print(f"Dispari: {numero}")
+
+# else nei cicli
+for numero in range(10):
+    if numero == 15:
+        break
+    print(numero)
+else:
+    print("Ciclo completato senza break")
+```
+
+1.5 Funzioni e modularità del codice
+
+Le funzioni sono blocchi di codice riutilizzabili che eseguono operazioni specifiche. Migliorano la leggibilità, riducono la duplicazione e facilitano il debugging.
+
+**Definizione di funzioni:**
+
+```python
+def saluta(nome):
+    """Funzione che saluta una persona."""
+    return f"Ciao, {nome}!"
+
+def calcola_media(*numeri):
+    """Calcola la media di una serie di numeri."""
+    if not numeri:
+        return 0
+    return sum(numeri) / len(numeri)
+
+def analizza_dati(dati, soglia=0.5):
+    """Analizza una lista di dati con una soglia configurabile."""
+    valori_alti = [x for x in dati if x > soglia]
+    return {
+        "totale": len(dati),
+        "valori_alti": len(valori_alti),
+        "percentuale": len(valori_alti) / len(dati) * 100
+    }
+```
+
+**Funzioni lambda:**
+
+```python
+# Funzione lambda semplice
+quadrato = lambda x: x**2
+
+# Uso in combinazione con altre funzioni
+numeri = [1, 2, 3, 4, 5]
+quadrati = list(map(lambda x: x**2, numeri))
+pari = list(filter(lambda x: x % 2 == 0, numeri))
+```
+
+**Decoratori:**
+
+```python
+def timer(func):
+    """Decoratore che misura il tempo di esecuzione."""
+    def wrapper(*args, **kwargs):
+        import time
+        start = time.time()
+        result = func(*args, **kwargs)
+        end = time.time()
+        print(f"{func.__name__} eseguita in {end - start:.4f} secondi")
+        return result
+    return wrapper
+
+@timer
+def analisi_complessa(dati):
+    # Simula un'analisi complessa
+    import time
+    time.sleep(1)
+    return sum(dati)
+```
+
+================================================================================
+CAPITOLO 2: GESTIONE DEI DATI CON PANDAS
+================================================================================
+
+2.1 Introduzione alle Series e DataFrame
+
+Pandas è la libreria fondamentale per la manipolazione dei dati in Python. Fornisce strutture dati potenti e flessibili per lavorare con dati tabulari.
+
+**Series**: Array unidimensionale etichettato capace di contenere qualsiasi tipo di dati.
+
+```python
+import pandas as pd
+import numpy as np
+
+# Creazione di una Series
+prezzi = pd.Series([100, 200, 150, 300], 
+                   index=['Azione1', 'Azione2', 'Azione3', 'Azione4'])
+print(prezzi)
+
+# Operazioni su Series
+print(prezzi.mean())      # Media
+print(prezzi.std())       # Deviazione standard
+print(prezzi.max())       # Valore massimo
+print(prezzi.idxmax())    # Indice del valore massimo
+```
+
+**DataFrame**: Struttura dati bidimensionale simile a una tabella di database.
+
+```python
+# Creazione di un DataFrame
+dati = {
+    'Nome': ['Alice', 'Bob', 'Charlie', 'Diana'],
+    'Età': [25, 30, 35, 28],
+    'Città': ['Roma', 'Milano', 'Torino', 'Firenze'],
+    'Salario': [50000, 60000, 55000, 52000]
+}
+
+df = pd.DataFrame(dati)
+print(df)
+
+# Informazioni sul DataFrame
+print(df.info())
+print(df.describe())
+print(df.shape)  # Dimensioni
+print(df.columns)  # Nomi delle colonne
+print(df.index)   # Indice
+```
+
+2.2 Importazione ed esportazione di dati
+
+Pandas supporta numerosi formati di file per importare ed esportare dati.
+
+**Lettura di file CSV:**
+
+```python
+# Lettura semplice
+df = pd.read_csv('dati.csv')
+
+# Con parametri avanzati
+df = pd.read_csv('dati.csv',
+                 sep=';',           # Separatore
+                 header=0,          # Riga dell'intestazione
+                 index_col=0,       # Colonna da usare come indice
+                 parse_dates=['Data'],  # Colonne da convertire in date
+                 na_values=['NA', 'N/A', ''])  # Valori da trattare come NaN
+
+# Lettura di file Excel
+df = pd.read_excel('dati.xlsx', sheet_name='Foglio1')
+
+# Lettura da database SQL
+import sqlite3
+conn = sqlite3.connect('database.db')
+df = pd.read_sql_query('SELECT * FROM tabella', conn)
+
+# Lettura da URL
+url = 'https://example.com/dati.csv'
+df = pd.read_csv(url)
+```
+
+**Esportazione di dati:**
+
+```python
+# Esportazione in CSV
+df.to_csv('output.csv', index=False)
+
+# Esportazione in Excel
+df.to_excel('output.xlsx', sheet_name='Risultati', index=False)
+
+# Esportazione in JSON
+df.to_json('output.json', orient='records')
+
+# Esportazione in SQL
+df.to_sql('tabella', conn, if_exists='replace', index=False)
+```
+
+2.3 Pulizia e preprocessing dei dati
+
+La pulizia dei dati è una fase cruciale dell'analisi dei dati. Pandas fornisce numerosi strumenti per gestire dati mancanti, duplicati e inconsistenti.
+
+**Gestione dei valori mancanti:**
+
+```python
+# Identificazione dei valori mancanti
+print(df.isnull().sum())  # Conteggio per colonna
+print(df.isnull().any())  # True/False per colonna
+
+# Rimozione dei valori mancanti
+df_pulito = df.dropna()                    # Rimuove righe con NaN
+df_pulito = df.dropna(axis=1)             # Rimuove colonne con NaN
+df_pulito = df.dropna(thresh=3)           # Mantiene righe con almeno 3 valori non-NaN
+
+# Imputazione dei valori mancanti
+df['colonna'].fillna(df['colonna'].mean(), inplace=True)    # Media
+df['colonna'].fillna(df['colonna'].median(), inplace=True)  # Mediana
+df['colonna'].fillna(df['colonna'].mode()[0], inplace=True) # Moda
+df['colonna'].fillna(method='ffill', inplace=True)          # Forward fill
+df['colonna'].fillna(method='bfill', inplace=True)          # Backward fill
+```
+
+**Gestione dei duplicati:**
+
+```python
+# Identificazione dei duplicati
+duplicati = df.duplicated()
+print(f"Numero di righe duplicate: {duplicati.sum()}")
+
+# Rimozione dei duplicati
+df_senza_duplicati = df.drop_duplicates()
+df_senza_duplicati = df.drop_duplicates(subset=['colonna1', 'colonna2'])  # Basato su colonne specifiche
+```
+
+**Pulizia dei dati testuali:**
+
+```python
+# Conversione a minuscolo
+df['testo'] = df['testo'].str.lower()
+
+# Rimozione degli spazi extra
+df['testo'] = df['testo'].str.strip()
+
+# Sostituzione di stringhe
+df['testo'] = df['testo'].str.replace('vecchio', 'nuovo')
+
+# Estrazione di pattern con regex
+df['codice_postale'] = df['indirizzo'].str.extract(r'(\d{5})')
+```
+
+**Conversione dei tipi di dati:**
+
+```python
+# Conversione di tipi
+df['età'] = df['età'].astype(int)
+df['prezzo'] = df['prezzo'].astype(float)
+df['data'] = pd.to_datetime(df['data'])
+
+# Creazione di categorie
+df['categoria'] = df['categoria'].astype('category')
+
+# Conversione di stringhe numeriche
+df['numero'] = pd.to_numeric(df['numero'], errors='coerce')  # Converte in NaN i valori non numerici
+```
+
+2.4 Operazioni di aggregazione e groupby
+
+Le operazioni di groupby permettono di raggruppare i dati e applicare funzioni di aggregazione.
+
+**Groupby basilare:**
+
+```python
+# Raggruppamento semplice
+media_per_categoria = df.groupby('categoria')['valore'].mean()
+
+# Multiple aggregazioni
+statistiche = df.groupby('categoria')['valore'].agg(['mean', 'std', 'count', 'min', 'max'])
+
+# Raggruppamento per multiple colonne
+risultato = df.groupby(['categoria', 'sottocategoria'])['valore'].sum()
+```
+
+**Groupby avanzato:**
+
+```python
+# Applicazione di funzioni personalizzate
+def range_valori(x):
+    return x.max() - x.min()
+
+risultato = df.groupby('categoria')['valore'].agg(range_valori)
+
+# Multiple funzioni su multiple colonne
+risultato = df.groupby('categoria').agg({
+    'prezzo': ['mean', 'std'],
+    'quantità': 'sum',
+    'data': 'count'
+})
+
+# Trasformazione dei dati
+df['media_categoria'] = df.groupby('categoria')['valore'].transform('mean')
+
+# Filtraggio dei gruppi
+gruppi_grandi = df.groupby('categoria').filter(lambda x: len(x) > 10)
+```
+
+**Pivot tables:**
+
+```python
+# Pivot table basilare
+pivot = df.pivot_table(values='valore', 
+                      index='categoria', 
+                      columns='periodo', 
+                      aggfunc='mean')
+
+# Pivot table con multiple aggregazioni
+pivot = df.pivot_table(values=['prezzo', 'quantità'], 
+                      index=['categoria', 'sottocategoria'], 
+                      columns='mese', 
+                      aggfunc={'prezzo': 'mean', 'quantità': 'sum'})
+```
+
+2.5 Merge, join e concatenazione di dataset
+
+Pandas fornisce potenti strumenti per combinare dataset diversi.
+
+**Concatenazione:**
+
+```python
+# Concatenazione verticale (stack)
+df_concat = pd.concat([df1, df2], ignore_index=True)
+
+# Concatenazione orizzontale
+df_concat = pd.concat([df1, df2], axis=1)
+
+# Concatenazione con chiavi
+df_concat = pd.concat([df1, df2], keys=['primo', 'secondo'])
+```
+
+**Merge (join):**
+
+```python
+# Inner join (default)
+risultato = pd.merge(df1, df2, on='chiave_comune')
+
+# Left join
+risultato = pd.merge(df1, df2, on='chiave', how='left')
+
+# Right join
+risultato = pd.merge(df1, df2, on='chiave', how='right')
+
+# Outer join
+risultato = pd.merge(df1, df2, on='chiave', how='outer')
+
+# Join su colonne diverse
+risultato = pd.merge(df1, df2, left_on='id1', right_on='id2')
+
+# Join su multiple colonne
+risultato = pd.merge(df1, df2, on=['col1', 'col2'])
+```
+
+**Metodi alternativi:**
+
+```python
+# Join basato sull'indice
+risultato = df1.join(df2, how='left')
+
+# Append (deprecato, usare concat)
+df_nuovo = df1.append(df2, ignore_index=True)
+```
+
+2.6 Gestione dei dati mancanti e outliers
+
+La gestione corretta dei dati mancanti e degli outliers è essenziale per l'accuratezza dell'analisi.
+
+**Tecniche avanzate per valori mancanti:**
+
+```python
+# Interpolazione
+df['valore'].interpolate(method='linear', inplace=True)
+
+# Imputazione basata su modelli
+from sklearn.impute import KNNImputer
+imputer = KNNImputer(n_neighbors=5)
+df_numerico = df.select_dtypes(include=[np.number])
+df_imputato = pd.DataFrame(imputer.fit_transform(df_numerico), 
+                          columns=df_numerico.columns)
+
+# Imputazione iterativa
+from sklearn.experimental import enable_iterative_imputer
+from sklearn.impute import IterativeImputer
+imputer = IterativeImputer(random_state=42)
+df_imputato = pd.DataFrame(imputer.fit_transform(df_numerico), 
+                          columns=df_numerico.columns)
+```
+
+**Identificazione e gestione degli outliers:**
+
+```python
+# Metodo IQR (Interquartile Range)
+Q1 = df['valore'].quantile(0.25)
+Q3 = df['valore'].quantile(0.75)
+IQR = Q3 - Q1
+
+limite_inferiore = Q1 - 1.5 * IQR
+limite_superiore = Q3 + 1.5 * IQR
+
+outliers = df[(df['valore'] < limite_inferiore) | (df['valore'] > limite_superiore)]
+
+# Metodo Z-score
+from scipy import stats
+z_scores = np.abs(stats.zscore(df['valore']))
+outliers_z = df[z_scores > 3]
+
+# Visualizzazione degli outliers
+import matplotlib.pyplot as plt
+plt.boxplot(df['valore'])
+plt.title('Boxplot per identificare outliers')
+plt.show()
+
+# Gestione degli outliers
+# Rimozione
+df_senza_outliers = df[(df['valore'] >= limite_inferiore) & (df['valore'] <= limite_superiore)]
+
+# Winsorizzazione
+from scipy.stats.mstats import winsorize
+df['valore_winsorized'] = winsorize(df['valore'], limits=[0.05, 0.05])
+
+# Trasformazione logaritmica
+df['valore_log'] = np.log1p(df['valore'])
+```
+
+2.7 Ottimizzazione delle performance con pandas
+
+Pandas può essere lento con dataset molto grandi. Ecco alcune tecniche di ottimizzazione.
+
+**Tipi di dati efficienti:**
+
+```python
+# Uso di categorie per stringhe ripetute
+df['categoria'] = df['categoria'].astype('category')
+
+# Downcasting dei tipi numerici
+df['intero_piccolo'] = pd.to_numeric(df['intero_piccolo'], downcast='integer')
+df['float_piccolo'] = pd.to_numeric(df['float_piccolo'], downcast='float')
+
+# Uso di tipi nullable per interi
+df['intero_nullable'] = df['intero_nullable'].astype('Int64')
+```
+
+**Tecniche di elaborazione efficiente:**
+
+```python
+# Uso di iterrows (da evitare quando possibile)
+# Meglio usare iterrows solo quando necessario
+for index, row in df.iterrows():
+    # Operazione lenta
+    pass
+
+# Uso di apply con funzioni vettorializzate
+def funzione_complessa(x):
+    return x ** 2 + np.sin(x)
+
+# Invece di:
+risultato = df['colonna'].apply(funzione_complessa)
+
+# Usa vettorializzazione:
+risultato = df['colonna'] ** 2 + np.sin(df['colonna'])
+
+# Uso di eval per operazioni complesse
+df.eval('nuova_colonna = colonna1 + colonna2 * colonna3', inplace=True)
+```
+
+**Chunk processing per file grandi:**
+
+```python
+# Lettura a chunk
+chunk_size = 100000
+chunks = pd.read_csv('file_grande.csv', chunksize=chunk_size)
+
+risultati = []
+for chunk in chunks:
+    # Elabora chunk
+    risultato_chunk = chunk.groupby('categoria')['valore'].mean()
+    risultati.append(risultato_chunk)
+
+risultato_finale = pd.concat(risultati)
+```
+
+**Uso di Dask per dataset molto grandi:**
+
+```python
+import dask.dataframe as dd
+
+# Lettura di file CSV molto grandi
+df = dd.read_csv('file_molto_grande.csv')
+
+# Operazioni lazy
+risultato = df.groupby('categoria')['valore'].mean()
+
+# Esecuzione
+risultato_computato = risultato.compute()
+```
+
+================================================================================
+CAPITOLO 3: VISUALIZZAZIONE DEI DATI CON MATPLOTLIB E SEABORN
+================================================================================
+
+3.1 Principi fondamentali della visualizzazione
+
+La visualizzazione efficace dei dati è cruciale per comprendere patterns e comunicare insights.
+
+**Principi di visualizzazione:**
+
+1. **Chiarezza**: Il messaggio deve essere immediatamente comprensibile
+2. **Onestà**: Non distorcere i dati per supportare conclusioni preconfezionate
+3. **Efficienza**: Massimizzare l'informazione trasmessa con il minimo sforzo
+4. **Bellezza**: L'estetica facilita la comprensione e l'engagement
+
+**Tipi di visualizzazioni:**
+
+- **Confronto**: Confrontare valori tra categorie
+- **Composizione**: Mostrare parti di un tutto
+- **Distribuzione**: Mostrare come i dati sono distribuiti
+- **Relazione**: Mostrare correlazioni tra variabili
+- **Evoluzione**: Mostrare cambiamenti nel tempo
+
+3.2 Grafici di base con matplotlib
+
+Matplotlib è la libreria fondamentale per la visualizzazione in Python.
+
+**Setup e import:**
+
+```python
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Impostazione dello stile
+plt.style.use('seaborn-v0_8')
+
+# Per notebook interattivi
+%matplotlib inline
+```
+
+**Grafici di linea:**
+
+```python
+# Dati di esempio
+x = np.linspace(0, 10, 100)
+y1 = np.sin(x)
+y2 = np.cos(x)
+
+# Grafico semplice
+plt.plot(x, y1)
+plt.title('Funzione Seno')
+plt.xlabel('x')
+plt.ylabel('sin(x)')
+plt.show()
+
+# Multiple linee
+plt.plot(x, y1, label='sin(x)', color='blue', linewidth=2)
+plt.plot(x, y2, label='cos(x)', color='red', linestyle='--')
+plt.legend()
+plt.grid(True)
+plt.show()
+```
+
+**Grafici a barre:**
+
+```python
+categorie = ['A', 'B', 'C', 'D']
+valori = [10, 25, 17, 32]
+
+plt.bar(categorie, valori, color=['red', 'green', 'blue', 'orange'])
+plt.title('Valori per Categoria')
+plt.xlabel('Categorie')
+plt.ylabel('Valori')
+plt.show()
+
+# Barre orizzontali
+plt.barh(categorie, valori)
+plt.title('Valori per Categoria (Orizzontale)')
+plt.show()
+```
+
+**Istogrammi:**
+
+```python
+# Dati casuali normali
+dati = np.random.normal(0, 1, 1000)
+
+plt.hist(dati, bins=30, alpha=0.7, color='skyblue', edgecolor='black')
+plt.title('Distribuzione Normale')
+plt.xlabel('Valore')
+plt.ylabel('Frequenza')
+plt.axvline(np.mean(dati), color='red', linestyle='--', label='Media')
+plt.legend()
+plt.show()
+```
+
+**Scatter plot:**
+
+```python
+x = np.random.rand(100)
+y = 2 * x + np.random.normal(0, 0.1, 100)
+
+plt.scatter(x, y, alpha=0.6, color='green')
+plt.title('Relazione tra X e Y')
+plt.xlabel('X')
+plt.ylabel('Y')
+plt.show()
+
+# Con colori basati su una terza variabile
+z = np.random.rand(100)
+plt.scatter(x, y, c=z, cmap='viridis', alpha=0.6)
+plt.colorbar(label='Z')
+plt.show()
+```
+
+3.3 Grafici statistici avanzati
+
+**Box plot:**
+
+```python
+# Dati di esempio
+dati1 = np.random.normal(0, 1, 100)
+dati2 = np.random.normal(1, 1.5, 100)
+dati3 = np.random.normal(-1, 2, 100)
+
+plt.boxplot([dati1, dati2, dati3], labels=['Gruppo A', 'Gruppo B', 'Gruppo C'])
+plt.title('Confronto tra Gruppi')
+plt.ylabel('Valori')
+plt.show()
+```
+
+**Heatmap:**
+
+```python
+# Matrice di correlazione
+dati = np.random.rand(10, 10)
+correlazione = np.corrcoef(dati)
+
+plt.imshow(correlazione, cmap='coolwarm', aspect='auto')
+plt.colorbar()
+plt.title('Matrice di Correlazione')
+plt.show()
+```
+
+**Grafici a torta:**
+
+```python
+etichette = ['Categoria A', 'Categoria B', 'Categoria C', 'Altri']
+dimensione = [35, 25, 20, 20]
+colori = ['gold', 'lightcoral', 'lightskyblue', 'lightgreen']
+
+plt.pie(dimensione, labels=etichette, colors=colori, autopct='%1.1f%%', startangle=140)
+plt.axis('equal')
+plt.title('Distribuzione per Categoria')
+plt.show()
+```
+
+3.4 Personalizzazione e temi
+
+**Stili e temi:**
+
+```python
+# Elenco degli stili disponibili
+print(plt.style.available)
+
+# Applicazione di stili diversi
+plt.style.use('ggplot')
+plt.plot(x, y1)
+plt.show()
+
+plt.style.use('dark_background')
+plt.plot(x, y1)
+plt.show()
+```
+
+**Personalizzazione avanzata:**
+
+```python
+fig, ax = plt.subplots(figsize=(10, 6))
+
+# Personalizzazione del grafico
+ax.plot(x, y1, color='#2E86AB', linewidth=3, linestyle='-', 
+        marker='o', markersize=4, markerfacecolor='white', markeredgewidth=2)
+
+# Personalizzazione degli assi
+ax.set_xlabel('Asse X', fontsize=12, fontweight='bold')
+ax.set_ylabel('Asse Y', fontsize=12, fontweight='bold')
+ax.set_title('Grafico Personalizzato', fontsize=14, fontweight='bold', pad=20)
+
+# Griglia
+ax.grid(True, alpha=0.3)
+
+# Limiti degli assi
+ax.set_xlim(0, 10)
+ax.set_ylim(-1.5, 1.5)
+
+# Legenda
+ax.legend(['Dati'], loc='upper right', frameon=True, fancybox=True, shadow=True)
+
+plt.tight_layout()
+plt.show()
+```
+
+**Subplot e layout complessi:**
+
+```python
+# Creazione di una figura con multiple subplot
+fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(12, 8))
+
+# Grafico 1: Linea
+ax1.plot(x, y1, 'b-')
+ax1.set_title('Grafico 1')
+
+# Grafico 2: Barre
+ax2.bar(categorie, valori, color='orange')
+ax2.set_title('Grafico 2')
+
+# Grafico 3: Istogramma
+ax3.hist(dati, bins=20, alpha=0.7)
+ax3.set_title('Grafico 3')
+
+# Grafico 4: Scatter
+ax4.scatter(x[:50], y[:50])
+ax4.set_title('Grafico 4')
+
+plt.tight_layout()
+plt.show()
+```
+
+3.5 Visualizzazioni interattive
+
+**Plotly per visualizzazioni interattive:**
+
+```python
+import plotly.express as px
+import plotly.graph_objects as go
+
+# Scatter plot interattivo
+df_plotly = px.data.iris()
+fig = px.scatter(df_plotly, x='sepal_width', y='sepal_length', 
+                 color='species', size='petal_length',
+                 title='Iris Dataset - Scatter Plot Interattivo')
+fig.show()
+
+# Grafico a linee con plotly
+df_line = px.data.gapminder().query("country=='Italy'")
+fig = px.line(df_line, x='year', y='gdpPercap', 
+              title='PIL pro capite Italia (1952-2007)')
+fig.show()
+```
+
+**Bokeh per dashboard interattive:**
+
+```python
+from bokeh.plotting import figure, show
+from bokeh.models import ColumnDataSource
+from bokeh.layouts import column, row
+from bokeh.io import output_file
+
+# Preparazione dei dati
+source = ColumnDataSource(data=dict(
+    x=[1, 2, 3, 4, 5],
+    y=[6, 7, 2, 4, 5],
+    size=[10, 20, 30, 40, 50]
+))
+
+# Creazione del grafico
+p = figure(title="Grafico Interattivo con Bokeh", 
+           x_axis_label='X', y_axis_label='Y')
+
+p.circle('x', 'y', size='size', source=source, alpha=0.6)
+
+# Aggiunta di interattività
+from bokeh.models import HoverTool
+hover = HoverTool()
+hover.tooltips = [("X", "@x"), ("Y", "@y"), ("Dimensione", "@size")]
+p.add_tools(hover)
+
+show(p)
+```
+
+3.6 Best practices per la presentazione dei dati
+
+**Principi per visualizzazioni efficaci:**
+
+1. **Conosci il tuo pubblico**: Adatta la complessità al livello di conoscenza
+2. **Racconta una storia**: Ogni visualizzazione dovrebbe supportare un messaggio chiaro
+3. **Semplifica**: Rimuovi elementi non essenziali
+4. **Usa colori appropriati**: Considera il daltonismo e la leggibilità
+5. **Fornisci contesto**: Aggiungi titoli, etichette e legende chiare
+
+**Errori comuni da evitare:**
+
+- **Chart junk**: Elementi decorativi che distraggono
+- **Scale inappropriate**: Assi che non iniziano da zero quando necessario
+- **Colori confusionari**: Combinazioni che rendono difficile la distinzione
+- **Sovraccarico informativo**: Troppi dati in un singolo grafico
+
+**Esempi di visualizzazioni efficaci:**
+
+```python
+# Prima: Grafico confusionario
+plt.figure(figsize=(8, 6))
+plt.plot(x, y1, 'r--', linewidth=5, alpha=0.3)
+plt.plot(x, y2, 'b:', linewidth=3, alpha=0.5)
+plt.title('CONFRONTO TRA FUNZIONI TRIGONOMETRICHE IMPORTANTI')
+plt.show()
+
+# Dopo: Grafico chiaro
+fig, ax = plt.subplots(figsize=(10, 6))
+ax.plot(x, y1, label='sin(x)', color='#1f77b4', linewidth=2)
+ax.plot(x, y2, label='cos(x)', color='#ff7f0e', linewidth=2)
+ax.set_xlabel('Angolo (radianti)', fontsize=12)
+ax.set_ylabel('Valore', fontsize=12)
+ax.set_title('Confronto tra seno e coseno', fontsize=14, pad=15)
+ax.legend(frameon=True, fancybox=True)
+ax.grid(True, alpha=0.3)
+ax.axhline(y=0, color='black', linestyle='-', alpha=0.3)
+ax.axvline(x=0, color='black', linestyle='-', alpha=0.3)
+plt.tight_layout()
+plt.show()
+```
+
+================================================================================
+CAPITOLO 4: ANALISI STATISTICA CON SCIPY E STATSMODELS
+================================================================================
+
+4.1 Concetti fondamentali di statistica descrittiva
+
+La statistica descrittiva riassume e descrive le caratteristiche principali di un dataset.
+
+**Misure di tendenza centrale:**
+
+```python
+import numpy as np
+from scipy import stats
+
+dati = np.random.normal(50, 10, 1000)
+
+# Media
+media = np.mean(dati)
+print(f"Media: {media:.2f}")
+
+# Mediana
+mediana = np.median(dati)
+print(f"Mediana: {mediana:.2f}")
+
+# Moda
+moda = stats.mode(dati, keepdims=True)
+print(f"Moda: {moda.mode[0]:.2f} (con frequenza {moda.count[0]})")
+
+# Media troncata (robusta agli outliers)
+media_troncata = stats.trim_mean(dati, 0.1)  # Rimuove il 10% estremi
+print(f"Media troncata: {media_troncata:.2f}")
+```
+
+**Misure di dispersione:**
+
+```python
+# Varianza
+varianza = np.var(dati, ddof=1)  # ddof=1 per varianza campionaria
+print(f"Varianza: {varianza:.2f}")
+
+# Deviazione standard
+dev_std = np.std(dati, ddof=1)
+print(f"Deviazione standard: {dev_std:.2f}")
+
+# Range
+range_val = np.ptp(dati)  # Peak-to-peak
+print(f"Range: {range_val:.2f}")
+
+# Range interquartile
+q75, q25 = np.percentile(dati, [75, 25])
+iqr = q75 - q25
+print(f"IQR: {iqr:.2f}")
+
+# Coefficiente di variazione
+cv = dev_std / media
+print(f"Coefficiente di variazione: {cv:.4f}")
+```
+
+**Misure di forma:**
+
+```python
+# Skewness (asimmetria)
+skewness = stats.skew(dati)
+print(f"Skewness: {skewness:.4f}")
+
+# Kurtosis (curtosi)
+kurtosis = stats.kurtosis(dati)
+print(f"Kurtosis: {kurtosis:.4f}")
+
+# Interpretazione
+if abs(skewness) < 0.5:
+    print("Distribuzione simmetrica")
+elif skewness > 0.5:
+    print("Distribuzione asimmetrica positiva (coda destra)")
+else:
+    print("Distribuzione asimmetrica negativa (coda sinistra)")
+
+if kurtosis > 0:
+    print("Distribuzione leptocurtica (più appuntita)")
+elif kurtosis < 0:
+    print("Distribuzione platicurtica (più piatta)")
+else:
+    print("Distribuzione mesocurtica (normale)")
+```
+
+**Statistiche descrittive complete:**
+
+```python
+# Usando pandas per statistiche descrittive
+import pandas as pd
+
+df = pd.DataFrame({'valori': dati})
+descrizione = df.describe()
+print(descrizione)
+
+# Statistiche per colonne categoriche
+df_cat = pd.DataFrame({
+    'categoria': np.random.choice(['A', 'B', 'C'], 1000),
+    'valore': np.random.randn(1000)
+})
+
+print(df_cat.groupby('categoria')['valore'].describe())
+```
+
+4.2 Test di ipotesi e inferenza statistica
+
+I test di ipotesi permettono di trarre conclusioni su popolazioni basandosi su campioni.
+
+**Test t per una media:**
+
+```python
+from scipy import stats
+
+# Dati di esempio
+campione = np.random.normal(52, 10, 50)
+media_popolazione = 50
+
+# Test t a una coda
+t_stat, p_value = stats.ttest_1samp(campione, media_popolazione)
+print(f"t-statistic: {t_stat:.4f}")
+print(f"p-value: {p_value:.4f}")
+
+if p_value < 0.05:
+    print("Rigettiamo l'ipotesi nulla: la media è significativamente diversa da 50")
+else:
+    print("Non possiamo rigettare l'ipotesi nulla")
+
+# Test t a due code
+t_stat_2tail, p_value_2tail = stats.ttest_1samp(campione, media_popolazione)
+print(f"Test a due code - p-value: {p_value_2tail:.4f}")
+```
+
+**Confronto tra due gruppi indipendenti:**
+
+```python
+# Due campioni indipendenti
+gruppo1 = np.random.normal(50, 10, 100)
+gruppo2 = np.random.normal(55, 10, 100)
+
+# Test t per due campioni
+t_stat, p_value = stats.ttest_ind(gruppo1, gruppo2)
+print(f"t-statistic: {t_stat:.4f}")
+print(f"p-value: {p_value:.4f}")
+
+if p_value < 0.05:
+    print("Le medie dei due gruppi sono significativamente diverse")
+else:
+    print("Non c'è differenza significativa tra le medie")
+
+# Assunzione di varianze uguali o diverse
+t_stat_equal, p_value_equal = stats.ttest_ind(gruppo1, gruppo2, equal_var=True)
+t_stat_unequal, p_value_unequal = stats.ttest_ind(gruppo1, gruppo2, equal_var=False)
+```
+
+**Test non parametrici:**
+
+```python
+# Test di Mann-Whitney (alternativa non parametrica al t-test)
+u_stat, p_value = stats.mannwhitneyu(gruppo1, gruppo2)
+print(f"Mann-Whitney U statistic: {u_stat:.4f}")
+print(f"p-value: {p_value:.4f}")
+
+# Test del chi-quadrato per indipendenza
+from scipy.stats import chi2_contingency
+
+# Tabella di contingenza
+tabella = np.array([[30, 20], [15, 35]])
+chi2, p, dof, expected = chi2_contingency(tabella)
+print(f"Chi-quadrato: {chi2:.4f}")
+print(f"p-value: {p:.4f}")
+print(f"Gradi di libertà: {dof}")
+```
+
+**Correzione per test multipli:**
+
+```python
+# Problema dei confronti multipli
+p_values = [0.03, 0.04, 0.02, 0.06, 0.01]  # 5 test
+
+# Correzione Bonferroni
+from statsmodels.stats.multitest import multipletests
+
+rejected, p_adjusted, _, _ = multipletests(p_values, method='bonferroni')
+print("P-values originali:", p_values)
+print("P-values corretti:", p_adjusted)
+print("Ipotesi rigettate:", rejected)
+
+# False Discovery Rate (Benjamini-Hochberg)
+rejected_fdr, p_adjusted_fdr, _, _ = multipletests(p_values, method='fdr_bh')
+print("FDR - Ipotesi rigettate:", rejected_fdr)
+```
+
+4.3 Analisi di regressione lineare e multipla
+
+La regressione lineare modella la relazione tra variabili.
+
+**Regressione lineare semplice:**
+
+```python
+import statsmodels.api as sm
+import matplotlib.pyplot as plt
+
+# Dati di esempio
+np.random.seed(42)
+x = np.random.rand(100) * 10
+y = 2 * x + 1 + np.random.normal(0, 1, 100)
+
+# Aggiunta della costante per l'intercetta
+X = sm.add_constant(x)
+
+# Modello di regressione
+model = sm.OLS(y, X)
+results = model.fit()
+
+print(results.summary())
+
+# Coefficienti
+print(f"Intercetta: {results.params[0]:.4f}")
+print(f"Pendenza: {results.params[1]:.4f}")
+
+# Previsioni
+y_pred = results.predict(X)
+
+# Visualizzazione
+plt.scatter(x, y, alpha=0.6, label='Dati osservati')
+plt.plot(x, y_pred, color='red', label='Retta di regressione')
+plt.xlabel('X')
+plt.ylabel('Y')
+plt.legend()
+plt.show()
+```
+
+**Regressione lineare multipla:**
+
+```python
+# Dataset con multiple variabili indipendenti
+np.random.seed(42)
+n = 200
+x1 = np.random.rand(n) * 10
+x2 = np.random.rand(n) * 5
+x3 = np.random.choice([0, 1], n)  # Variabile dummy
+y = 1.5 * x1 + 2.3 * x2 + 5 * x3 + np.random.normal(0, 2, n)
+
+# Matrice delle variabili indipendenti
+X = np.column_stack([np.ones(n), x1, x2, x3])  # Aggiunge intercetta
+X = sm.add_constant(np.column_stack([x1, x2, x3]))
+
+# Modello
+model_multi = sm.OLS(y, X)
+results_multi = model_multi.fit()
+
+print(results_multi.summary())
+
+# Analisi dei residui
+residuos = results_multi.resid
+
+# Test di normalità dei residui
+from scipy.stats import shapiro
+stat, p = shapiro(residuos)
+print(f"Test di Shapiro-Wilk: statistic={stat:.4f}, p-value={p:.4f}")
+
+# Plot dei residui
+fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(12, 8))
+
+# Residui vs valori adattati
+ax1.scatter(results_multi.fittedvalues, residuos)
+ax1.axhline(y=0, color='red', linestyle='--')
+ax1.set_xlabel('Valori adattati')
+ax1.set_ylabel('Residui')
+ax1.set_title('Residui vs Valori adattati')
+
+# Q-Q plot
+sm.qqplot(residuos, line='45', ax=ax2)
+ax2.set_title('Q-Q Plot dei Residui')
+
+# Istogramma dei residui
+ax3.hist(residuos, bins=20, alpha=0.7)
+ax3.set_xlabel('Residui')
+ax3.set_ylabel('Frequenza')
+ax3.set_title('Distribuzione dei Residui')
+
+# Residui vs ordine
+ax4.scatter(range(len(residuos)), residuos)
+ax4.axhline(y=0, color='red', linestyle='--')
+ax4.set_xlabel('Osservazione')
+ax4.set_ylabel('Residui')
+ax4.set_title('Residui vs Ordine')
+
+plt.tight_layout()
+plt.show()
+```
+
+**Diagnostica del modello:**
+
+```python
+# Calcolo dell'R-quadrato aggiustato
+r_squared_adj = results_multi.rsquared_adj
+print(f"R-quadrato aggiustato: {r_squared_adj:.4f}")
+
+# Test F per la significatività complessiva del modello
+f_stat = results_multi.fvalue
+f_pvalue = results_multi.f_pvalue
+print(f"Test F: F-statistic={f_stat:.4f}, p-value={f_pvalue:.4f}")
+
+# VIF (Variance Inflation Factor) per multicollinearità
+from statsmodels.stats.outliers_influence import variance_inflation_factor
+
+vif_data = pd.DataFrame()
+vif_data["feature"] = ['const', 'x1', 'x2', 'x3']
+vif_data["VIF"] = [variance_inflation_factor(X, i) for i in range(X.shape[1])]
+
+print(vif_data)
+
+# Interpretazione VIF:
+# VIF = 1: Nessuna correlazione
+# 1 < VIF < 5: Correlazione moderata
+# VIF >= 5: Correlazione elevata (possibile multicollinearità)
+# VIF >= 10: Multicollinearità grave
+```
+
+4.4 Modelli di classificazione statistica
+
+**Regressione logistica:**
+
+```python
+# Dati binari
+np.random.seed(42)
+n = 500
+x1 = np.random.randn(n)
+x2 = np.random.randn(n)
+prob = 1 / (1 + np.exp(-(0.5 + 2*x1 - 1.5*x2)))  # Probabilità vera
+y = np.random.binomial(1, prob, n)
+
+# DataFrame
+df_logit = pd.DataFrame({'x1': x1, 'x2': x2, 'y': y})
+X_logit = sm.add_constant(df_logit[['x1', 'x2']])
+
+# Modello di regressione logistica
+logit_model = sm.Logit(df_logit['y'], X_logit)
+logit_results = logit_model.fit()
+
+print(logit_results.summary())
+
+# Odds ratio
+odds_ratios = np.exp(logit_results.params)
+print("Odds Ratios:")
+print(odds_ratios)
+
+# Previsioni
+predizioni = logit_results.predict(X_logit)
+classi_predette = (predizioni > 0.5).astype(int)
+
+# Matrice di confusione
+from sklearn.metrics import confusion_matrix, classification_report
+cm = confusion_matrix(df_logit['y'], classi_predette)
+print("Matrice di confusione:")
+print(cm)
+
+print("\nReport di classificazione:")
+print(classification_report(df_logit['y'], classi_predette))
+```
+
+**Analisi discriminante:**
+
+```python
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
+from sklearn.model_selection import train_test_split
+
+# Preparazione dati
+X = df_logit[['x1', 'x2']]
+y = df_logit['y']
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+
+# Modello LDA
+lda = LinearDiscriminantAnalysis()
+lda.fit(X_train, y_train)
+
+# Previsioni
+y_pred_lda = lda.predict(X_test)
+
+# Accuratezza
+from sklearn.metrics import accuracy_score
+accuracy_lda = accuracy_score(y_test, y_pred_lda)
+print(f"Accuratezza LDA: {accuracy_lda:.4f}")
+
+# Coefficienti
+print("Coefficienti LDA:")
+print(lda.coef_)
+```
+
+4.5 Analisi di serie temporali
+
+**Decomposizione di serie temporali:**
+
+```python
+import pandas as pd
+from statsmodels.tsa.seasonal import seasonal_decompose
+from statsmodels.tsa.stattools import adfuller
+import matplotlib.pyplot as plt
+
+# Generazione di dati di serie temporale
+np.random.seed(42)
+date_range = pd.date_range(start='2020-01-01', end='2023-12-31', freq='D')
+trend = np.linspace(100, 200, len(date_range))
+seasonal = 10 * np.sin(2 * np.pi * np.arange(len(date_range)) / 365.25)
+noise = np.random.normal(0, 5, len(date_range))
+ts_data = trend + seasonal + noise
+
+ts = pd.Series(ts_data, index=date_range)
+
+# Decomposizione
+decomposition = seasonal_decompose(ts, model='additive', period=365)
+
+fig, (ax1, ax2, ax3, ax4) = plt.subplots(4, 1, figsize=(12, 10))
+
+ax1.plot(ts)
+ax1.set_title('Serie Temporale Originale')
+
+ax2.plot(decomposition.trend)
+ax2.set_title('Trend')
+
+ax3.plot(decomposition.seasonal)
+ax3.set_title('Componente Stagionale')
+
+ax4.plot(decomposition.resid)
+ax4.set_title('Residui')
+
+plt.tight_layout()
+plt.show()
+
+# Test di stazionarietà (Augmented Dickey-Fuller)
+adf_result = adfuller(ts.dropna())
+print(f'ADF Statistic: {adf_result[0]:.4f}')
+print(f'p-value: {adf_result[1]:.4f}')
+print('Stazionaria' if adf_result[1] < 0.05 else 'Non stazionaria')
+```
+
+**Modello ARIMA:**
+
+```python
+from statsmodels.tsa.arima.model import ARIMA
+from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
+
+# Analisi ACF e PACF
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 4))
+
+plot_acf(ts.diff().dropna(), ax=ax1)
+ax1.set_title('Autocorrelazione (ACF)')
+
+plot_pacf(ts.diff().dropna(), ax=ax2)
+ax2.set_title('Autocorrelazione Parziale (PACF)')
+
+plt.show()
+
+# Modello ARIMA (p, d, q)
+# p: ordine AR, d: differenziazione, q: ordine MA
+model_arima = ARIMA(ts, order=(1, 1, 1))
+results_arima = model_arima.fit()
+
+print(results_arima.summary())
+
+# Previsioni
+forecast = results_arima.forecast(steps=30)
+plt.figure(figsize=(12, 6))
+plt.plot(ts[-100:], label='Dati storici')
+plt.plot(forecast.index, forecast, label='Previsioni', color='red')
+plt.legend()
+plt.show()
+
+# Valutazione del modello
+from sklearn.metrics import mean_squared_error, mean_absolute_error
+
+# Suddivisione train/test
+train_size = int(len(ts) * 0.8)
+train, test = ts[:train_size], ts[train_size:]
+
+model = ARIMA(train, order=(1, 1, 1))
+fitted_model = model.fit()
+
+# Previsioni sul test set
+predictions = fitted_model.forecast(steps=len(test))
+
+mse = mean_squared_error(test, predictions)
+mae = mean_absolute_error(test, predictions)
+
+print(f'MSE: {mse:.4f}')
+print(f'MAE: {mae:.4f}')
+print(f'RMSE: {np.sqrt(mse):.4f}')
+```
+
+4.6 Validazione e interpretazione dei risultati
+
+**Validazione incrociata per modelli statistici:**
+
+```python
+from sklearn.model_selection import cross_val_score, KFold
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import make_scorer, r2_score
+
+# Preparazione dati
+X = np.random.rand(100, 3)
+y = X @ np.array([1.5, -2.0, 3.0]) + np.random.normal(0, 0.1, 100)
+
+# Modello
+model = LinearRegression()
+
+# K-Fold Cross Validation
+kf = KFold(n_splits=5, shuffle=True, random_state=42)
+cv_scores = cross_val_score(model, X, y, cv=kf, scoring='r2')
+
+print(f"CV R² scores: {cv_scores}")
+print(f"CV R² medio: {cv_scores.mean():.4f} (+/- {cv_scores.std() * 2:.4f})")
+
+# Validazione con diverse metriche
+scoring_metrics = ['r2', 'neg_mean_squared_error', 'neg_mean_absolute_error']
+for metric in scoring_metrics:
+    scores = cross_val_score(model, X, y, cv=kf, scoring=metric)
+    if 'neg_' in metric:
+        scores = -scores  # Per metriche negative
+    print(f"{metric}: {scores.mean():.4f} (+/- {scores.std() * 2:.4f})")
+```
+
+**Confronto tra modelli:**
+
+```python
+from sklearn.linear_model import Ridge, Lasso
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.model_selection import cross_validate
+
+# Modelli da confrontare
+models = {
+    'Linear Regression': LinearRegression(),
+    'Ridge Regression': Ridge(alpha=0.1),
+    'Lasso Regression': Lasso(alpha=0.1),
+    'Random Forest': RandomForestRegressor(n_estimators=100, random_state=42)
+}
+
+# Metriche di valutazione
+scoring = {
+    'r2': 'r2',
+    'mse': 'neg_mean_squared_error',
+    'mae': 'neg_mean_absolute_error'
+}
+
+# Confronto
+results = {}
+for name, model in models.items():
+    cv_results = cross_validate(model, X, y, cv=5, scoring=scoring)
+    results[name] = {
+        'R²': cv_results['test_r2'].mean(),
+        'MSE': -cv_results['test_mse'].mean(),  # Negativo perché sklearn usa negativo
+        'MAE': -cv_results['test_mae'].mean()
+    }
+
+# Tabella comparativa
+results_df = pd.DataFrame(results).T
+print(results_df.round(4))
+
+# Visualizzazione
+results_df.plot(kind='bar', figsize=(12, 6))
+plt.title('Confronto tra Modelli')
+plt.ylabel('Valore della Metrica')
+plt.xticks(rotation=45)
+plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
+plt.tight_layout()
+plt.show()
+```
+
+**Interpretazione dei coefficienti:**
+
+```python
+# Modello finale
+final_model = LinearRegression()
+final_model.fit(X, y)
+
+# Coefficienti
+coefficients = pd.DataFrame({
+    'Feature': [f'X{i}' for i in range(X.shape[1])],
+    'Coefficient': final_model.coef_,
+    'Absolute': np.abs(final_model.coef_)
+})
+
+print("Coefficienti del modello:")
+print(coefficients.sort_values('Absolute', ascending=False))
+
+# Importanza relativa (normalizzata)
+coefficients['Importance'] = coefficients['Absolute'] / coefficients['Absolute'].sum()
+print("\nImportanza relativa delle feature:")
+print(coefficients[['Feature', 'Importance']].sort_values('Importance', ascending=False))
+
+# Intervalli di confidenza per i coefficienti
+import statsmodels.api as sm
+
+X_sm = sm.add_constant(X)
+model_sm = sm.OLS(y, X_sm).fit()
+
+print("\nIntervalli di confidenza (95%):")
+conf_int = model_sm.conf_int(alpha=0.05)
+conf_int.columns = ['Lower', 'Upper']
+conf_int['Coefficient'] = model_sm.params
+conf_int['Feature'] = ['Intercept'] + [f'X{i}' for i in range(X.shape[1])]
+print(conf_int[['Feature', 'Coefficient', 'Lower', 'Upper']])
+```
+
+================================================================================
+CAPITOLO 5: MACHINE LEARNING CON SCIKIT-LEARN
+================================================================================
+
+5.1 Introduzione al Machine Learning supervisionato
+
+Il Machine Learning supervisionato utilizza dati etichettati per addestrare modelli predittivi.
+
+**Concetti fondamentali:**
+
+- **Feature (caratteristiche)**: Variabili di input utilizzate dal modello
+- **Target/Label**: Variabile di output che il modello cerca di prevedere
+- **Training set**: Dati utilizzati per addestrare il modello
+- **Test set**: Dati utilizzati per valutare le prestazioni del modello
+- **Overfitting**: Quando il modello si adatta troppo ai dati di training
+- **Underfitting**: Quando il modello è troppo semplice per catturare i pattern
+
+**Tipi di problemi supervisionati:**
+
+1. **Regressione**: Previsione di valori continui
+2. **Classificazione**: Previsione di categorie discrete
+
+5.2 Preprocessing dei dati per ML
+
+Il preprocessing è cruciale per le prestazioni dei modelli ML.
+
+**Suddivisione train/test:**
+
+```python
+from sklearn.model_selection import train_test_split
+
+# Dataset di esempio
+from sklearn.datasets import load_boston
+boston = load_boston()
+X, y = boston.data, boston.target
+
+# Suddivisione 80/20
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+print(f"Training set: {X_train.shape[0]} samples")
+print(f"Test set: {X_test.shape[0]} samples")
+```
+
+**Standardizzazione e normalizzazione:**
+
+```python
+from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler
+
+# StandardScaler: media 0, deviazione standard 1
+scaler_standard = StandardScaler()
+X_train_scaled = scaler_standard.fit_transform(X_train)
+X_test_scaled = scaler_standard.transform(X_test)
+
+# MinMaxScaler: range [0, 1]
+scaler_minmax = MinMaxScaler()
+X_train_minmax = scaler_minmax.fit_transform(X_train)
+X_test_minmax = scaler_minmax.transform(X_test)
+
+# RobustScaler: usa mediana e IQR (robusto agli outliers)
+scaler_robust = RobustScaler()
+X_train_robust = scaler_robust.fit_transform(X_train)
+X_test_robust = scaler_robust.transform(X_test)
+
+# Visualizzazione
+fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(15, 5))
+
+ax1.hist(X_train_scaled.flatten(), bins=50, alpha=0.7, label='Scaled')
+ax1.set_title('StandardScaler')
+ax1.legend()
+
+ax2.hist(X_train_minmax.flatten(), bins=50, alpha=0.7, label='MinMax', color='orange')
+ax2.set_title('MinMaxScaler')
+ax2.legend()
+
+ax3.hist(X_train_robust.flatten(), bins=50, alpha=0.7, label='Robust', color='green')
+ax3.set_title('RobustScaler')
+ax3.legend()
+
+plt.tight_layout()
+plt.show()
+```
+
+**Encoding di variabili categoriche:**
+
+```python
+from sklearn.preprocessing import LabelEncoder, OneHotEncoder
+import pandas as pd
+
+# Dati di esempio
+data = pd.DataFrame({
+    'colore': ['rosso', 'blu', 'verde', 'rosso', 'blu'],
+    'taglia': ['S', 'M', 'L', 'M', 'S'],
+    'prezzo': [10, 15, 20, 12, 18]
+})
+
+# Label Encoding (per variabili ordinali)
+le = LabelEncoder()
+data['taglia_encoded'] = le.fit_transform(data['taglia'])
+print("Label Encoding per taglia:")
+print(data[['taglia', 'taglia_encoded']])
+
+# One-Hot Encoding (per variabili nominali)
+from sklearn.compose import ColumnTransformer
+from sklearn.preprocessing import OneHotEncoder
+
+ct = ColumnTransformer(
+    transformers=[('encoder', OneHotEncoder(), ['colore'])],
+    remainder='passthrough'
+)
+
+data_encoded = ct.fit_transform(data)
+print("\nOne-Hot Encoding per colore:")
+print(pd.DataFrame(data_encoded, columns=ct.get_feature_names_out()))
+```
+
+**Gestione dei valori mancanti:**
+
+```python
+from sklearn.impute import SimpleImputer, KNNImputer
+
+# Dati con valori mancanti
+data_missing = pd.DataFrame({
+    'A': [1, 2, np.nan, 4, 5],
+    'B': [np.nan, 2, 3, 4, np.nan],
+    'C': [1, 2, 3, np.nan, 5]
+})
+
+# Imputazione con media
+imputer_mean = SimpleImputer(strategy='mean')
+data_mean = pd.DataFrame(imputer_mean.fit_transform(data_missing), 
+                        columns=data_missing.columns)
+
+# Imputazione con mediana
+imputer_median = SimpleImputer(strategy='median')
+data_median = pd.DataFrame(imputer_median.fit_transform(data_missing), 
+                          columns=data_missing.columns)
+
+# Imputazione con KNN
+imputer_knn = KNNImputer(n_neighbors=2)
+data_knn = pd.DataFrame(imputer_knn.fit_transform(data_missing), 
+                       columns=data_missing.columns)
+
+print("Dati originali:")
+print(data_missing)
+print("\nImputazione con media:")
+print(data_mean)
+print("\nImputazione con KNN:")
+print(data_knn)
+```
+
+5.3 Algoritmi di regressione
+
+**Regressione lineare:**
+
+```python
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
+
+# Dataset di esempio
+from sklearn.datasets import make_regression
+X, y = make_regression(n_samples=1000, n_features=5, noise=0.1, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Modello di regressione lineare
+lr_model = LinearRegression()
+lr_model.fit(X_train, y_train)
+
+# Previsioni
+y_pred = lr_model.predict(X_test)
+
+# Valutazione
+mse = mean_squared_error(y_test, y_pred)
+r2 = r2_score(y_test, y_pred)
+
+print(f"MSE: {mse:.4f}")
+print(f"R²: {r2:.4f}")
+print(f"Coefficienti: {lr_model.coef_}")
+print(f"Intercetta: {lr_model.intercept_:.4f}")
+
+# Visualizzazione (per una feature)
+plt.scatter(X_test[:, 0], y_test, alpha=0.6, label='Valori reali')
+plt.scatter(X_test[:, 0], y_pred, alpha=0.6, label='Previsioni', color='red')
+plt.xlabel('Feature 0')
+plt.ylabel('Target')
+plt.legend()
+plt.title('Regressione Lineare: Reale vs Previsto')
+plt.show()
+```
+
+**Regressione Ridge e Lasso:**
+
+```python
+from sklearn.linear_model import Ridge, Lasso
+from sklearn.model_selection import GridSearchCV
+
+# Ridge Regression (L2 regularization)
+ridge = Ridge(alpha=1.0)
+ridge.fit(X_train, y_train)
+y_pred_ridge = ridge.predict(X_test)
+
+print(f"Ridge - R²: {r2_score(y_test, y_pred_ridge):.4f}")
+print(f"Ridge - Coefficienti: {ridge.coef_}")
+
+# Lasso Regression (L1 regularization)
+lasso = Lasso(alpha=0.1)
+lasso.fit(X_train, y_train)
+y_pred_lasso = lasso.predict(X_test)
+
+print(f"Lasso - R²: {r2_score(y_test, y_pred_lasso):.4f}")
+print(f"Lasso - Coefficienti: {lasso.coef_}")
+
+# Grid Search per ottimizzare alpha
+param_grid = {'alpha': [0.001, 0.01, 0.1, 1, 10, 100]}
+ridge_cv = GridSearchCV(Ridge(), param_grid, cv=5, scoring='r2')
+ridge_cv.fit(X_train, y_train)
+
+print(f"Miglior alpha per Ridge: {ridge_cv.best_params_['alpha']}")
+print(f"Miglior R² per Ridge: {ridge_cv.best_score_:.4f}")
+
+lasso_cv = GridSearchCV(Lasso(), param_grid, cv=5, scoring='r2')
+lasso_cv.fit(X_train, y_train)
+
+print(f"Miglior alpha per Lasso: {lasso_cv.best_params_['alpha']}")
+print(f"Miglior R² per Lasso: {lasso_cv.best_score_:.4f}")
+```
+
+**Alberi di decisione per regressione:**
+
+```python
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
+
+# Albero di decisione
+dt_reg = DecisionTreeRegressor(max_depth=5, random_state=42)
+dt_reg.fit(X_train, y_train)
+y_pred_dt = dt_reg.predict(X_test)
+
+print(f"Decision Tree - R²: {r2_score(y_test, y_pred_dt):.4f}")
+
+# Random Forest
+rf_reg = RandomForestRegressor(n_estimators=100, max_depth=5, random_state=42)
+rf_reg.fit(X_train, y_train)
+y_pred_rf = rf_reg.predict(X_test)
+
+print(f"Random Forest - R²: {r2_score(y_test, y_pred_rf):.4f}")
+
+# Gradient Boosting
+gb_reg = GradientBoostingRegressor(n_estimators=100, learning_rate=0.1, 
+                                  max_depth=3, random_state=42)
+gb_reg.fit(X_train, y_train)
+y_pred_gb = gb_reg.predict(X_test)
+
+print(f"Gradient Boosting - R²: {r2_score(y_test, y_pred_gb):.4f}")
+
+# Importanza delle feature (Random Forest)
+feature_importance = pd.DataFrame({
+    'feature': [f'feature_{i}' for i in range(X.shape[1])],
+    'importance': rf_reg.feature_importances_
+}).sort_values('importance', ascending=False)
+
+print("\nImportanza delle feature (Random Forest):")
+print(feature_importance)
+
+# Visualizzazione importanza
+plt.figure(figsize=(10, 6))
+plt.bar(feature_importance['feature'], feature_importance['importance'])
+plt.xticks(rotation=45)
+plt.xlabel('Feature')
+plt.ylabel('Importanza')
+plt.title('Importanza delle Feature - Random Forest')
+plt.tight_layout()
+plt.show()
+```
+
+5.4 Algoritmi di classificazione
+
+**Regressione logistica:**
+
+```python
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+
+# Dataset di classificazione
+from sklearn.datasets import make_classification
+X_clf, y_clf = make_classification(n_samples=1000, n_features=10, n_classes=2, 
+                                  n_informative=5, random_state=42)
+X_train_clf, X_test_clf, y_train_clf, y_test_clf = train_test_split(
+    X_clf, y_clf, test_size=0.2, random_state=42)
+
+# Regressione logistica
+log_reg = LogisticRegression(random_state=42)
+log_reg.fit(X_train_clf, y_train_clf)
+y_pred_log = log_reg.predict(X_test_clf)
+
+# Valutazione
+accuracy = accuracy_score(y_test_clf, y_pred_log)
+print(f"Accuratezza: {accuracy:.4f}")
+
+print("\nReport di classificazione:")
+print(classification_report(y_test_clf, y_pred_log))
+
+# Matrice di confusione
+cm = confusion_matrix(y_test_clf, y_pred_log)
+print("\nMatrice di confusione:")
+print(cm)
+
+# Probabilità predette
+y_prob = log_reg.predict_proba(X_test_clf)[:, 1]
+
+# Curva ROC
+from sklearn.metrics import roc_curve, auc
+fpr, tpr, thresholds = roc_curve(y_test_clf, y_prob)
+roc_auc = auc(fpr, tpr)
+
+plt.figure(figsize=(8, 6))
+plt.plot(fpr, tpr, color='darkorange', lw=2, 
+         label=f'ROC curve (AUC = {roc_auc:.2f})')
+plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
+plt.xlim([0.0, 1.0])
+plt.ylim([0.0, 1.05])
+plt.xlabel('False Positive Rate')
+plt.ylabel('True Positive Rate')
+plt.title('Receiver Operating Characteristic (ROC)')
+plt.legend(loc="lower right")
+plt.show()
+```
+
+**Alberi di decisione e Random Forest per classificazione:**
+
+```python
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
+
+# Albero di decisione
+dt_clf = DecisionTreeClassifier(max_depth=5, random_state=42)
+dt_clf.fit(X_train_clf, y_train_clf)
+y_pred_dt_clf = dt_clf.predict(X_test_clf)
+
+print(f"Decision Tree - Accuratezza: {accuracy_score(y_test_clf, y_pred_dt_clf):.4f}")
+
+# Random Forest
+rf_clf = RandomForestClassifier(n_estimators=100, max_depth=5, random_state=42)
+rf_clf.fit(X_train_clf, y_train_clf)
+y_pred_rf_clf = rf_clf.predict(X_test_clf)
+
+print(f"Random Forest - Accuratezza: {accuracy_score(y_test_clf, y_pred_rf_clf):.4f}")
+
+# Visualizzazione dell'albero (se non troppo complesso)
+from sklearn.tree import plot_tree
+
+plt.figure(figsize=(20, 10))
+plot_tree(dt_clf, feature_names=[f'feature_{i}' for i in range(X_clf.shape[1])], 
+          class_names=['Classe 0', 'Classe 1'], filled=True, rounded=True, 
+          fontsize=10, max_depth=3)
+plt.title('Albero di Decisione (primi 3 livelli)')
+plt.show()
+```
+
+**Support Vector Machines:**
+
+```python
+from sklearn.svm import SVC
+
+# SVM con kernel lineare
+svm_linear = SVC(kernel='linear', C=1.0, random_state=42)
+svm_linear.fit(X_train_clf, y_train_clf)
+y_pred_svm_linear = svm_linear.predict(X_test_clf)
+
+print(f"SVM Lineare - Accuratezza: {accuracy_score(y_test_clf, y_pred_svm_linear):.4f}")
+
+# SVM con kernel RBF
+svm_rbf = SVC(kernel='rbf', C=1.0, gamma='scale', random_state=42)
+svm_rbf.fit(X_train_clf, y_train_clf)
+y_pred_svm_rbf = svm_rbf.predict(X_test_clf)
+
+print(f"SVM RBF - Accuratezza: {accuracy_score(y_test_clf, y_pred_svm_rbf):.4f}")
+
+# Grid Search per ottimizzare i parametri SVM
+param_grid_svm = {
+    'C': [0.1, 1, 10],
+    'gamma': ['scale', 'auto', 0.001, 0.01, 0.1],
+    'kernel': ['rbf', 'linear']
+}
+
+svm_cv = GridSearchCV(SVC(random_state=42), param_grid_svm, cv=3, scoring='accuracy')
+svm_cv.fit(X_train_clf, y_train_clf)
+
+print(f"Migliori parametri SVM: {svm_cv.best_params_}")
+print(f"Miglior accuratezza SVM: {svm_cv.best_score_:.4f}")
+```
+
+5.5 Clustering e apprendimento non supervisionato
+
+**K-Means Clustering:**
+
+```python
+from sklearn.cluster import KMeans
+from sklearn.metrics import silhouette_score
+from sklearn.datasets import make_blobs
+
+# Dataset per clustering
+X_cluster, _ = make_blobs(n_samples=300, centers=4, cluster_std=0.60, random_state=42)
+
+# Determinazione del numero ottimale di cluster (metodo del gomito)
+inertia = []
+silhouette_scores = []
+k_range = range(2, 11)
+
+for k in k_range:
+    kmeans = KMeans(n_clusters=k, random_state=42, n_init=10)
+    kmeans.fit(X_cluster)
+    inertia.append(kmeans.inertia_)
+    silhouette_scores.append(silhouette_score(X_cluster, kmeans.labels_))
+
+# Plot del metodo del gomito
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+
+ax1.plot(k_range, inertia, 'bo-')
+ax1.set_xlabel('Numero di cluster (k)')
+ax1.set_ylabel('Inertia')
+ax1.set_title('Metodo del Gomito')
+ax1.grid(True)
+
+ax2.plot(k_range, silhouette_scores, 'ro-')
+ax2.set_xlabel('Numero di cluster (k)')
+ax2.set_ylabel('Silhouette Score')
+ax2.set_title('Silhouette Score')
+ax2.grid(True)
+
+plt.tight_layout()
+plt.show()
+
+# Clustering con k=4
+kmeans_final = KMeans(n_clusters=4, random_state=42, n_init=10)
+clusters = kmeans_final.fit_predict(X_cluster)
+
+# Visualizzazione
+plt.figure(figsize=(8, 6))
+plt.scatter(X_cluster[:, 0], X_cluster[:, 1], c=clusters, cmap='viridis', alpha=0.6)
+plt.scatter(kmeans_final.cluster_centers_[:, 0], kmeans_final.cluster_centers_[:, 1], 
+           s=300, c='red', marker='X', label='Centroidi')
+plt.xlabel('Feature 1')
+plt.ylabel('Feature 2')
+plt.title('K-Means Clustering (k=4)')
+plt.legend()
+plt.show()
+
+print(f"Centroidi finali:")
+print(kmeans_final.cluster_centers_)
+```
+
+**DBSCAN:**
+
+```python
+from sklearn.cluster import DBSCAN
+from sklearn.preprocessing import StandardScaler
+
+# DBSCAN è sensibile alla scala
+X_scaled = StandardScaler().fit_transform(X_cluster)
+
+# DBSCAN
+dbscan = DBSCAN(eps=0.3, min_samples=10)
+dbscan_labels = dbscan.fit_predict(X_scaled)
+
+# Numero di cluster trovati (-1 indica rumore)
+n_clusters = len(set(dbscan_labels)) - (1 if -1 in dbscan_labels else 0)
+n_noise = list(dbscan_labels).count(-1)
+
+print(f"Numero di cluster trovati: {n_clusters}")
+print(f"Numero di punti rumore: {n_noise}")
+
+# Visualizzazione
+plt.figure(figsize=(8, 6))
+unique_labels = set(dbscan_labels)
+colors = plt.cm.Spectral(np.linspace(0, 1, len(unique_labels)))
+
+for k, col in zip(unique_labels, colors):
+    if k == -1:
+        # Nero per il rumore
+        col = 'black'
+    
+    class_member_mask = (dbscan_labels == k)
+    
+    xy = X_scaled[class_member_mask]
+    plt.scatter(xy[:, 0], xy[:, 1], c=[col], alpha=0.6, s=50)
+
+plt.xlabel('Feature 1 (scaled)')
+plt.ylabel('Feature 2 (scaled)')
+plt.title('DBSCAN Clustering')
+plt.show()
+```
+
+**Analisi delle componenti principali (PCA):**
+
+```python
+from sklearn.decomposition import PCA
+
+# Dataset con molte feature
+X_pca, _ = make_classification(n_samples=1000, n_features=20, n_informative=10, 
+                              n_redundant=5, random_state=42)
+
+# PCA
+pca = PCA()
+X_pca_transformed = pca.fit_transform(X_pca)
+
+# Varianza spiegata
+explained_variance_ratio = pca.explained_variance_ratio_
+cumulative_variance = np.cumsum(explained_variance_ratio)
+
+# Plot della varianza spiegata
+plt.figure(figsize=(12, 5))
+
+plt.subplot(1, 2, 1)
+plt.bar(range(1, len(explained_variance_ratio) + 1), explained_variance_ratio, alpha=0.7)
+plt.xlabel('Componente Principale')
+plt.ylabel('Varianza Spiegata')
+plt.title('Varianza Spiegata per Componente')
+
+plt.subplot(1, 2, 2)
+plt.plot(range(1, len(cumulative_variance) + 1), cumulative_variance, 'bo-')
+plt.axhline(y=0.95, color='red', linestyle='--', label='95% varianza')
+plt.xlabel('Numero di Componenti')
+plt.ylabel('Varianza Cumulativa')
+plt.title('Varianza Cumulativa')
+plt.legend()
+plt.grid(True)
+
+plt.tight_layout()
+plt.show()
+
+# Selezione del numero ottimale di componenti (95% varianza)
+n_components_95 = np.where(cumulative_variance >= 0.95)[0][0] + 1
+print(f"Componenti necessarie per 95% varianza: {n_components_95}")
+
+# PCA con numero ridotto di componenti
+pca_reduced = PCA(n_components=n_components_95)
+X_pca_reduced = pca_reduced.fit_transform(X_pca)
+
+print(f"Dimensioni originali: {X_pca.shape}")
+print(f"Dimensioni ridotte: {X_pca_reduced.shape}")
+```
+
+5.6 Valutazione delle performance dei modelli
+
+**Metriche per la regressione:**
+
+```python
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+
+# Modelli di regressione
+models_reg = {
+    'Linear Regression': LinearRegression(),
+    'Ridge': Ridge(alpha=1.0),
+    'Lasso': Lasso(alpha=0.1),
+    'Random Forest': RandomForestRegressor(n_estimators=100, random_state=42)
+}
+
+# Valutazione
+results_reg = {}
+for name, model in models_reg.items():
+    model.fit(X_train, y_train)
+    y_pred = model.predict(X_test)
+    
+    results_reg[name] = {
+        'MAE': mean_absolute_error(y_test, y_pred),
+        'MSE': mean_squared_error(y_test, y_pred),
+        'RMSE': np.sqrt(mean_squared_error(y_test, y_pred)),
+        'R²': r2_score(y_test, y_pred)
+    }
+
+results_df_reg = pd.DataFrame(results_reg).T
+print("Confronto modelli di regressione:")
+print(results_df_reg.round(4))
+
+# Visualizzazione
+results_df_reg.plot(kind='bar', figsize=(12, 6))
+plt.title('Confronto Metriche di Regressione')
+plt.ylabel('Valore')
+plt.xticks(rotation=45)
+plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
+plt.tight_layout()
+plt.show()
+```
+
+**Metriche per la classificazione:**
+
+```python
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+from sklearn.metrics import roc_auc_score, confusion_matrix
+
+# Modelli di classificazione
+models_clf = {
+    'Logistic Regression': LogisticRegression(random_state=42),
+    'Decision Tree': DecisionTreeClassifier(max_depth=5, random_state=42),
+    'Random Forest': RandomForestClassifier(n_estimators=100, random_state=42),
+    'SVM': SVC(probability=True, random_state=42)
+}
+
+# Valutazione
+results_clf = {}
+for name, model in models_clf.items():
+    model.fit(X_train_clf, y_train_clf)
+    y_pred = model.predict(X_test_clf)
+    y_prob = model.predict_proba(X_test_clf)[:, 1] if hasattr(model, 'predict_proba') else None
+    
+    results_clf[name] = {
+        'Accuracy': accuracy_score(y_test_clf, y_pred),
+        'Precision': precision_score(y_test_clf, y_pred),
+        'Recall': recall_score(y_test_clf, y_pred),
+        'F1-Score': f1_score(y_test_clf, y_pred),
+        'AUC': roc_auc_score(y_test_clf, y_prob) if y_prob is not None else np.nan
+    }
+
+results_df_clf = pd.DataFrame(results_clf).T
+print("Confronto modelli di classificazione:")
+print(results_df_clf.round(4))
+
+# Matrice di confusione per il miglior modello
+best_model_name = results_df_clf['F1-Score'].idxmax()
+best_model = models_clf[best_model_name]
+best_model.fit(X_train_clf, y_train_clf)
+y_pred_best = best_model.predict(X_test_clf)
+
+cm = confusion_matrix(y_test_clf, y_pred_best)
+print(f"\nMatrice di confusione per {best_model_name}:")
+print(cm)
+
+# Visualizzazione matrice di confusione
+plt.figure(figsize=(6, 5))
+plt.imshow(cm, interpolation='nearest', cmap=plt.cm.Blues)
+plt.title(f'Matrice di Confusione - {best_model_name}')
+plt.colorbar()
+
+classes = ['Classe 0', 'Classe 1']
+tick_marks = np.arange(len(classes))
+plt.xticks(tick_marks, classes)
+plt.yticks(tick_marks, classes)
+
+plt.xlabel('Predetto')
+plt.ylabel('Reale')
+
+# Aggiunta dei valori nella matrice
+thresh = cm.max() / 2.
+for i, j in np.ndindex(cm.shape):
+    plt.text(j, i, format(cm[i, j], 'd'),
+             horizontalalignment="center",
+             color="white" if cm[i, j] > thresh else "black")
+
+plt.tight_layout()
+plt.show()
+```
+
+**Validazione incrociata:**
+
+```python
+from sklearn.model_selection import cross_val_score, StratifiedKFold
+
+# Validazione incrociata per regressione
+cv_scores_reg = {}
+for name, model in models_reg.items():
+    scores = cross_val_score(model, X, y, cv=5, scoring='r2')
+    cv_scores_reg[name] = {
+        'R² medio': scores.mean(),
+        'Deviazione standard': scores.std()
+    }
+
+cv_df_reg = pd.DataFrame(cv_scores_reg).T
+print("Validazione incrociata - Regressione:")
+print(cv_df_reg.round(4))
+
+# Validazione incrociata stratificata per classificazione
+cv_scores_clf = {}
+skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+
+for name, model in models_clf.items():
+    scores = cross_val_score(model, X_clf, y_clf, cv=skf, scoring='f1')
+    cv_scores_clf[name] = {
+        'F1 medio': scores.mean(),
+        'Deviazione standard': scores.std()
+    }
+
+cv_df_clf = pd.DataFrame(cv_scores_clf).T
+print("\nValidazione incrociata - Classificazione:")
+print(cv_df_clf.round(4))
+
+# Confronto training vs test score (per identificare overfitting)
+from sklearn.model_selection import learning_curve
+
+def plot_learning_curve(estimator, title, X, y, cv=None, n_jobs=None, train_sizes=np.linspace(.1, 1.0, 5)):
+    plt.figure(figsize=(8, 6))
+    plt.title(title)
+    plt.xlabel("Esempi di training")
+    plt.ylabel("Score")
+    
+    train_sizes, train_scores, validation_scores = learning_curve(
+        estimator, X, y, cv=cv, n_jobs=n_jobs, train_sizes=train_sizes, 
+        scoring='f1' if hasattr(estimator, 'predict_proba') else 'accuracy')
+    
+    train_scores_mean = np.mean(train_scores, axis=1)
+    train_scores_std = np.std(train_scores, axis=1)
+    validation_scores_mean = np.mean(validation_scores, axis=1)
+    validation_scores_std = np.std(validation_scores, axis=1)
+    
+    plt.grid()
+    plt.fill_between(train_sizes, train_scores_mean - train_scores_std,
+                     train_scores_mean + train_scores_std, alpha=0.1, color="r")
+    plt.fill_between(train_sizes, validation_scores_mean - validation_scores_std,
+                     validation_scores_mean + validation_scores_std, alpha=0.1, color="g")
+    plt.plot(train_sizes, train_scores_mean, 'o-', color="r", label="Training score")
+    plt.plot(train_sizes, validation_scores_mean, 'o-', color="g", label="Cross-validation score")
+    plt.legend(loc="best")
+    plt.show()
+
+# Learning curve per Random Forest
+plot_learning_curve(RandomForestClassifier(n_estimators=100, random_state=42), 
+                   "Learning Curve - Random Forest", X_clf, y_clf, cv=5)
+```
+
+5.7 Ottimizzazione degli iperparametri
+
+**Grid Search:**
+
+```python
+from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
+
+# Esempio con Random Forest
+rf = RandomForestClassifier(random_state=42)
+
+# Griglia di parametri
+param_grid = {
+    'n_estimators': [50, 100, 200],
+    'max_depth': [None, 10, 20, 30],
+    'min_samples_split': [2, 5, 10],
+    'min_samples_leaf': [1, 2, 4],
+    'max_features': ['auto', 'sqrt', 'log2']
+}
+
+# Grid Search
+grid_search = GridSearchCV(
+    estimator=rf,
+    param_grid=param_grid,
+    cv=5,
+    scoring='f1',
+    n_jobs=-1,
+    verbose=1
+)
+
+grid_search.fit(X_train_clf, y_train_clf)
+
+print(f"Migliori parametri: {grid_search.best_params_}")
+print(f"Miglior score CV: {grid_search.best_score_:.4f}")
+
+# Modello con migliori parametri
+best_rf = grid_search.best_estimator_
+y_pred_best_rf = best_rf.predict(X_test_clf)
+print(f"Score sul test set: {f1_score(y_test_clf, y_pred_best_rf):.4f}")
+```
+
+**Randomized Search:**
+
+```python
+# Randomized Search (più efficiente per spazi di ricerca grandi)
+param_distributions = {
+    'n_estimators': [int(x) for x in np.linspace(start=50, stop=200, num=10)],
+    'max_depth': [int(x) for x in np.linspace(10, 110, num=11)] + [None],
+    'min_samples_split': [2, 5, 10, 15],
+    'min_samples_leaf': [1, 2, 4, 6],
+    'max_features': ['auto', 'sqrt', 'log2'],
+    'bootstrap': [True, False]
+}
+
+random_search = RandomizedSearchCV(
+    estimator=rf,
+    param_distributions=param_distributions,
+    n_iter=100,  # Numero di combinazioni da provare
+    cv=5,
+    scoring='f1',
+    n_jobs=-1,
+    random_state=42,
+    verbose=1
+)
+
+random_search.fit(X_train_clf, y_train_clf)
+
+print(f"Migliori parametri (Random Search): {random_search.best_params_}")
+print(f"Miglior score CV: {random_search.best_score_:.4f}")
+```
+
+**Bayesian Optimization:**
+
+```python
+from skopt import BayesSearchCV
+from skopt.space import Real, Categorical, Integer
+
+# Spazio di ricerca per Bayesian Optimization
+search_spaces = {
+    'n_estimators': Integer(50, 200),
+    'max_depth': Integer(10, 100),
+    'min_samples_split': Integer(2, 20),
+    'min_samples_leaf': Integer(1, 10),
+    'max_features': Categorical(['auto', 'sqrt', 'log2']),
+    'bootstrap': Categorical([True, False])
+}
+
+bayes_search = BayesSearchCV(
+    estimator=rf,
+    search_spaces=search_spaces,
+    n_iter=50,  # Numero di iterazioni
+    cv=5,
+    scoring='f1',
+    n_jobs=-1,
+    random_state=42,
+    verbose=1
+)
+
+bayes_search.fit(X_train_clf, y_train_clf)
+
+print(f"Migliori parametri (Bayesian): {bayes_search.best_params_}")
+print(f"Miglior score CV: {bayes_search.best_score_:.4f}")
+```
+
+**Confronto tra metodi di ottimizzazione:**
+
+```python
+# Confronto dei tempi e risultati
+import time
+
+methods = {
+    'Grid Search': grid_search,
+    'Random Search': random_search,
+    'Bayesian': bayes_search
+}
+
+comparison = {}
+for name, search in methods.items():
+    start_time = time.time()
+    # Il fit è già stato fatto, ma misuriamo il tempo di previsione
+    y_pred = search.best_estimator_.predict(X_test_clf)
+    pred_time = time.time() - start_time
+    
+    comparison[name] = {
+        'Best CV Score': search.best_score_,
+        'Test F1': f1_score(y_test_clf, y_pred),
+        'Prediction Time': pred_time
+    }
+
+comparison_df = pd.DataFrame(comparison).T
+print("Confronto metodi di ottimizzazione:")
+print(comparison_df.round(4))
+```
+
+================================================================================
+CAPITOLO 6: DEEP LEARNING CON TENSORFLOW E KERAS
+================================================================================
+
+6.1 Concetti fondamentali delle reti neurali
+
+Le reti neurali artificiali sono ispirate al cervello umano e sono composte da nodi interconnessi chiamati neuroni.
+
+**Componenti principali:**
+
+- **Neuroni**: Unità di calcolo che ricevono input, applicano una funzione di attivazione e producono output
+- **Strati**: Gruppi di neuroni organizzati in layer
+- **Pesi**: Parametri che vengono aggiornati durante l'addestramento
+- **Funzioni di attivazione**: Trasformazioni non lineari applicate agli output dei neuroni
+- **Loss function**: Misura dell'errore da minimizzare
+- **Ottimizzatore**: Algoritmo per aggiornare i pesi
+
+**Tipi di reti neurali:**
+
+1. **Feedforward Neural Networks (FNN)**: Informazione fluisce in una direzione
+2. **Convolutional Neural Networks (CNN)**: Specializzate per dati con struttura spaziale (immagini)
+3. **Recurrent Neural Networks (RNN)**: Adatte per sequenze temporali
+4. **Transformers**: Architetture basate su meccanismi di attenzione
+
+6.2 Implementazione di reti neurali con Keras
+
+Keras è un'API di alto livello per costruire e addestrare reti neurali.
+
+**Setup e import:**
+
+```python
+import tensorflow as tf
+from tensorflow import keras
+from tensorflow.keras import layers
+import numpy as np
+import matplotlib.pyplot as plt
+
+print(f"TensorFlow version: {tf.__version__}")
+print(f"Keras version: {keras.__version__}")
+
+# Verifica GPU
+print(f"GPU disponibile: {len(tf.config.list_physical_devices('GPU')) > 0}")
+```
+
+**Reti neurali per regressione:**
+
+```python
+from sklearn.datasets import make_regression
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+
+# Dataset
+X_reg, y_reg = make_regression(n_samples=10000, n_features=10, noise=0.1, random_state=42)
+X_train_reg, X_test_reg, y_train_reg, y_test_reg = train_test_split(X_reg, y_reg, test_size=0.2, random_state=42)
+
+# Standardizzazione
+scaler_reg = StandardScaler()
+X_train_reg_scaled = scaler_reg.fit_transform(X_train_reg)
+X_test_reg_scaled = scaler_reg.transform(X_test_reg)
+
+# Modello di regressione
+model_reg = keras.Sequential([
+    layers.Dense(64, activation='relu', input_shape=(X_train_reg.shape[1],)),
+    layers.Dropout(0.2),
+    layers.Dense(32, activation='relu'),
+    layers.Dropout(0.2),
+    layers.Dense(16, activation='relu'),
+    layers.Dense(1)  # Nessuna attivazione per regressione
+])
+
+# Compilazione
+model_reg.compile(
+    optimizer='adam',
+    loss='mean_squared_error',
+    metrics=['mae', 'mse']
+)
+
+# Summary del modello
+model_reg.summary()
+
+# Addestramento
+history_reg = model_reg.fit(
+    X_train_reg_scaled, y_train_reg,
+    epochs=100,
+    batch_size=32,
+    validation_split=0.2,
+    callbacks=[
+        keras.callbacks.EarlyStopping(patience=10, restore_best_weights=True),
+        keras.callbacks.ReduceLROnPlateau(factor=0.5, patience=5)
+    ],
+    verbose=1
+)
+
+# Valutazione
+test_loss, test_mae, test_mse = model_reg.evaluate(X_test_reg_scaled, y_test_reg, verbose=0)
+print(f"Test MAE: {test_mae:.4f}")
+print(f"Test MSE: {test_mse:.4f}")
+
+# Previsioni
+y_pred_reg = model_reg.predict(X_test_reg_scaled).flatten()
+
+# Visualizzazione storia addestramento
+plt.figure(figsize=(12, 4))
+
+plt.subplot(1, 3, 1)
+plt.plot(history_reg.history['loss'], label='Training Loss')
+plt.plot(history_reg.history['val_loss'], label='Validation Loss')
+plt.xlabel('Epoch')
+plt.ylabel('Loss')
+plt.legend()
+plt.title('Loss durante l\'addestramento')
+
+plt.subplot(1, 3, 2)
+plt.plot(history_reg.history['mae'], label='Training MAE')
+plt.plot(history_reg.history['val_mae'], label='Validation MAE')
+plt.xlabel('Epoch')
+plt.ylabel('MAE')
+plt.legend()
+plt.title('MAE durante l\'addestramento')
+
+plt.subplot(1, 3, 3)
+plt.scatter(y_test_reg, y_pred_reg, alpha=0.6)
+plt.plot([y_test_reg.min(), y_test_reg.max()], [y_test_reg.min(), y_test_reg.max()], 'r--')
+plt.xlabel('Valori Reali')
+plt.ylabel('Previsioni')
+plt.title('Previsioni vs Valori Reali')
+
+plt.tight_layout()
+plt.show()
+```
+
+**Reti neurali per classificazione:**
+
+```python
+from sklearn.datasets import make_classification
+
+# Dataset di classificazione binaria
+X_clf, y_clf = make_classification(n_samples=10000, n_features=20, n_classes=2, 
+                                  n_informative=10, random_state=42)
+X_train_clf, X_test_clf, y_train_clf, y_test_clf = train_test_split(X_clf, y_clf, test_size=0.2, random_state=42)
+
+# Standardizzazione
+scaler_clf = StandardScaler()
+X_train_clf_scaled = scaler_clf.fit_transform(X_train_clf)
+X_test_clf_scaled = scaler_clf.transform(X_test_clf)
+
+# Modello di classificazione
+model_clf = keras.Sequential([
+    layers.Dense(128, activation='relu', input_shape=(X_train_clf.shape[1],)),
+    layers.Dropout(0.3),
+    layers.Dense(64, activation='relu'),
+    layers.Dropout(0.3),
+    layers.Dense(32, activation='relu'),
+    layers.Dense(1, activation='sigmoid')  # Sigmoid per classificazione binaria
+])
+
+# Compilazione
+model_clf.compile(
+    optimizer='adam',
+    loss='binary_crossentropy',
+    metrics=['accuracy', keras.metrics.AUC(name='auc')]
+)
+
+# Addestramento
+history_clf = model_clf.fit(
+    X_train_clf_scaled, y_train_clf,
+    epochs=50,
+    batch_size=64,
+    validation_split=0.2,
+    callbacks=[
+        keras.callbacks.EarlyStopping(patience=8, restore_best_weights=True),
+        keras.callbacks.ModelCheckpoint('best_model.h5', save_best_only=True)
+    ],
+    verbose=1
+)
+
+# Valutazione
+test_loss, test_accuracy, test_auc = model_clf.evaluate(X_test_clf_scaled, y_test_clf, verbose=0)
+print(f"Test Accuracy: {test_accuracy:.4f}")
+print(f"Test AUC: {test_auc:.4f}")
+
+# Previsioni
+y_pred_prob = model_clf.predict(X_test_clf_scaled).flatten()
+y_pred_clf = (y_pred_prob > 0.5).astype(int)
+
+# Matrice di confusione
+from sklearn.metrics import confusion_matrix, classification_report
+cm = confusion_matrix(y_test_clf, y_pred_clf)
+print("\nMatrice di confusione:")
+print(cm)
+
+print("\nReport di classificazione:")
+print(classification_report(y_test_clf, y_pred_clf))
+
+# Curva ROC
+from sklearn.metrics import roc_curve, auc
+fpr, tpr, thresholds = roc_curve(y_test_clf, y_pred_prob)
+roc_auc = auc(fpr, tpr)
+
+plt.figure(figsize=(8, 6))
+plt.plot(fpr, tpr, color='darkorange', lw=2, label=f'ROC curve (AUC = {roc_auc:.2f})')
+plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
+plt.xlim([0.0, 1.0])
+plt.ylim([0.0, 1.05])
+plt.xlabel('False Positive Rate')
+plt.ylabel('True Positive Rate')
+plt.title('Receiver Operating Characteristic (ROC)')
+plt.legend(loc="lower right")
+plt.show()
+```
+
+6.3 Convolutional Neural Networks per computer vision
+
+Le CNN sono specializzate nell'elaborazione di dati con struttura spaziale come le immagini.
+
+**Architettura CNN basilare:**
+
+```python
+# Caricamento dataset MNIST
+from tensorflow.keras.datasets import mnist
+from tensorflow.keras.utils import to_categorical
+
+(X_train_mnist, y_train_mnist), (X_test_mnist, y_test_mnist) = mnist.load_data()
+
+# Preprocessing
+X_train_mnist = X_train_mnist.reshape(-1, 28, 28, 1).astype('float32') / 255.0
+X_test_mnist = X_test_mnist.reshape(-1, 28, 28, 1).astype('float32') / 255.0
+y_train_mnist = to_categorical(y_train_mnist, 10)
+y_test_mnist = to_categorical(y_test_mnist, 10)
+
+# Modello CNN
+model_cnn = keras.Sequential([
+    # Convolutional layers
+    layers.Conv2D(32, (3, 3), activation='relu', input_shape=(28, 28, 1)),
+    layers.MaxPooling2D((2, 2)),
+    layers.Conv2D(64, (3, 3), activation='relu'),
+    layers.MaxPooling2D((2, 2)),
+    layers.Conv2D(64, (3, 3), activation='relu'),
+    
+    # Dense layers
+    layers.Flatten(),
+    layers.Dense(64, activation='relu'),
+    layers.Dropout(0.5),
+    layers.Dense(10, activation='softmax')
+])
+
+model_cnn.compile(
+    optimizer='adam',
+    loss='categorical_crossentropy',
+    metrics=['accuracy']
+)
+
+model_cnn.summary()
+
+# Addestramento
+history_cnn = model_cnn.fit(
+    X_train_mnist, y_train_mnist,
+    epochs=10,
+    batch_size=64,
+    validation_split=0.1,
+    callbacks=[keras.callbacks.EarlyStopping(patience=3)]
+)
+
+# Valutazione
+test_loss, test_accuracy = model_cnn.evaluate(X_test_mnist, y_test_mnist, verbose=0)
+print(f"Test Accuracy: {test_accuracy:.4f}")
+
+# Visualizzazione filtri convoluzionali
+filters, biases = model_cnn.layers[0].get_weights()
+print(f"Shape filtri primo layer: {filters.shape}")
+
+# Visualizzazione dei primi 6 filtri
+fig, axes = plt.subplots(2, 3, figsize=(8, 6))
+for i in range(6):
+    ax = axes[i//3, i%3]
+    ax.imshow(filters[:, :, 0, i], cmap='gray')
+    ax.set_title(f'Filtro {i+1}')
+    ax.axis('off')
+plt.tight_layout()
+plt.show()
+```
+
+**Data Augmentation:**
+
+```python
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
+
+# Data augmentation per immagini
+datagen = ImageDataGenerator(
+    rotation_range=10,
+    width_shift_range=0.1,
+    height_shift_range=0.1,
+    zoom_range=0.1,
+    horizontal_flip=True,
+    fill_mode='nearest'
+)
+
+# Esempio con CIFAR-10
+from tensorflow.keras.datasets import cifar10
+
+(X_train_cifar, y_train_cifar), (X_test_cifar, y_test_cifar) = cifar10.load_data()
+X_train_cifar = X_train_cifar.astype('float32') / 255.0
+X_test_cifar = X_test_cifar.astype('float32') / 255.0
+y_train_cifar = to_categorical(y_train_cifar, 10)
+y_test_cifar = to_categorical(y_test_cifar, 10)
+
+# Modello CNN per CIFAR-10
+model_cifar = keras.Sequential([
+    layers.Conv2D(32, (3, 3), activation='relu', input_shape=(32, 32, 3)),
+    layers.BatchNormalization(),
+    layers.MaxPooling2D((2, 2)),
+    layers.Dropout(0.25),
+    
+    layers.Conv2D(64, (3, 3), activation='relu'),
+    layers.BatchNormalization(),
+    layers.MaxPooling2D((2, 2)),
+    layers.Dropout(0.25),
+    
+    layers.Conv2D(128, (3, 3), activation='relu'),
+    layers.BatchNormalization(),
+    layers.MaxPooling2D((2, 2)),
+    layers.Dropout(0.25),
+    
+    layers.Flatten(),
+    layers.Dense(512, activation='relu'),
+    layers.BatchNormalization(),
+    layers.Dropout(0.5),
+    layers.Dense(10, activation='softmax')
+])
+
+model_cifar.compile(
+    optimizer='adam',
+    loss='categorical_crossentropy',
+    metrics=['accuracy']
+)
+
+# Addestramento con data augmentation
+history_cifar = model_cifar.fit(
+    datagen.flow(X_train_cifar, y_train_cifar, batch_size=64),
+    epochs=50,
+    validation_data=(X_test_cifar, y_test_cifar),
+    callbacks=[
+        keras.callbacks.EarlyStopping(patience=10),
+        keras.callbacks.ReduceLROnPlateau(factor=0.5, patience=5)
+    ]
+)
+
+# Valutazione
+test_accuracy = model_cifar.evaluate(X_test_cifar, y_test_cifar, verbose=0)[1]
+print(f"Test Accuracy con data augmentation: {test_accuracy:.4f}")
+```
+
+6.4 Recurrent Neural Networks per sequenze
+
+Le RNN sono progettate per elaborare sequenze di dati.
+
+**RNN basilare per previsione di serie temporali:**
+
+```python
+# Generazione dati di serie temporale
+def generate_time_series(n_samples=1000, n_steps=50):
+    freq1, freq2, offsets1, offsets2 = np.random.rand(4, n_samples, 1)
+    time = np.linspace(0, 1, n_steps)
+    series = 0.5 * np.sin((time - offsets1) * (freq1 * 10 + 10))
+    series += 0.2 * np.sin((time - offsets2) * (freq2 * 20 + 20))
+    series += 0.1 * (np.random.rand(n_samples, n_steps) - 0.5)
+    return series
+
+n_steps = 50
+series = generate_time_series(10000, n_steps + 1)
+X = series[:, :n_steps]
+y = series[:, -1]
+
+X_train_rnn, X_test_rnn, y_train_rnn, y_test_rnn = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Reshape per RNN [samples, time steps, features]
+X_train_rnn = X_train_rnn.reshape(-1, n_steps, 1)
+X_test_rnn = X_test_rnn.reshape(-1, n_steps, 1)
+
+# Modello RNN
+model_rnn = keras.Sequential([
+    layers.SimpleRNN(20, return_sequences=True, input_shape=[None, 1]),
+    layers.SimpleRNN(20),
+    layers.Dense(1)
+])
+
+model_rnn.compile(optimizer='adam', loss='mse')
+history_rnn = model_rnn.fit(X_train_rnn, y_train_rnn, epochs=20, validation_split=0.1)
+
+# Valutazione
+mse_rnn = model_rnn.evaluate(X_test_rnn, y_test_rnn, verbose=0)
+print(f"RNN MSE: {mse_rnn:.4f}")
+```
+
+**LSTM per previsione di serie temporali:**
+
+```python
+# Modello LSTM
+model_lstm = keras.Sequential([
+    layers.LSTM(50, return_sequences=True, input_shape=[None, 1]),
+    layers.Dropout(0.2),
+    layers.LSTM(50, return_sequences=True),
+    layers.Dropout(0.2),
+    layers.LSTM(50),
+    layers.Dropout(0.2),
+    layers.Dense(1)
+])
+
+model_lstm.compile(optimizer='adam', loss='mse', metrics=['mae'])
+
+# Addestramento con early stopping
+history_lstm = model_lstm.fit(
+    X_train_rnn, y_train_rnn,
+    epochs=50,
+    batch_size=64,
+    validation_split=0.1,
+    callbacks=[keras.callbacks.EarlyStopping(patience=10)]
+)
+
+# Valutazione
+mse_lstm, mae_lstm = model_lstm.evaluate(X_test_rnn, y_test_rnn, verbose=0)
+print(f"LSTM MSE: {mse_lstm:.4f}")
+print(f"LSTM MAE: {mae_lstm:.4f}")
+
+# Previsioni
+y_pred_lstm = model_lstm.predict(X_test_rnn).flatten()
+
+# Visualizzazione previsioni
+plt.figure(figsize=(12, 6))
+plt.plot(y_test_rnn[:100], label='Valori reali')
+plt.plot(y_pred_lstm[:100], label='Previsioni LSTM')
+plt.xlabel('Campione')
+plt.ylabel('Valore')
+plt.title('Previsioni LSTM vs Valori Reali')
+plt.legend()
+plt.show()
+```
+
+**GRU (Gated Recurrent Unit):**
+
+```python
+# Modello GRU (più efficiente di LSTM)
+model_gru = keras.Sequential([
+    layers.GRU(50, return_sequences=True, input_shape=[None, 1]),
+    layers.Dropout(0.2),
+    layers.GRU(50),
+    layers.Dropout(0.2),
+    layers.Dense(1)
+])
+
+model_gru.compile(optimizer='adam', loss='mse', metrics=['mae'])
+
+history_gru = model_gru.fit(
+    X_train_rnn, y_train_rnn,
+    epochs=30,
+    batch_size=64,
+    validation_split=0.1,
+    callbacks=[keras.callbacks.EarlyStopping(patience=8)]
+)
+
+# Confronto prestazioni
+models_seq = {
+    'RNN': model_rnn,
+    'LSTM': model_lstm,
+    'GRU': model_gru
+}
+
+results_seq = {}
+for name, model in models_seq.items():
+    mse, mae = model.evaluate(X_test_rnn, y_test_rnn, verbose=0)
+    results_seq[name] = {'MSE': mse, 'MAE': mae}
+
+results_df_seq = pd.DataFrame(results_seq).T
+print("Confronto modelli sequenziali:")
+print(results_df_seq.round(4))
+```
+
+6.5 Transfer learning e fine-tuning
+
+Il transfer learning permette di riutilizzare modelli pre-addestrati.
+
+**Transfer learning con VGG16:**
+
+```python
+from tensorflow.keras.applications import VGG16
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
+
+# Caricamento VGG16 pre-addestrato (senza top layers)
+base_model = VGG16(weights='imagenet', include_top=False, input_shape=(224, 224, 3))
+
+# Congelamento dei layer base
+for layer in base_model.layers:
+    layer.trainable = False
+
+# Aggiunta di layer personalizzati
+model_transfer = keras.Sequential([
+    base_model,
+    layers.Flatten(),
+    layers.Dense(256, activation='relu'),
+    layers.Dropout(0.5),
+    layers.Dense(10, activation='softmax')  # Adattato per 10 classi
+])
+
+model_transfer.compile(
+    optimizer=keras.optimizers.Adam(learning_rate=1e-4),
+    loss='categorical_crossentropy',
+    metrics=['accuracy']
+)
+
+model_transfer.summary()
+
+# Data augmentation per transfer learning
+train_datagen = ImageDataGenerator(
+    rescale=1./255,
+    rotation_range=20,
+    width_shift_range=0.2,
+    height_shift_range=0.2,
+    shear_range=0.2,
+    zoom_range=0.2,
+    horizontal_flip=True,
+    fill_mode='nearest'
+)
+
+# Nota: Per un esempio completo servirebbero dati reali
+# Qui mostriamo solo la struttura del modello
+```
+
+**Fine-tuning:**
+
+```python
+# Sblocco degli ultimi layer per fine-tuning
+for layer in base_model.layers[-4:]:  # Sblocca gli ultimi 4 layer
+    layer.trainable = True
+
+# Ricompilazione con learning rate più basso
+model_transfer.compile(
+    optimizer=keras.optimizers.Adam(learning_rate=1e-5),
+    loss='categorical_crossentropy',
+    metrics=['accuracy']
+)
+
+# Addestramento del modello fine-tunato
+# history_finetune = model_transfer.fit(...)
+```
+
+6.6 Deployment di modelli deep learning
+
+**Salvataggio e caricamento modelli:**
+
+```python
+# Salvataggio del modello
+model_clf.save('modello_classificazione.h5')
+
+# Caricamento del modello
+model_caricato = keras.models.load_model('modello_classificazione.h5')
+
+# Verifica che funzioni
+test_loss, test_accuracy = model_caricato.evaluate(X_test_clf_scaled, y_test_clf, verbose=0)
+print(f"Accuratezza modello caricato: {test_accuracy:.4f}")
+
+# Salvataggio in formato SavedModel (per TensorFlow Serving)
+model_clf.save('modello_saved_model', save_format='tf')
+
+# Conversione in TFLite per dispositivi mobili
+converter = tf.lite.TFLiteConverter.from_keras_model(model_clf)
+tflite_model = converter.convert()
+
+with open('modello.tflite', 'wb') as f:
+    f.write(tflite_model)
+```
+
+**TensorFlow Serving:**
+
+```python
+# Installazione (in terminale):
+# docker run -p 8501:8501 --mount type=bind,source=$(pwd)/modello_saved_model,target=/models/modello -e MODEL_NAME=modello -t tensorflow/serving
+
+# Client per query del modello servito
+import requests
+import json
+import numpy as np
+
+def predict_with_serving(data, model_name='modello'):
+    url = f'http://localhost:8501/v1/models/{model_name}:predict'
+    
+    # Preparazione dati
+    instances = data.tolist()
+    payload = {'instances': instances}
+    
+    # Richiesta
+    response = requests.post(url, json=payload)
+    predictions = response.json()['predictions']
+    
+    return np.array(predictions)
+
+# Esempio di utilizzo
+sample_data = X_test_clf_scaled[:5]
+predictions = predict_with_serving(sample_data)
+print("Previsioni dal modello servito:")
+print(predictions)
+```
+
+================================================================================
+CAPITOLO 7: BIG DATA E DISTRIBUTED COMPUTING
+================================================================================
+
+7.1 Introduzione a PySpark
+
+PySpark permette di elaborare grandi dataset in modo distribuito.
+
+**Setup PySpark:**
+
+```python
+# Installazione: pip install pyspark
+
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import *
+from pyspark.ml.feature import *
+from pyspark.ml.classification import *
+from pyspark.ml.evaluation import *
+
+# Creazione Spark Session
+spark = SparkSession.builder \
+    .appName("DataScience con PySpark") \
+    .config("spark.driver.memory", "4g") \
+    .getOrCreate()
+
+print(f"Spark version: {spark.version}")
+
+# Configurazione per evitare warning
+spark.sparkContext.setLogLevel("ERROR")
+```
+
+**Lettura e manipolazione dati:**
+
+```python
+# Lettura CSV
+df_spark = spark.read.csv("dati.csv", header=True, inferSchema=True)
+
+# Lettura JSON
+df_json = spark.read.json("dati.json")
+
+# Lettura Parquet (formato efficiente)
+df_parquet = spark.read.parquet("dati.parquet")
+
+# Informazioni sul DataFrame
+print(f"Numero righe: {df_spark.count()}")
+print(f"Schema:")
+df_spark.printSchema()
+
+# Operazioni basilari
+df_spark.show(5)
+df_spark.describe().show()
+
+# Selezione colonne
+df_select = df_spark.select("colonna1", "colonna2")
+df_select.show()
+
+# Filtri
+df_filtered = df_spark.filter(col("età") > 18)
+df_filtered.show()
+
+# Raggruppamenti
+df_grouped = df_spark.groupBy("categoria").agg(
+    count("*").alias("conteggio"),
+    avg("valore").alias("media_valore"),
+    max("valore").alias("max_valore")
+)
+df_grouped.show()
+```
+
+**SQL con PySpark:**
+
+```python
+# Registrazione come tabella temporanea
+df_spark.createOrReplaceTempView("tabella_dati")
+
+# Query SQL
+risultato_sql = spark.sql("""
+    SELECT categoria, 
+           COUNT(*) as conteggio,
+           AVG(valore) as media_valore,
+           MAX(valore) as max_valore
+    FROM tabella_dati
+    WHERE valore > 0
+    GROUP BY categoria
+    ORDER BY conteggio DESC
+""")
+
+risultato_sql.show()
+```
+
+7.2 Elaborazione distribuita di grandi dataset
+
+**Pipeline di preprocessing distribuito:**
+
+```python
+from pyspark.ml import Pipeline
+from pyspark.ml.feature import StringIndexer, OneHotEncoder, VectorAssembler, StandardScaler
+
+# Dataset di esempio
+data = [
+    (1, "Maschio", 25, "Laurea", 50000),
+    (2, "Femmina", 30, "Master", 60000),
+    (3, "Maschio", 35, "Dottorato", 80000),
+    (4, "Femmina", 28, "Laurea", 55000),
+    (5, "Maschio", 40, "Master", 75000)
+]
+
+columns = ["id", "genere", "età", "istruzione", "stipendio"]
+df_spark = spark.createDataFrame(data, columns)
+
+# Pipeline di preprocessing
+# 1. StringIndexer per variabili categoriche
+indexer_genere = StringIndexer(inputCol="genere", outputCol="genere_index")
+indexer_istruzione = StringIndexer(inputCol="istruzione", outputCol="istruzione_index")
+
+# 2. OneHotEncoder
+encoder = OneHotEncoder(inputCols=["genere_index", "istruzione_index"], 
+                       outputCols=["genere_encoded", "istruzione_encoded"])
+
+# 3. VectorAssembler per combinare feature
+assembler = VectorAssembler(
+    inputCols=["età", "genere_encoded", "istruzione_encoded"], 
+    outputCol="features"
+)
+
+# 4. StandardScaler
+scaler = StandardScaler(inputCol="features", outputCol="features_scaled")
+
+# Creazione pipeline
+pipeline = Pipeline(stages=[indexer_genere, indexer_istruzione, encoder, assembler, scaler])
+
+# Fit e transform
+model_pipeline = pipeline.fit(df_spark)
+df_processed = model_pipeline.transform(df_spark)
+
+df_processed.select("id", "features_scaled").show(truncate=False)
+```
+
+**Gestione dati mancanti distribuita:**
+
+```python
+from pyspark.ml.feature import Imputer
+
+# Creazione dataset con valori mancanti
+data_missing = [
+    (1, 25.0, 50000.0),
+    (2, None, 60000.0),
+    (3, 35.0, None),
+    (4, 28.0, 55000.0),
+    (5, None, 75000.0)
+]
+
+df_missing = spark.createDataFrame(data_missing, ["id", "età", "stipendio"])
+
+# Imputer per riempire valori mancanti
+imputer = Imputer(
+    inputCols=["età", "stipendio"],
+    outputCols=["età_imputed", "stipendio_imputed"]
+).setStrategy("mean")
+
+df_imputed = imputer.fit(df_missing).transform(df_missing)
+df_imputed.show()
+```
+
+7.3 Machine Learning su larga scala
+
+**Regressione lineare distribuita:**
+
+```python
+from pyspark.ml.regression import LinearRegression
+from pyspark.ml.evaluation import RegressionEvaluator
+
+# Dataset per regressione
+data_reg = [
+    (1, [25.0, 1.0, 0.0, 1.0], 50000.0),
+    (2, [30.0, 0.0, 1.0, 0.0], 60000.0),
+    (3, [35.0, 1.0, 0.0, 0.0], 80000.0),
+    (4, [28.0, 0.0, 1.0, 1.0], 55000.0),
+    (5, [40.0, 1.0, 0.0, 0.0], 75000.0)
+]
+
+df_reg = spark.createDataFrame(data_reg, ["id", "features", "stipendio"])
+
+# Suddivisione train/test
+train_df, test_df = df_reg.randomSplit([0.8, 0.2], seed=42)
+
+# Modello di regressione lineare
+lr = LinearRegression(featuresCol="features", labelCol="stipendio")
+
+# Addestramento
+lr_model = lr.fit(train_df)
+
+# Previsioni
+predictions = lr_model.transform(test_df)
+
+# Valutazione
+evaluator = RegressionEvaluator(labelCol="stipendio", predictionCol="prediction", metricName="rmse")
+rmse = evaluator.evaluate(predictions)
+print(f"RMSE: {rmse:.2f}")
+
+# Coefficienti del modello
+print(f"Coefficienti: {lr_model.coefficients}")
+print(f"Intercetta: {lr_model.intercept:.2f}")
+
+predictions.select("stipendio", "prediction").show()
+```
+
+**Classificazione distribuita:**
+
+```python
+from pyspark.ml.classification import RandomForestClassifier
+from pyspark.ml.evaluation import BinaryClassificationEvaluator, MulticlassClassificationEvaluator
+
+# Dataset per classificazione
+data_clf = [
+    (1, [25.0, 1.0, 0.0], 0),  # Basso stipendio
+    (2, [30.0, 0.0, 1.0], 1),  # Alto stipendio
+    (3, [35.0, 1.0, 0.0], 1),
+    (4, [28.0, 0.0, 1.0], 0),
+    (5, [40.0, 1.0, 0.0], 1),
+    (6, [22.0, 0.0, 0.0], 0),
+    (7, [45.0, 1.0, 1.0], 1)
+]
+
+df_clf = spark.createDataFrame(data_clf, ["id", "features", "target"])
+
+# Suddivisione train/test
+train_clf, test_clf = df_clf.randomSplit([0.7, 0.3], seed=42)
+
+# Random Forest Classifier
+rf = RandomForestClassifier(featuresCol="features", labelCol="target", numTrees=10)
+
+# Addestramento
+rf_model = rf.fit(train_clf)
+
+# Previsioni
+predictions_clf = rf_model.transform(test_clf)
+
+# Valutazione
+evaluator_acc = MulticlassClassificationEvaluator(labelCol="target", predictionCol="prediction", metricName="accuracy")
+accuracy = evaluator_acc.evaluate(predictions_clf)
+
+evaluator_auc = BinaryClassificationEvaluator(labelCol="target", rawPredictionCol="rawPrediction", metricName="areaUnderROC")
+auc = evaluator_auc.evaluate(predictions_clf)
+
+print(f"Accuratezza: {accuracy:.4f}")
+print(f"AUC: {auc:.4f}")
+
+predictions_clf.select("target", "prediction", "probability").show()
+```
+
+**Clustering distribuito:**
+
+```python
+from pyspark.ml.clustering import KMeans
+from pyspark.ml.evaluation import ClusteringEvaluator
+
+# Dataset per clustering
+data_cluster = [
+    (1, [1.0, 1.0]),
+    (2, [1.2, 1.1]),
+    (3, [0.8, 0.9]),
+    (4, [5.0, 5.0]),
+    (5, [5.1, 5.2]),
+    (6, [4.9, 4.8]),
+    (7, [9.0, 9.0]),
+    (8, [9.1, 8.9]),
+    (9, [8.8, 9.2])
+]
+
+df_cluster = spark.createDataFrame(data_cluster, ["id", "features"])
+
+# K-Means
+kmeans = KMeans(k=3, featuresCol="features", predictionCol="cluster")
+
+# Addestramento
+kmeans_model = kmeans.fit(df_cluster)
+
+# Previsioni
+predictions_cluster = kmeans_model.transform(df_cluster)
+
+# Valutazione
+evaluator_cluster = ClusteringEvaluator(predictionCol="cluster", featuresCol="features")
+silhouette = evaluator_cluster.evaluate(predictions_cluster)
+print(f"Silhouette Score: {silhouette:.4f}")
+
+# Centroidi
+centers = kmeans_model.clusterCenters()
+print("Centroidi dei cluster:")
+for i, center in enumerate(centers):
+    print(f"Cluster {i}: {center}")
+
+predictions_cluster.show()
+```
+
+7.4 Integrazione con cloud platforms
+
+**Lettura da AWS S3:**
+
+```python
+# Configurazione AWS (in produzione usare variabili d'ambiente)
+spark._jsc.hadoopConfiguration().set("fs.s3a.access.key", "your-access-key")
+spark._jsc.hadoopConfiguration().set("fs.s3a.secret.key", "your-secret-key")
+spark._jsc.hadoopConfiguration().set("fs.s3a.endpoint", "s3.amazonaws.com")
+
+# Lettura da S3
+df_s3 = spark.read.csv("s3a://bucket-name/path/to/file.csv", header=True, inferSchema=True)
+
+# Scrittura su S3
+df_s3.write.mode("overwrite").parquet("s3a://bucket-name/output/")
+```
+
+**Lettura da Google Cloud Storage:**
+
+```python
+# Configurazione GCS
+spark._jsc.hadoopConfiguration().set("google.cloud.auth.service.account.json.keyfile", "/path/to/service-account.json")
+
+# Lettura da GCS
+df_gcs = spark.read.json("gs://bucket-name/data/*.json")
+```
+
+**Lettura da Azure Blob Storage:**
+
+```python
+# Configurazione Azure
+spark._jsc.hadoopConfiguration().set("fs.azure.account.key.storageaccount.blob.core.windows.net", "your-account-key")
+
+# Lettura da Azure
+df_azure = spark.read.parquet("wasbs://container@storageaccount.blob.core.windows.net/data/")
+```
+
+7.5 Ottimizzazione delle performance
+
+**Tecniche di ottimizzazione PySpark:**
+
+```python
+# 1. Cache dei DataFrame frequentemente utilizzati
+df_cached = df_spark.cache()
+
+# 2. Persistenza su disco se necessario
+df_persisted = df_spark.persist(StorageLevel.MEMORY_AND_DISK)
+
+# 3. Configurazione partizioni
+df_repartitioned = df_spark.repartition(10)  # 10 partizioni
+
+# 4. Coalesce per ridurre partizioni
+df_coalesced = df_spark.coalesce(4)
+
+# 5. Broadcast join per tabelle piccole
+from pyspark.sql.functions import broadcast
+
+df_large = spark.read.parquet("large_table.parquet")
+df_small = spark.read.parquet("small_table.parquet")
+
+df_joined = df_large.join(broadcast(df_small), "key")
+
+# 6. Salto di righe non necessarie presto nella pipeline
+df_optimized = df_spark \
+    .filter(col("importante") > 0) \
+    .select("col1", "col2", "col3") \
+    .groupBy("categoria") \
+    .agg(sum("valore").alias("totale"))
+
+# 7. Uso di colonne invece di UDF quando possibile
+# Invece di UDF:
+# def funzione_complessa(x):
+#     return x * 2 + 1
+# udf_func = udf(funzione_complessa)
+# df.withColumn("nuova_col", udf_func(col("vecchia_col")))
+
+# Usa operazioni native:
+df_optimized = df_spark.withColumn("nuova_col", col("vecchia_col") * 2 + 1)
+```
+
+**Monitoraggio performance:**
+
+```python
+# Abilitazione monitoraggio
+spark.sparkContext.setLogLevel("INFO")
+
+# Visualizzazione piano di esecuzione
+df_spark.explain()
+
+# Statistiche sulle partizioni
+print(f"Numero partizioni: {df_spark.rdd.getNumPartitions()}")
+
+# Cache status
+print(f"Cache status: {df_cached.is_cached}")
+
+# Forza esecuzione per vedere statistiche
+df_spark.count()  # Forza esecuzione
+```
+
+================================================================================
+CAPITOLO 8: PROGETTI PRATICI E CASE STUDIES
+================================================================================
+
+8.1 Analisi di dati finanziari
+
+**Analisi di serie storiche finanziarie:**
+
+```python
+import yfinance as yf
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from statsmodels.tsa.arima.model import ARIMA
+from sklearn.metrics import mean_squared_error
+
+# Download dati finanziari
+ticker = "AAPL"
+data = yf.download(ticker, start="2020-01-01", end="2023-12-31")
+
+# Preprocessing
+df_fin = data[['Close']].copy()
+df_fin['Returns'] = df_fin['Close'].pct_change()
+df_fin['Log_Returns'] = np.log(df_fin['Close'] / df_fin['Close'].shift(1))
+df_fin.dropna(inplace=True)
+
+# Statistiche descrittive
+print("Statistiche prezzi di chiusura:")
+print(df_fin['Close'].describe())
+
+print("\nStatistiche rendimenti:")
+print(df_fin['Returns'].describe())
+
+# Visualizzazioni
+fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(15, 10))
+
+# Prezzi di chiusura
+ax1.plot(df_fin.index, df_fin['Close'])
+ax1.set_title(f'Prezzi di chiusura {ticker}')
+ax1.set_ylabel('Prezzo ($)')
+
+# Rendimenti giornalieri
+ax2.plot(df_fin.index, df_fin['Returns'])
+ax2.set_title('Rendimenti giornalieri')
+ax2.set_ylabel('Rendimento')
+
+# Istogramma rendimenti
+ax3.hist(df_fin['Returns'], bins=50, alpha=0.7, density=True)
+ax3.set_title('Distribuzione rendimenti')
+ax3.set_xlabel('Rendimento')
+ax3.set_ylabel('Densità')
+
+# Q-Q plot per normalità
+from scipy import stats
+stats.probplot(df_fin['Returns'], dist="norm", plot=ax4)
+ax4.set_title('Q-Q Plot vs Distribuzione Normale')
+
+plt.tight_layout()
+plt.show()
+
+# Modello ARIMA per previsione
+# Suddivisione train/test
+train_size = int(len(df_fin) * 0.8)
+train, test = df_fin['Close'][:train_size], df_fin['Close'][train_size:]
+
+# Addestramento modello ARIMA
+model_arima = ARIMA(train, order=(5, 1, 0))
+model_fit = model_arima.fit()
+
+# Previsioni
+forecast = model_fit.forecast(steps=len(test))
+
+# Valutazione
+rmse = np.sqrt(mean_squared_error(test, forecast))
+print(f"RMSE ARIMA: {rmse:.2f}")
+
+# Visualizzazione previsioni
+plt.figure(figsize=(12, 6))
+plt.plot(train.index, train, label='Training')
+plt.plot(test.index, test, label='Test')
+plt.plot(test.index, forecast, label='Previsioni ARIMA', color='red')
+plt.title(f'Previsioni ARIMA per {ticker}')
+plt.xlabel('Data')
+plt.ylabel('Prezzo di chiusura')
+plt.legend()
+plt.show()
+```
+
+8.2 Sistemi di raccomandazione
+
+**Collaborative Filtering con Surprise:**
+
+```python
+# Installazione: pip install scikit-surprise
+
+from surprise import Dataset, Reader, SVD, KNNBasic
+from surprise.model_selection import cross_validate, train_test_split
+from surprise import accuracy
+import pandas as pd
+
+# Dataset MovieLens (esempio ridotto)
+ratings_data = [
+    (1, 1, 5.0), (1, 2, 3.0), (1, 3, 4.0), (1, 4, 2.0),
+    (2, 1, 4.0), (2, 2, 5.0), (2, 3, 2.0), (2, 4, 3.0),
+    (3, 1, 2.0), (3, 2, 4.0), (3, 3, 5.0), (3, 4, 4.0),
+    (4, 1, 3.0), (4, 2, 2.0), (4, 3, 3.0), (4, 4, 5.0)
+]
+
+df_ratings = pd.DataFrame(ratings_data, columns=['user_id', 'item_id', 'rating'])
+
+# Preparazione dati per Surprise
+reader = Reader(rating_scale=(1, 5))
+data = Dataset.load_from_df(df_ratings[['user_id', 'item_id', 'rating']], reader)
+
+# Suddivisione train/test
+trainset, testset = train_test_split(data, test_size=0.25, random_state=42)
+
+# Modello SVD (Matrix Factorization)
+svd_model = SVD(n_factors=50, n_epochs=20, random_state=42)
+svd_model.fit(trainset)
+
+# Previsioni
+predictions_svd = svd_model.test(testset)
+
+# Valutazione
+rmse_svd = accuracy.rmse(predictions_svd)
+mae_svd = accuracy.mae(predictions_svd)
+
+print(f"SVD - RMSE: {rmse_svd:.4f}, MAE: {mae_svd:.4f}")
+
+# Modello KNN (User-based collaborative filtering)
+knn_model = KNNBasic(k=3, sim_options={'name': 'cosine', 'user_based': True})
+knn_model.fit(trainset)
+
+predictions_knn = knn_model.test(testset)
+rmse_knn = accuracy.rmse(predictions_knn)
+mae_knn = accuracy.mae(predictions_knn)
+
+print(f"KNN - RMSE: {rmse_knn:.4f}, MAE: {mae_knn:.4f}")
+
+# Generazione raccomandazioni per un utente
+user_id = 1
+all_items = df_ratings['item_id'].unique()
+
+# Items già valutati dall'utente
+rated_items = df_ratings[df_ratings['user_id'] == user_id]['item_id'].tolist()
+
+# Items da raccomandare
+items_to_recommend = [item for item in all_items if item not in rated_items]
+
+# Previsioni per items non valutati
+recommendations = []
+for item_id in items_to_recommend:
+    pred = svd_model.predict(user_id, item_id)
+    recommendations.append((item_id, pred.est))
+
+# Ordinamento per rating previsto decrescente
+recommendations.sort(key=lambda x: x[1], reverse=True)
+
+print(f"\nRaccomandazioni per utente {user_id}:")
+for item_id, rating_pred in recommendations[:3]:
+    print(f"Item {item_id}: rating previsto {rating_pred:.2f}")
+```
+
+8.3 Analisi di immagini mediche
+
+**Classificazione di immagini mediche con CNN:**
+
+```python
+import tensorflow as tf
+from tensorflow import keras
+from tensorflow.keras import layers
+from sklearn.metrics import classification_report, confusion_matrix
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Simulazione dataset di immagini mediche (in pratica usare dataset reali come Chest X-ray)
+# Creazione dati sintetici per dimostrazione
+def create_synthetic_medical_data(n_samples=1000, img_size=64):
+    # Simula immagini di radiografie (2 classi: normale vs patologia)
+    X = np.random.rand(n_samples, img_size, img_size, 1)
+    
+    # Aggiunta di "pattern patologici" sintetici
+    y = np.random.choice([0, 1], n_samples)
+    
+    # Modifica immagini patologiche
+    for i in range(n_samples):
+        if y[i] == 1:  # Patologia
+            # Aggiunta di regioni più scure (simulando masse)
+            start_row = np.random.randint(10, img_size-20)
+            start_col = np.random.randint(10, img_size-20)
+            X[i, start_row:start_row+10, start_col:start_col+10, 0] *= 0.3
+    
+    return X, y
+
+X_medical, y_medical = create_synthetic_medical_data()
+
+# Suddivisione train/validation/test
+from sklearn.model_selection import train_test_split
+
+X_train_med, X_temp, y_train_med, y_temp = train_test_split(X_medical, y_medical, test_size=0.3, random_state=42)
+X_val_med, X_test_med, y_val_med, y_test_med = train_test_split(X_temp, y_temp, test_size=0.5, random_state=42)
+
+# Data augmentation per immagini mediche
+data_augmentation = keras.Sequential([
+    layers.RandomRotation(0.1),
+    layers.RandomZoom(0.1),
+    layers.RandomTranslation(0.1, 0.1),
+])
+
+# Modello CNN per classificazione medica
+def create_medical_cnn(input_shape=(64, 64, 1)):
+    inputs = keras.Input(shape=input_shape)
+    
+    # Data augmentation
+    x = data_augmentation(inputs)
+    
+    # Convolutional blocks
+    x = layers.Conv2D(32, 3, activation='relu')(x)
+    x = layers.BatchNormalization()(x)
+    x = layers.MaxPooling2D()(x)
+    x = layers.Dropout(0.25)(x)
+    
+    x = layers.Conv2D(64, 3, activation='relu')(x)
+    x = layers.BatchNormalization()(x)
+    x = layers.MaxPooling2D()(x)
+    x = layers.Dropout(0.25)(x)
+    
+    x = layers.Conv2D(128, 3, activation='relu')(x)
+    x = layers.BatchNormalization()(x)
+    x = layers.MaxPooling2D()(x)
+    x = layers.Dropout(0.25)(x)
+    
+    # Dense layers
+    x = layers.Flatten()(x)
+    x = layers.Dense(256, activation='relu')(x)
+    x = layers.BatchNormalization()(x)
+    x = layers.Dropout(0.5)(x)
+    
+    outputs = layers.Dense(1, activation='sigmoid')(x)
+    
+    model = keras.Model(inputs, outputs)
+    return model
+
+model_medical = create_medical_cnn()
+model_medical.compile(
+    optimizer='adam',
+    loss='binary_crossentropy',
+    metrics=['accuracy', keras.metrics.AUC(name='auc')]
+)
+
+model_medical.summary()
+
+# Callbacks
+callbacks_medical = [
+    keras.callbacks.EarlyStopping(patience=15, restore_best_weights=True),
+    keras.callbacks.ReduceLROnPlateau(factor=0.5, patience=5),
+    keras.callbacks.ModelCheckpoint('best_medical_model.h5', save_best_only=True)
+]
+
+# Addestramento
+history_medical = model_medical.fit(
+    X_train_med, y_train_med,
+    epochs=50,
+    batch_size=32,
+    validation_data=(X_val_med, y_val_med),
+    callbacks=callbacks_medical
+)
+
+# Valutazione
+test_results = model_medical.evaluate(X_test_med, y_test_med, verbose=0)
+print(f"Test Loss: {test_results[0]:.4f}")
+print(f"Test Accuracy: {test_results[1]:.4f}")
+print(f"Test AUC: {test_results[2]:.4f}")
+
+# Previsioni
+y_pred_prob = model_medical.predict(X_test_med).flatten()
+y_pred_medical = (y_pred_prob > 0.5).astype(int)
+
+# Report di classificazione
+print("\nReport di classificazione:")
+print(classification_report(y_test_med, y_pred_medical, target_names=['Normale', 'Patologia']))
+
+# Matrice di confusione
+cm = confusion_matrix(y_test_med, y_pred_medical)
+print("\nMatrice di confusione:")
+print(cm)
+
+# Visualizzazione storia addestramento
+fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(15, 10))
+
+ax1.plot(history_medical.history['loss'], label='Training Loss')
+ax1.plot(history_medical.history['val_loss'], label='Validation Loss')
+ax1.set_title('Loss')
+ax1.legend()
+
+ax2.plot(history_medical.history['accuracy'], label='Training Accuracy')
+ax2.plot(history_medical.history['val_accuracy'], label='Validation Accuracy')
+ax2.set_title('Accuracy')
+ax2.legend()
+
+ax3.plot(history_medical.history['auc'], label='Training AUC')
+ax3.plot(history_medical.history['val_auc'], label='Validation AUC')
+ax3.set_title('AUC')
+ax3.legend()
+
+# Curva ROC
+from sklearn.metrics import roc_curve, auc
+fpr, tpr, thresholds = roc_curve(y_test_med, y_pred_prob)
+roc_auc = auc(fpr, tpr)
+
+ax4.plot(fpr, tpr, color='darkorange', lw=2, label=f'ROC curve (AUC = {roc_auc:.2f})')
+ax4.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
+ax4.set_xlim([0.0, 1.0])
+ax4.set_ylim([0.0, 1.05])
+ax4.set_xlabel('False Positive Rate')
+ax4.set_ylabel('True Positive Rate')
+ax4.set_title('Receiver Operating Characteristic')
+ax4.legend(loc="lower right")
+
+plt.tight_layout()
+plt.show()
+
+# Visualizzazione di alcune previsioni
+fig, axes = plt.subplots(2, 5, figsize=(15, 6))
+
+for i in range(10):
+    ax = axes[i//5, i%5]
+    ax.imshow(X_test_med[i, :, :, 0], cmap='gray')
+    true_label = 'Patologia' if y_test_med[i] == 1 else 'Normale'
+    pred_label = 'Patologia' if y_pred_medical[i] == 1 else 'Normale'
+    color = 'green' if y_test_med[i] == y_pred_medical[i] else 'red'
+    ax.set_title(f'Reale: {true_label}\nPred: {pred_label}', color=color, fontsize=8)
+    ax.axis('off')
+
+plt.tight_layout()
+plt.show()
+```
+
+8.4 Previsioni di serie temporali
+
+**Previsioni di vendita con LSTM:**
+
+```python
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.preprocessing import MinMaxScaler
+from tensorflow import keras
+from tensorflow.keras import layers
+
+# Generazione dati di vendita sintetici
+np.random.seed(42)
+date_range = pd.date_range(start='2018-01-01', end='2023-12-31', freq='D')
+
+# Trend + stagionalità + rumore
+trend = np.linspace(1000, 2000, len(date_range))
+seasonal_weekly = 200 * np.sin(2 * np.pi * np.arange(len(date_range)) / 7)
+seasonal_yearly = 300 * np.sin(2 * np.pi * np.arange(len(date_range)) / 365.25)
+noise = np.random.normal(0, 100, len(date_range))
+
+sales = trend + seasonal_weekly + seasonal_yearly + noise
+sales = np.maximum(sales, 0)  # Nessun valore negativo
+
+df_sales = pd.DataFrame({'date': date_range, 'sales': sales})
+df_sales.set_index('date', inplace=True)
+
+# Preprocessing per LSTM
+scaler = MinMaxScaler()
+sales_scaled = scaler.fit_transform(df_sales[['sales']])
+
+# Creazione sequenze per LSTM
+def create_sequences(data, seq_length):
+    X, y = [], []
+    for i in range(len(data) - seq_length):
+        X.append(data[i:i+seq_length])
+        y.append(data[i+seq_length])
+    return np.array(X), np.array(y)
+
+seq_length = 30  # 30 giorni di storia
+X, y = create_sequences(sales_scaled, seq_length)
+
+# Suddivisione train/test
+train_size = int(0.8 * len(X))
+X_train_seq, X_test_seq = X[:train_size], X[train_size:]
+y_train_seq, y_test_seq = y[:train_size], y[train_size:]
+
+print(f"Shape training: X={X_train_seq.shape}, y={y_train_seq.shape}")
+print(f"Shape test: X={X_test_seq.shape}, y={y_test_seq.shape}")
+
+# Modello LSTM per previsione serie temporali
+model_lstm_sales = keras.Sequential([
+    layers.LSTM(50, activation='relu', input_shape=(seq_length, 1), return_sequences=True),
+    layers.Dropout(0.2),
+    layers.LSTM(50, activation='relu'),
+    layers.Dropout(0.2),
+    layers.Dense(25, activation='relu'),
+    layers.Dense(1)
+])
+
+model_lstm_sales.compile(optimizer='adam', loss='mse', metrics=['mae'])
+
+# Addestramento
+history_lstm_sales = model_lstm_sales.fit(
+    X_train_seq, y_train_seq,
+    epochs=50,
+    batch_size=32,
+    validation_split=0.1,
+    callbacks=[
+        keras.callbacks.EarlyStopping(patience=10, restore_best_weights=True),
+        keras.callbacks.ReduceLROnPlateau(factor=0.5, patience=5)
+    ],
+    verbose=1
+)
+
+# Previsioni
+y_pred_scaled = model_lstm_sales.predict(X_test_seq)
+y_pred = scaler.inverse_transform(y_pred_scaled)
+y_test_actual = scaler.inverse_transform(y_test_seq)
+
+# Valutazione
+from sklearn.metrics import mean_absolute_error, mean_squared_error
+
+mae = mean_absolute_error(y_test_actual, y_pred)
+rmse = np.sqrt(mean_squared_error(y_test_actual, y_pred))
+
+print(f"MAE: {mae:.2f}")
+print(f"RMSE: {rmse:.2f}")
+
+# Visualizzazione risultati
+plt.figure(figsize=(15, 8))
+
+# Grafico completo
+plt.subplot(2, 1, 1)
+plt.plot(df_sales.index, df_sales['sales'], label='Dati reali', alpha=0.7)
+
+# Previsioni allineate temporalmente
+pred_dates = df_sales.index[seq_length + train_size:seq_length + train_size + len(y_pred)]
+plt.plot(pred_dates, y_pred.flatten(), label='Previsioni LSTM', color='red', linewidth=2)
+
+plt.title('Previsioni Vendite con LSTM')
+plt.xlabel('Data')
+plt.ylabel('Vendite')
+plt.legend()
+plt.grid(True, alpha=0.3)
+
+# Zoom sull'ultima parte
+plt.subplot(2, 1, 2)
+start_idx = len(df_sales) - 200  # Ultimi 200 giorni
+plt.plot(df_sales.index[start_idx:], df_sales['sales'][start_idx:], label='Dati reali', alpha=0.7)
+plt.plot(pred_dates, y_pred.flatten(), label='Previsioni LSTM', color='red', linewidth=2)
+plt.title('Zoom sulle Previsioni')
+plt.xlabel('Data')
+plt.ylabel('Vendite')
+plt.legend()
+plt.grid(True, alpha=0.3)
+
+plt.tight_layout()
+plt.show()
+
+# Previsioni future
+def predict_future(model, last_sequence, n_future_steps, scaler):
+    predictions = []
+    current_sequence = last_sequence.copy()
+    
+    for _ in range(n_future_steps):
+        # Previsione del prossimo valore
+        pred_scaled = model.predict(current_sequence.reshape(1, seq_length, 1), verbose=0)
+        pred_actual = scaler.inverse_transform(pred_scaled)[0][0]
+        predictions.append(pred_actual)
+        
+        # Aggiornamento sequenza: rimuovi primo elemento, aggiungi previsione
+        current_sequence = np.roll(current_sequence, -1)
+        current_sequence[-1] = pred_scaled[0][0]
+    
+    return predictions
+
+# Previsioni per i prossimi 30 giorni
+last_sequence = sales_scaled[-seq_length:].flatten()
+future_predictions = predict_future(model_lstm_sales, last_sequence, 30, scaler)
+
+# Date future
+last_date = df_sales.index[-1]
+future_dates = pd.date_range(start=last_date + pd.Timedelta(days=1), periods=30, freq='D')
+
+# Visualizzazione previsioni future
+plt.figure(figsize=(12, 6))
+plt.plot(df_sales.index[-90:], df_sales['sales'][-90:], label='Dati storici', alpha=0.7)
+plt.plot(future_dates, future_predictions, label='Previsioni future', color='orange', linewidth=2)
+plt.axvline(x=last_date, color='red', linestyle='--', alpha=0.7, label='Oggi')
+plt.title('Previsioni Vendite Future (30 giorni)')
+plt.xlabel('Data')
+plt.ylabel('Vendite')
+plt.legend()
+plt.grid(True, alpha=0.3)
+plt.show()
+
+print(f"Previsione per domani: {future_predictions[0]:.0f} unità")
+print(f"Previsione media prossima settimana: {np.mean(future_predictions[:7]):.0f} unità")
+```
+
+8.5 Natural Language Processing
+
+**Analisi di sentiment con BERT:**
+
+```python
+# Installazione: pip install transformers torch
+
+import torch
+from transformers import BertTokenizer, BertForSequenceClassification
+from transformers import pipeline
+import pandas as pd
+import numpy as np
+
+# Dataset di recensioni sintetiche
+reviews_data = [
+    ("Questo prodotto è eccellente, lo consiglio vivamente!", "positivo"),
+    ("Spedizione veloce e imballaggio perfetto.", "positivo"),
+    ("Il prodotto funziona bene ma il prezzo è troppo alto.", "neutro"),
+    ("Qualità mediocre, non vale il prezzo pagato.", "negativo"),
+    ("Servizio clienti terribile, mai più!", "negativo"),
+    ("Prodotto buono ma consegna in ritardo.", "neutro"),
+    ("Super soddisfatto dell'acquisto!", "positivo"),
+    ("Il prodotto si è rotto dopo una settimana.", "negativo"),
+    ("Confezione elegante e prodotto di qualità.", "positivo"),
+    ("Prezzo competitivo ma qualità sotto la media.", "neutro")
+]
+
+df_reviews = pd.DataFrame(reviews_data, columns=['review', 'sentiment'])
+
+# Modello pre-addestrato per analisi sentiment (multilingua)
+model_name = "nlptown/bert-base-multilingual-uncased-sentiment"
+sentiment_pipeline = pipeline("sentiment-analysis", model=model_name)
+
+# Analisi sentiment
+results = []
+for review in df_reviews['review']:
+    result = sentiment_pipeline(review)[0]
+    results.append({
+        'review': review,
+        'predicted_label': result['label'],
+        'confidence': result['score']
+    })
+
+df_results = pd.DataFrame(results)
+
+# Mappatura etichette numeriche a categoriche
+label_mapping = {
+    '1 star': 'molto negativo',
+    '2 stars': 'negativo', 
+    '3 stars': 'neutro',
+    '4 stars': 'positivo',
+    '5 stars': 'molto positivo'
+}
+
+df_results['sentiment_pred'] = df_results['predicted_label'].map(label_mapping)
+
+# Confronto con etichette reali
+df_comparison = pd.concat([df_reviews, df_results[['sentiment_pred', 'confidence']]], axis=1)
+
+print("Risultati analisi sentiment:")
+print(df_comparison)
+
+# Accuratezza
+accuracy = (df_comparison['sentiment'] == df_comparison['sentiment_pred']).mean()
+print(f"\nAccuratezza: {accuracy:.2f}")
+
+# Distribuzione delle previsioni
+print("\nDistribuzione sentiment predetti:")
+print(df_results['sentiment_pred'].value_counts())
+
+# Visualizzazione
+import matplotlib.pyplot as plt
+
+plt.figure(figsize=(12, 5))
+
+plt.subplot(1, 2, 1)
+df_results['sentiment_pred'].value_counts().plot(kind='bar')
+plt.title('Distribuzione Sentiment Predetti')
+plt.xlabel('Sentiment')
+plt.ylabel('Conteggio')
+plt.xticks(rotation=45)
+
+plt.subplot(1, 2, 2)
+plt.hist(df_results['confidence'], bins=10, alpha=0.7, edgecolor='black')
+plt.title('Distribuzione Confidence Scores')
+plt.xlabel('Confidence')
+plt.ylabel('Frequenza')
+
+plt.tight_layout()
+plt.show()
+
+# Classificazione di nuove recensioni
+nuove_recensioni = [
+    "Prodotto fantastico, consegna rapida!",
+    "Non funziona come pubblicizzato, delusione totale.",
+    "Buon rapporto qualità-prezzo.",
+    "Il pacco è arrivato danneggiato."
+]
+
+print("\nAnalisi nuove recensioni:")
+for review in nuove_recensioni:
+    result = sentiment_pipeline(review)[0]
+    sentiment = label_mapping[result['label']]
+    print(f"Recensione: '{review}'")
+    print(f"Sentiment: {sentiment} (confidence: {result['score']:.3f})")
+    print("-" * 50)
+```
+
+================================================================================
+APPENDICE A: AMBIENTI DI SVILUPPO
+================================================================================
+
+A.1 Jupyter Notebook e JupyterLab
+
+Jupyter Notebook è uno strumento essenziale per l'analisi dati interattiva.
+
+**Installazione e setup:**
+
+```bash
+# Installazione
+pip install jupyter
+
+# Avvio
+jupyter notebook
+
+# Per JupyterLab (interfaccia più moderna)
+pip install jupyterlab
+jupyter lab
+```
+
+**Caratteristiche principali:**
+
+- Esecuzione interattiva di codice Python
+- Combinazione di codice, testo formattato e visualizzazioni
+- Supporto per markdown e LaTeX
+- Condivisione di notebook
+- Integrazione con git
+
+**Best practices per notebook:**
+
+```python
+# 1. Organizzazione del codice
+# Import all'inizio
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+# 2. Uso di markdown per documentazione
+# # Titolo del notebook
+# ## Sezione 1: Caricamento dati
+# Questa sezione carica e pulisce i dati...
+
+# 3. Funzioni riutilizzabili
+def load_data(file_path):
+    """Carica dati da file CSV."""
+    return pd.read_csv(file_path)
+
+def clean_data(df):
+    """Pulisce il dataset."""
+    return df.dropna().reset_index(drop=True)
+
+# 4. Configurazione plotting
+plt.style.use('seaborn-v0_8')
+plt.rcParams['figure.figsize'] = (10, 6)
+
+# 5. Logging per debugging
+import logging
+logging.basicConfig(level=logging.INFO)
+
+# 6. Gestione memoria
+# Cancella variabili grandi quando non servono più
+# del df_large
+# import gc; gc.collect()
+```
+
+A.2 IDE specializzati per Data Science
+
+**VS Code con estensioni Data Science:**
+
+- Python extension
+- Jupyter extension
+- Pylance per intellisense
+- Git integration
+
+**PyCharm Professional:**
+
+- IDE completo per Python
+- Integrazione Jupyter
+- Supporto database
+- Profiling tools
+
+**Spyder:**
+
+- IDE simile a RStudio
+- Variable explorer
+- Integrated plotting
+
+A.3 Gestione degli ambienti virtuali
+
+**Conda environments:**
+
+```bash
+# Creazione ambiente
+conda create -n data_science python=3.9
+
+# Attivazione
+conda activate data_science
+
+# Installazione pacchetti
+conda install numpy pandas scikit-learn matplotlib
+
+# Esportazione ambiente
+conda env export > environment.yml
+
+# Importazione ambiente
+conda env create -f environment.yml
+```
+
+**Virtualenv:**
+
+```bash
+# Installazione
+pip install virtualenv
+
+# Creazione
+virtualenv venv
+
+# Attivazione (Windows)
+venv\Scripts\activate
+
+# Attivazione (Linux/Mac)
+source venv/bin/activate
+
+# Disattivazione
+deactivate
+```
+
+A.4 Containerizzazione con Docker
+
+**Dockerfile per Data Science:**
+
+```dockerfile
+FROM python:3.9-slim
+
+# Installazione system dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+# Creazione directory lavoro
+WORKDIR /app
+
+# Copia requirements
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copia codice
+COPY . .
+
+# Expose port per Jupyter (opzionale)
+EXPOSE 8888
+
+# Comando default
+CMD ["python", "main.py"]
+```
+
+**Requirements.txt:**
+
+```
+numpy==1.21.5
+pandas==1.5.2
+scikit-learn==1.1.3
+matplotlib==3.6.2
+seaborn==0.11.2
+jupyter==1.0.0
+tensorflow==2.11.0
+```
+
+**Docker Compose per stack completo:**
+
+```yaml
+version: '3.8'
+services:
+  jupyter:
+    build: .
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./notebooks:/app/notebooks
+      - ./data:/app/data
+    command: jupyter lab --ip=0.0.0.0 --port=8888 --allow-root --no-browser
+    environment:
+      - JUPYTER_TOKEN=password
+  
+  mlflow:
+    image: mlflow/mlflow
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./mlruns:/mlruns
+    command: mlflow ui --host 0.0.0.0 --port 5000
+```
+
+================================================================================
+APPENDICE B: RISORSE E COMUNITÀ
+================================================================================
+
+B.1 Documentazione ufficiale
+
+**Python Data Science Stack:**
+- Python: https://docs.python.org/3/
+- NumPy: https://numpy.org/doc/
+- Pandas: https://pandas.pydata.org/docs/
+- Matplotlib: https://matplotlib.org/stable/contents.html
+- Scikit-learn: https://scikit-learn.org/stable/documentation.html
+- TensorFlow: https://www.tensorflow.org/api_docs
+- PyTorch: https://pytorch.org/docs/
+
+B.2 Corsi online e piattaforme di apprendimento
+
+**Coursera:**
+- Machine Learning (Andrew Ng)
+- Deep Learning Specialization
+- Applied Data Science with Python
+
+**edX:**
+- Data Science MicroMasters
+- Statistics and Data Science
+
+**DataCamp:**
+- Interactive Python courses
+- Data Science tracks
+
+**Fast.ai:**
+- Practical Deep Learning for Coders
+
+B.3 Community e forum di discussione
+
+**Reddit:**
+- r/MachineLearning
+- r/datascience
+- r/LearnPython
+- r/learnmachinelearning
+
+**Stack Overflow:**
+- Tag: python, pandas, machine-learning, tensorflow
+
+**Kaggle:**
+- Competizioni
+- Dataset pubblici
+- Kernel condivisi
+
+B.4 Conferenze e eventi
+
+**Principali conferenze:**
+- PyData
+- SciPy Conference
+- JupyterCon
+- TensorFlow Dev Summit
+- NeurIPS
+- ICML
+- CVPR
+
+**Meetup locali:**
+- PyData meetups
+- Data Science meetups
+- AI/ML meetups
+
+================================================================================
+
+Questo manuale completo fornisce una guida esaustiva alla programmazione Python per Data Science e Machine Learning. Copre tutti gli aspetti fondamentali, dagli basics di Python fino alle tecniche avanzate di Deep Learning e Big Data.
+
+Ricorda che la pratica è essenziale: applica questi concetti a problemi reali e continua ad imparare attraverso progetti pratici e l'esplorazione della comunità Data Science.
+
+Buon coding e happy learning! 🚀
+
+================================================================================

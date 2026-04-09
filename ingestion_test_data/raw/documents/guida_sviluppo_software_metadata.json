@@ -1,0 +1,28 @@
+{
+    "title": "Guida Sviluppo Software",
+    "author": "Team Sviluppo",
+    "created_date": "2024-01-15",
+    "modified_date": "2024-03-10",
+    "version": "2.1",
+    "language": "it",
+    "category": "technical",
+    "tags": [
+        "sviluppo",
+        "programmazione",
+        "best-practices",
+        "guide"
+    ],
+    "word_count": 2450,
+    "pages": 12,
+    "description": "Guida completa alle pratiche di sviluppo software moderne, inclusi principi di design, testing e deployment",
+    "keywords": [
+        "software development",
+        "coding standards",
+        "agile",
+        "devops",
+        "quality assurance"
+    ],
+    "source": "internal",
+    "confidentiality": "internal",
+    "review_date": "2025-01-15"
+}

@@ -1,0 +1,166 @@
+# Default Ingestion Configuration
+# See docs/ingest-config-schema.md for complete documentation
+
+ingest:
+  # ============================================================================
+  # INPUT DISCOVERY
+  # ============================================================================
+  input:
+    dirs:
+      - "ingestion_test_data/raw"  # Default input directory
+    supported_formats:
+      - pdf
+      - docx
+      - doc
+      - html
+      - htm
+      - txt
+      - xml
+      - md
+      - json
+    max_depth: 10
+    exclude_paths:
+      - .git
+      - __pycache__
+      - node_modules
+      - .DS_Store
+  
+  # ============================================================================
+  # ZIP EXTRACTION
+  # ============================================================================
+  zip_extraction:
+    enabled: true
+    max_archive_depth: 3
+    exclude_patterns_in_archive:
+      - "__MACOSX/*"
+      - "*.DS_Store"
+  
+  # ============================================================================
+  # ID GENERATION (DETERMINISTIC)
+  # ============================================================================
+  id_generation:
+    strategy: sha256-16  # Deterministic: sha256-16, sha256-32
+    prefix: ""  # NO PREFIX - use full document ID only
+    suffix: ""
+  
+  # ============================================================================
+  # DOCUMENT LOADING & TEXT EXTRACTION
+  # ============================================================================
+  loader:
+    encoding_fallback:
+      - utf-8
+      - latin-1
+      - cp1252
+      - iso-8859-1
+    max_text_length: 1000000
+    
+    # Format-specific text extraction settings
+    pdf:
+      extract_text: true
+      max_pages: 0
+    docx:
+      extract_text: true
+    doc:
+      extract_text: true
+    html:
+      extract_text: true
+      keep_html: false
+    txt:
+      extract_text: true
+    
+    pdf:
+      extract_text: true
+      max_pages: 0  # 0 = all pages
+    
+    docx:
+      extract_text: true
+    
+    doc:
+      extract_text: true
+    
+    html:
+      extract_text: true
+      keep_html: false
+    
+    txt:
+      extract_text: true
+  
+  # ============================================================================
+  # DOCUMENT CONVERSION
+  # ============================================================================
+  conversion:
+    doc_to_pdf: true
+    backend: auto
+    timeout: 60
+  
+  # ============================================================================
+  # METADATA HANDLING (SIDECAR FILES)
+  # ============================================================================
+  metadata:
+    enabled: true
+    base_paths:
+      - "."  # Default: current directory and subdirectories
+    search_strategies:
+      - name: by_name
+        description: "exact filename match with .json extension"
+        rule: "{basename}.json"
+      
+      - name: in_directory
+        description: "any .json file in same directory"
+        rule: "*.json"
+      
+      - name: in_parent
+        description: "metadata in parent if directory is named 'attachments'"
+        rule: "parent_if_attachments"
+    
+    format: json
+    validation_enabled: false
+  
+  # ============================================================================
+  # OUTPUT & PERSISTENCE
+  # ============================================================================
+  output:
+    backend: filesystem
+    
+    filesystem:
+      dir_pattern: "{doc_id}"  # Directory for each document - FULL DOCUMENT ID ONLY, no prefix
+      preserve_extension: true
+      create_manifest: true
+      manifest_filename: manifest.json
+    
+    artifacts:
+      original_file: true
+      extracted_text: true
+      document_metadata: true
+      sidecar_metadata: true
+  
+  # ============================================================================
+  # ANALYZERS (OPTIONAL PROCESSING)
+  # ============================================================================
+  analyzers:
+    enabled: true
+    pipeline:
+      - name: text_extractor
+        enabled: true
+        config:
+          min_length: 10
+          remove_nulls: true
+    
+    on_analyzer_error: skip  # skip, fail_document, fail_all
+  
+  # ============================================================================
+  # LOGGING & DEBUGGING
+  # ============================================================================
+  logging:
+    level: INFO  # DEBUG, INFO, WARNING, ERROR
+    file: null  # "logs/ingest.log"
+    include_timings: false
+  
+  # ============================================================================
+  # ADVANCED / PERFORMANCE
+  # ============================================================================
+  advanced:
+    temp_dir: null  # Uses system temp if null
+    max_files: 0    # 0 = no limit
+    num_workers: 1  # Single-threaded by default
+    streaming_mode: false

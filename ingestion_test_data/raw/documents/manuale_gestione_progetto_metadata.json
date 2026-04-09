@@ -1,0 +1,31 @@
+{
+    "title": "Manuale Gestione Progetti",
+    "author": "PMO - Project Management Office",
+    "created_date": "2023-09-01",
+    "modified_date": "2024-03-01",
+    "version": "4.1",
+    "language": "it",
+    "category": "management",
+    "tags": [
+        "project-management",
+        "methodology",
+        "agile",
+        "waterfall",
+        "best-practices"
+    ],
+    "word_count": 4100,
+    "pages": 35,
+    "description": "Manuale completo per la gestione progetti, inclusi metodologie, strumenti e best practices",
+    "keywords": [
+        "project management",
+        "PMO",
+        "agile",
+        "scrum",
+        "risk management"
+    ],
+    "source": "PMO",
+    "confidentiality": "internal",
+    "review_date": "2025-03-01",
+    "approved_by": "Chief Operations Officer",
+    "document_type": "manual"
+}

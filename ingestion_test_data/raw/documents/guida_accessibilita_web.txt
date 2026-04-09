@@ -1,0 +1,256 @@
+Guida all'Accessibilità Web
+
+Capitolo 1: Introduzione all'Accessibilità
+
+L'accessibilità web rappresenta il diritto fondamentale di tutti gli utenti, indipendentemente dalle loro capacità, di accedere e utilizzare i contenuti e i servizi disponibili sul web. Questa guida fornisce le linee guida essenziali per creare esperienze digitali inclusive e conformi agli standard internazionali.
+
+1.1 Cosa è l'Accessibilità Web
+
+L'accessibilità web (Web Accessibility) si riferisce alla pratica di rendere i siti web utilizzabili da persone con disabilità. Questo include disabilità visive, motorie, cognitive e uditive.
+
+1.2 Benefici dell'Accessibilità
+
+- Inclusività: Accesso per 15% della popolazione mondiale
+- SEO: Miglior posizionamento nei motori di ricerca
+- Usabilità: Migliore esperienza per tutti gli utenti
+- Compliance: Conformità legale e normativa
+- Business: Maggiore reach di mercato
+
+Capitolo 2: Principi WCAG
+
+Le Web Content Accessibility Guidelines (WCAG) 2.1 forniscono il framework standard internazionale.
+
+2.1 I Quattro Principi
+
+1. **Perceivable**: L'informazione deve essere presentata in modi che gli utenti possano percepire
+2. **Operable**: I componenti dell'interfaccia devono essere operabili
+3. **Understandable**: L'informazione e l'operazione dell'interfaccia devono essere comprensibili
+4. **Robust**: Il contenuto deve essere robusto abbastanza da essere interpretato da una varietà di user agent
+
+2.2 Livelli di Conformità
+
+- **A**: Livello minimo, barriere critiche rimosse
+- **AA**: Livello standard, raccomandato per la maggior parte dei siti
+- **AAA**: Livello massimo, accessibilità ottimale
+
+Capitolo 3: Accessibilità per Disabilità Visive
+
+3.1 Testo Alternativo
+
+Ogni immagine non decorativa deve avere un alt text descrittivo:
+
+```html
+<!-- Buono -->
+<img src="grafico-vendite.png" alt="Grafico vendite Q1 2024: aumento 15%">
+
+<!-- Cattivo -->
+<img src="grafico.png" alt="Grafico">
+```
+
+3.2 Struttura della Pagina
+
+Utilizzare heading gerarchici:
+
+```html
+<h1>Titolo Principale</h1>
+<h2>Sezione 1</h2>
+<h3>Sottosezione 1.1</h3>
+<h2>Sezione 2</h2>
+```
+
+3.3 Colori e Contrasto
+
+- Rapporto di contrasto minimo 4.5:1 per testo normale
+- 3:1 per testo grande
+- Non usare solo il colore per trasmettere informazioni
+
+3.4 Screen Reader
+
+- Testare con NVDA, JAWS, VoiceOver
+- Fornire landmark regions (header, nav, main, etc.)
+- Evitare cambiamenti di contesto automatici
+
+Capitolo 4: Accessibilità Motoria
+
+4.1 Navigazione da Tastiera
+
+Tutti gli elementi interattivi devono essere accessibili da tastiera:
+
+- Tab order logico
+- Focus visibile
+- Skip links per navigazione rapida
+- No keyboard traps
+
+4.2 Touch Targets
+
+- Dimensione minima 44x44 pixel per touch targets
+- Spaziatura adeguata tra elementi
+- Gestures alternative per azioni complesse
+
+4.3 Tempo Sufficiente
+
+- Possibilità di disabilitare limiti di tempo
+- Avviso prima della scadenza
+- Possibilità di estendere timeout
+
+Capitolo 5: Accessibilità Cognitiva
+
+5.1 Linguaggio Semplice
+
+- Usa parole comuni invece di termini tecnici
+- Struttura informazioni in chunk digeribili
+- Fornisci glossari per termini specifici
+
+5.2 Navigazione Prevedibile
+
+- Menu consistenti across pages
+- Icone familiari con testo di supporto
+- Avvisi per cambiamenti di contesto
+
+5.3 Error Prevention
+
+- Conferma per azioni distruttive
+- Possibilità di undo
+- Messaggi di errore chiari e costruttivi
+
+Capitolo 6: Accessibilità Auditiva
+
+6.1 Trascrizioni
+
+Fornire trascrizioni per contenuti audio:
+
+```
+[Musica di sottofondo]
+
+Narratore: Benvenuti al webinar sulla accessibilità web.
+
+[Applausi]
+
+Narratore: Inizieremo con una panoramica dei principi WCAG.
+```
+
+6.2 Sottotitoli
+
+- Sottotitoli sincronizzati per video
+- Descrizioni audio per contenuti visivi importanti
+- Volume controllabile indipendentemente
+
+6.3 Avvisi Sonori
+
+- Non affidarsi solo a suoni per informazioni critiche
+- Fornire alternative visive agli avvisi sonori
+
+Capitolo 7: Strumenti e Testing
+
+7.1 Strumenti Automatici
+
+- WAVE Web Accessibility Evaluation Tool
+- axe DevTools
+- Lighthouse Accessibility Audit
+- Siteimprove Accessibility Checker
+
+7.2 Testing Manuale
+
+- Keyboard-only navigation testing
+- Screen reader testing
+- Color blindness simulation
+- User testing con persone con disabilità
+
+7.3 Checklist di Conformità
+
+- [ ] Tutti i link hanno testo significativo
+- [ ] Form hanno labels associati
+- [ ] Tabelle hanno headers appropriati
+- [ ] Video hanno trascrizioni
+- [ ] Colori hanno contrasto sufficiente
+
+Capitolo 8: Implementazione Pratica
+
+8.1 HTML Semantico
+
+```html
+<!-- Buono -->
+<header>
+  <nav>
+    <ul>
+      <li><a href="#main">Salta al contenuto</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="main">
+  <article>
+    <h1>Titolo dell'articolo</h1>
+    <p>Contenuto...</p>
+  </article>
+</main>
+```
+
+8.2 ARIA quando necessario
+
+```html
+<!-- Per componenti custom -->
+<button aria-expanded="false" aria-controls="menu">
+  Menu
+</button>
+<div id="menu" role="menu" hidden>
+  <!-- menu items -->
+</div>
+```
+
+8.3 CSS Accessibile
+
+- Non nascondere contenuto solo con CSS
+- Fornire focus styles visibili
+- Usare unità relative (em, rem) per scalabilità
+
+Capitolo 9: Compliance e Legal
+
+9.1 Normative
+
+- **Italia**: Legge 4/2004, Direttiva UE 2016/2102
+- **UE**: European Accessibility Act
+- **USA**: Section 508, ADA
+- **Internazionale**: WCAG 2.1
+
+9.2 Responsabilità
+
+- Web developer: Implementazione tecnica
+- Content creator: Creazione contenuto accessibile
+- QA team: Testing e validazione
+- Management: Policy e risorse
+
+9.3 Consequenze Non-Compliance
+
+- Azioni legali da utenti con disabilità
+- Sanzioni amministrative
+- Perdita reputazione
+- Limitazioni di mercato
+
+Capitolo 10: Best Practices Avanzate
+
+10.1 Progressive Enhancement
+
+Inizia con contenuto accessibile di base, aggiungi enhancements gradualmente.
+
+10.2 Inclusive Design
+
+Progetta per il 90% degli utenti, automaticamente accessibile al restante 10%.
+
+10.3 Continuous Improvement
+
+- Monitora metriche di accessibilità
+- Raccogli feedback dagli utenti
+- Aggiorna regolarmente le conoscenze
+
+10.4 Training e Cultura
+
+- Formazione regolare per il team
+- Integration in design system
+- Accessibility champion in ogni progetto
+
+Conclusione
+
+L'accessibilità web non è più un optional, ma una necessità etica, legale e business. Implementando le pratiche descritte in questa guida, le organizzazioni possono creare esperienze digitali veramente inclusive che beneficiano tutti gli utenti.
+
+Ricorda: l'accessibilità è un processo continuo che richiede impegno costante, ma i benefici in termini di reach, usabilità e compliance lo rendono un investimento indispensabile per il futuro digitale.

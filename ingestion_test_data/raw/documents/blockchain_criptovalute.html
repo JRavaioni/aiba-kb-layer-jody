@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blockchain e Criptovalute: Applicazioni Finanziarie Avanzate</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 40px;
+            font-style: italic;
+        }
+
+        h2 {
+            color: #3498db;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            margin-top: 40px;
+        }
+
+        h3 {
+            color: #e74c3c;
+            margin-top: 30px;
+        }
+
+        .highlight {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid #e17055;
+        }
+
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-family: 'Fira Code', monospace;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .code-block::before {
+            content: "Python";
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #e53e3e;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+        }
+
+        .crypto-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #2d3748;
+        }
+
+        .stat-label {
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+
+        .blockchain-diagram {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 10px;
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .block {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            padding: 15px;
+            margin: 10px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .transaction {
+            background: #e74c3c;
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .mining {
+            background: #f39c12;
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .defi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .defi-app {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .defi-app h4 {
+            margin-top: 0;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .comparison-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .comparison-table tr:hover {
+            background: #e8f4fd;
+        }
+
+        .pros-cons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .pros {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #28a745;
+        }
+
+        .cons {
+            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #dc3545;
+        }
+
+        .pros h4,
+        .cons h4 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+
+        .future-trends {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 40px 0;
+            border-left: 5px solid #ffc107;
+        }
+
+        .future-trends h3 {
+            color: #856404;
+        }
+
+        .implementation-steps {
+            counter-reset: step-counter;
+            margin: 30px 0;
+        }
+
+        .step {
+            counter-increment: step-counter;
+            margin: 15px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+
+        .step::before {
+            content: counter(step-counter) ". ";
+            font-weight: bold;
+            color: #3498db;
+            font-size: 1.2em;
+        }
+
+        .case-study {
+            background: linear-gradient(135deg, #e8f4fd 0%, #d1ecf1 100%);
+            padding: 25px;
+            border-radius: 10px;
+            margin: 25px 0;
+            border-left: 5px solid #17a2b8;
+        }
+
+        .case-study h4 {
+            margin-top: 0;
+            color: #0c5460;
+        }
+
+        .footnotes {
+            border-top: 2px solid #3498db;
+            margin-top: 50px;
+            padding-top: 30px;
+            font-size: 0.9em;
+            color: #7f8c8d;
+        }
+
+        .footnotes ol {
+            padding-left: 20px;
+        }
+
+        .footnotes li {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Blockchain e Criptovalute: Applicazioni Finanziarie Avanzate</h1>
+        <p class="subtitle">Dalla teoria alla pratica: implementazione di sistemi finanziari decentralizzati</p>
+
+        <div class="crypto-stats">
+            <div class="stat-card">
+                <div class="stat-value">$2.8T</div>
+                <div class="stat-label">Capitalizzazione Totale Crypto</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">1.2M</div>
+                <div class="stat-label">Transazioni Bitcoin/Giorno</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">400+</div>
+                <div class="stat-label">Progetti DeFi Attivi</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">65%</div>
+                <div class="stat-label">Istituzioni che Esplorano Crypto</div>
+            </div>
+        </div>
+
+        <h2>1. Fondamenti Tecnologici della Blockchain</h2>
+        <p>La blockchain rappresenta una rivoluzione architetturale che combina crittografia, teoria dei giochi e
+            sistemi distribuiti per creare un registro digitale immutabile e trasparente.</p>
+
+        <div class="blockchain-diagram">
+            <h3>Architettura di un Blocco</h3>
+            <div class="block">
+                <strong>Block Header</strong><br>
+                • Previous Hash<br>
+                • Timestamp<br>
+                • Nonce<br>
+                • Merkle Root
+            </div>
+            <div class="transaction">
+                <strong>Transazioni</strong><br>
+                • Input/Output<br>
+                • Amount<br>
+                • Public Keys<br>
+                • Signatures
+            </div>
+            <div class="mining">
+                <strong>Proof-of-Work</strong><br>
+                • Hash Function<br>
+                • Difficulty Target<br>
+                • Mining Reward
+            </div>
+        </div>
+
+        <h3>1.1 Crittografia e Sicurezza</h3>
+        <div class="code-block">
+            from cryptography.hazmat.primitives import hashes, serialization
+            from cryptography.hazmat.primitives.asymmetric import rsa, padding
+            from cryptography.hazmat.backends import default_backend
+            import hashlib
+            import ecdsa
+            import os
+
+            class CryptoUtils:
+            """Utility class per operazioni crittografiche blockchain"""
+
+            @staticmethod
+            def generate_rsa_keypair():
+            """Genera coppia di chiavi RSA"""
+            private_key = rsa.generate_private_key(
+            public_exponent=65537,
+            key_size=2048,
+            backend=default_backend()
+            )
+            public_key = private_key.public_key()
+
+            # Serializzazione PEM
+            private_pem = private_key.private_bytes(
+            encoding=serialization.Encoding.PEM,
+            format=serialization.PrivateFormat.PKCS8,
+            encryption_algorithm=serialization.NoEncryption()
+            )
+
+            public_pem = public_key.public_bytes(
+            encoding=serialization.Encoding.PEM,
+            format=serialization.PublicFormat.SubjectPublicKeyInfo
+            )
+
+            return private_pem, public_pem
+
+            @staticmethod
+            def generate_ecdsa_keypair():
+            """Genera coppia di chiavi ECDSA (usata in Bitcoin/Ethereum)"""
+            sk = ecdsa.SigningKey.generate(curve=ecdsa.SECP256k1)
+            vk = sk.verifying_key
+
+            private_key_hex = sk.to_secret()
+            public_key_hex = vk.to_string().hex()
+
+            return private_key_hex, public_key_hex
+
+            @staticmethod
+            def sha256_hash(data):
+            """Calcola hash SHA-256"""
+            if isinstance(data, str):
+            data = data.encode('utf-8')
+            return hashlib.sha256(data).hexdigest()
+
+            @staticmethod
+            def double_sha256(data):
+            """Double SHA-256 (usato in Bitcoin)"""
+            if isinstance(data, str):
+            data = data.encode('utf-8')
+            return hashlib.sha256(hashlib.sha256(data).digest()).hexdigest()
+
+            @staticmethod
+            def ripemd160_hash(data):
+            """RIPEMD-160 hash (usato negli indirizzi Bitcoin)"""
+            if isinstance(data, str):
+            data = data.encode('utf-8')
+            h = hashlib.new('ripemd160')
+            h.update(hashlib.sha256(data).digest())
+            return h.hexdigest()
+
+            @staticmethod
+            def sign_message(private_key_pem, message):
+            """Firma un messaggio con chiave privata RSA"""
+            private_key = serialization.load_pem_private_key(
+            private_key_pem,
+            password=None,
+            backend=default_backend()
+            )
+
+            signature = private_key.sign(
+            message.encode('utf-8'),
+            padding.PSS(
+            mgf=padding.MGF1(hashes.SHA256()),
+            salt_length=padding.PSS.MAX_LENGTH
+            ),
+            hashes.SHA256()
+            )
+
+            return signature.hex()
+
+            @staticmethod
+            def verify_signature(public_key_pem, message, signature):
+            """Verifica firma con chiave pubblica RSA"""
+            public_key = serialization.load_pem_public_key(
+            public_key_pem,
+            backend=default_backend()
+            )
+
+            try:
+            public_key.verify(
+            bytes.fromhex(signature),
+            message.encode('utf-8'),
+            padding.PSS(
+            mgf=padding.MGF1(hashes.SHA256()),
+            salt_length=padding.PSS.MAX_LENGTH
+            ),
+            hashes.SHA256()
+            )
+            return True
+            except:
+            return False
+
+            @staticmethod
+            def generate_merkle_root(transactions):
+            """Calcola Merkle root da lista di transazioni"""
+            if not transactions:
+            return CryptoUtils.double_sha256("")
+
+            # Se dispari, duplica l'ultimo elemento
+            if len(transactions) % 2 == 1:
+            transactions.append(transactions[-1])
+
+            # Calcola hash di ogni transazione
+            hashes = [CryptoUtils.double_sha256(tx) for tx in transactions]
+
+            # Costruisci albero Merkle
+            while len(hashes) > 1:
+            if len(hashes) % 2 == 1:
+            hashes.append(hashes[-1])
+
+            new_hashes = []
+            for i in range(0, len(hashes), 2):
+            combined = hashes[i] + hashes[i+1]
+            new_hashes.append(CryptoUtils.double_sha256(combined))
+            hashes = new_hashes
+
+            return hashes[0]
+
+            # Esempi di utilizzo
+            crypto = CryptoUtils()
+
+            # Genera chiavi
+            private_key, public_key = crypto.generate_ecdsa_keypair()
+            print(f"Private Key: {private_key}")
+            print(f"Public Key: {public_key}")
+
+            # Hash di un blocco
+            block_data = "block_header_data"
+            block_hash = crypto.double_sha256(block_data)
+            print(f"Block Hash: {block_hash}")
+
+            # Merkle root
+            transactions = ["tx1", "tx2", "tx3", "tx4"]
+            merkle_root = crypto.generate_merkle_root(transactions)
+            print(f"Merkle Root: {merkle_root}")
+
+            # Firma e verifica
+            message = "Hello Blockchain"
+            signature = crypto.sign_message(private_key, message)
+            is_valid = crypto.verify_signature(public_key, message, signature)
+            print(f"Signature valid: {is_valid}")
+        </div>
+
+        <h3>1.2 Consensus Mechanisms</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Algoritmo</th>
+                    <th>Principio</th>
+                    <th>Vantaggi</th>
+                    <th>Svantaggi</th>
+                    <th>Applicazioni</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Proof-of-Work</strong></td>
+                    <td>Computazione intensiva per risolvere puzzle crittografici</td>
+                    <td>Sicurezza elevata, decentralizzato</td>
+                    <td>Alto consumo energetico, scalabilità limitata</td>
+                    <td>Bitcoin, Ethereum (pre-Merge)</td>
+                </tr>
+                <tr>
+                    <td><strong>Proof-of-Stake</strong></td>
+                    <td>Staking di criptovalute come garanzia</td>
+                    <td>Efficiente energeticamente, scalabile</td>
+                    <td>Rich rewards inequality, nothing-at-stake problem</td>
+                    <td>Ethereum 2.0, Cardano</td>
+                </tr>
+                <tr>
+                    <td><strong>Delegated Proof-of-Stake</strong></td>
+                    <td>Voto per delegati che producono blocchi</td>
+                    <td>Alta velocità, governance integrata</td>
+                    <td>Meno decentralizzato, single points of failure</td>
+                    <td>EOS, Tron</td>
+                </tr>
+                <tr>
+                    <td><strong>Proof-of-Authority</strong></td>
+                    <td>Identità nota degli validatori</td>
+                    <td>Alta velocità, basso consumo energetico</td>
+                    <td>Meno decentralizzato, trust-based</td>
+                    <td>Rete private, testnets</td>
+                </tr>
+                <tr>
+                    <td><strong>Proof-of-History</strong></td>
+                    <td>Timestamp crittografici sequenziali</td>
+                    <td>Alta scalabilità, bassa latenza</td>
+                    <td>Nuovo approccio, meno testato</td>
+                    <td>Solana</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>2. Smart Contracts e Applicazioni Decentralizzate</h2>
+        <p>Gli smart contract rappresentano programmi auto-esecuting che codificano la logica business direttamente
+            nella blockchain, eliminando intermediari e aumentando l'efficienza.</p>
+
+        <h3>2.1 Solidity Programming</h3>
+        <div class="code-block">
+            // SPDX-License-Identifier: MIT
+            pragma solidity ^0.8.0;
+
+            import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+            import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+            import "@openzeppelin/contracts/access/Ownable.sol";
+
+            /**
+            * @title LendingPool - Protocollo di Lending Decentralizzato
+            * @dev Implementa un pool di lending con interessi composti
+            */
+            contract LendingPool is ERC20, ReentrancyGuard, Ownable {
+            struct Deposit {
+            uint256 amount;
+            uint256 timestamp;
+            uint256 interestRate;
+            }
+
+            struct Loan {
+            uint256 amount;
+            uint256 collateral;
+            uint256 timestamp;
+            uint256 interestRate;
+            bool liquidated;
+            }
+
+            mapping(address => Deposit) public deposits;
+            mapping(address => Loan) public loans;
+
+            uint256 public totalDeposits;
+            uint256 public totalLoans;
+            uint256 public baseInterestRate = 5; // 5% APY base
+            uint256 public utilizationRate; // Percentuale di utilizzo del pool
+
+            event DepositMade(address indexed user, uint256 amount);
+            event WithdrawalMade(address indexed user, uint256 amount, uint256 interest);
+            event LoanTaken(address indexed user, uint256 amount, uint256 collateral);
+            event LoanRepaid(address indexed user, uint256 amount, uint256 interest);
+            event Liquidation(address indexed user, uint256 collateralSeized);
+
+            /**
+            * @dev Calcola tasso di interesse basato sull'utilizzazione
+            */
+            function calculateInterestRate() public view returns (uint256) {
+            // Modello di interesse: base + (utilization * multiplier)
+            uint256 utilization = totalLoans * 100 / (totalDeposits + 1);
+            return baseInterestRate + (utilization * 10 / 100);
+            }
+
+            /**
+            * @dev Deposita ETH nel pool di lending
+            */
+            function deposit() external payable nonReentrant {
+            require(msg.value > 0, "Deposit amount must be positive");
+
+            uint256 interestRate = calculateInterestRate();
+
+            if (deposits[msg.sender].amount > 0) {
+            // Calcola interessi maturati
+            uint256 timeElapsed = block.timestamp - deposits[msg.sender].timestamp;
+            uint256 interestEarned = deposits[msg.sender].amount * interestRate * timeElapsed / (365 days * 100);
+            deposits[msg.sender].amount += interestEarned;
+            }
+
+            deposits[msg.sender].amount += msg.value;
+            deposits[msg.sender].timestamp = block.timestamp;
+            deposits[msg.sender].interestRate = interestRate;
+
+            totalDeposits += msg.value;
+
+            // Mint LP tokens proporzionali al deposito
+            uint256 lpTokens = msg.value * totalSupply() / (totalDeposits - msg.value + 1);
+            if (totalSupply() == 0) {
+            lpTokens = msg.value;
+            }
+            _mint(msg.sender, lpTokens);
+
+            emit DepositMade(msg.sender, msg.value);
+            }
+
+            /**
+            * @dev Preleva deposito con interessi
+            */
+            function withdraw(uint256 lpAmount) external nonReentrant {
+            require(balanceOf(msg.sender) >= lpAmount, "Insufficient LP tokens");
+
+            uint256 depositShare = lpAmount * totalDeposits / totalSupply();
+            require(depositShare <= deposits[msg.sender].amount, "Insufficient deposit balance" ); // Calcola interessi
+                maturati uint256 timeElapsed=block.timestamp - deposits[msg.sender].timestamp; uint256
+                interestEarned=depositShare * deposits[msg.sender].interestRate * timeElapsed / (365 days * 100);
+                uint256 totalWithdrawal=depositShare + interestEarned; deposits[msg.sender].amount -=depositShare;
+                totalDeposits -=depositShare; _burn(msg.sender, lpAmount);
+                payable(msg.sender).transfer(totalWithdrawal); emit WithdrawalMade(msg.sender, depositShare,
+                interestEarned); } /** * @dev Richiede un prestito con collateral */ function borrow(uint256
+                borrowAmount) external payable nonReentrant { require(msg.value> 0, "Collateral required");
+                require(borrowAmount <= totalDeposits - totalLoans, "Insufficient liquidity" ); uint256
+                    collateralRatio=msg.value * 100 / borrowAmount; require(collateralRatio>= 150, "Insufficient
+                    collateral (min 150%)");
+
+                    uint256 interestRate = calculateInterestRate();
+
+                    loans[msg.sender] = Loan({
+                    amount: borrowAmount,
+                    collateral: msg.value,
+                    timestamp: block.timestamp,
+                    interestRate: interestRate,
+                    liquidated: false
+                    });
+
+                    totalLoans += borrowAmount;
+                    payable(msg.sender).transfer(borrowAmount);
+
+                    emit LoanTaken(msg.sender, borrowAmount, msg.value);
+                    }
+
+                    /**
+                    * @dev Restituisce prestito con interessi
+                    */
+                    function repay() external payable nonReentrant {
+                    require(loans[msg.sender].amount > 0, "No active loan");
+                    require(!loans[msg.sender].liquidated, "Loan already liquidated");
+
+                    uint256 timeElapsed = block.timestamp - loans[msg.sender].timestamp;
+                    uint256 interestDue = loans[msg.sender].amount * loans[msg.sender].interestRate * timeElapsed / (365
+                    days * 100);
+                    uint256 totalDue = loans[msg.sender].amount + interestDue;
+
+                    require(msg.value >= totalDue, "Insufficient repayment amount");
+
+                    totalLoans -= loans[msg.sender].amount;
+
+                    // Restituisci collateral
+                    payable(msg.sender).transfer(loans[msg.sender].collateral);
+
+                    // Restituisci eccesso
+                    if (msg.value > totalDue) {
+                    payable(msg.sender).transfer(msg.value - totalDue);
+                    }
+
+                    delete loans[msg.sender];
+
+                    emit LoanRepaid(msg.sender, loans[msg.sender].amount, interestDue);
+                    }
+
+                    /**
+                    * @dev Liquida posizione underwater
+                    */
+                    function liquidate(address borrower) external nonReentrant {
+                    require(loans[borrower].amount > 0, "No active loan");
+                    require(!loans[borrower].liquidated, "Already liquidated");
+
+                    uint256 currentCollateralValue = loans[borrower].collateral; // In produzione userebbe price feed
+                    uint256 loanValue = loans[borrower].amount;
+                    uint256 collateralRatio = currentCollateralValue * 100 / loanValue;
+
+                    require(collateralRatio < 120, "Position not underwater (min 120% maintenance)" ); // Liquidatore
+                        riceve bonus del 5% uint256 liquidationBonus=currentCollateralValue * 5 / 100; uint256
+                        totalSeized=currentCollateralValue + liquidationBonus; loans[borrower].liquidated=true;
+                        totalLoans -=loans[borrower].amount; payable(msg.sender).transfer(totalSeized); emit
+                        Liquidation(borrower, totalSeized); } /** * @dev View function per informazioni del pool */
+                        function getPoolInfo() external view returns ( uint256 _totalDeposits, uint256 _totalLoans,
+                        uint256 _utilizationRate, uint256 _interestRate ) { _totalDeposits=totalDeposits;
+                        _totalLoans=totalLoans; _utilizationRate=totalLoans * 100 / (totalDeposits + 1);
+                        _interestRate=calculateInterestRate(); } /** * @dev View function per posizione utente */
+                        function getUserPosition(address user) external view returns ( uint256 depositAmount, uint256
+                        loanAmount, uint256 collateralAmount, uint256 depositInterestRate, uint256 loanInterestRate ) {
+                        depositAmount=deposits[user].amount; loanAmount=loans[user].amount;
+                        collateralAmount=loans[user].collateral; depositInterestRate=deposits[user].interestRate;
+                        loanInterestRate=loans[user].interestRate; } } </div>
+
+                        <h2>3. DeFi: Finanza Decentralizzata</h2>
+                        <p>La DeFi rappresenta l'evoluzione della finanza tradizionale in un ecosistema completamente
+                            decentralizzato, eliminando intermediari e aumentando l'accessibilità.</p>
+
+                        <div class="defi-grid">
+                            <div class="defi-app">
+                                <h4>🏦 Lending Protocols</h4>
+                                <p>Aave, Compound, MakerDAO - Piattaforme di lending peer-to-peer con interessi dinamici
+                                    basati su supply/demand.</p>
+                                <strong>TVL: $50B+</strong>
+                            </div>
+                            <div class="defi-app">
+                                <h4>⚖️ Decentralized Exchanges</h4>
+                                <p>Uniswap, SushiSwap, PancakeSwap - Scambio di token senza custodia, utilizzando
+                                    automated market makers.</p>
+                                <strong>Volume: $100B+/month</strong>
+                            </div>
+                            <div class="defi-app">
+                                <h4>🛡️ Derivative Platforms</h4>
+                                <p>dYdX, Synthetix - Trading di derivati sintetici e perpetual futures completamente
+                                    on-chain.</p>
+                                <strong>Open Interest: $10B+</strong>
+                            </div>
+                            <div class="defi-app">
+                                <h4>📊 Yield Farming</h4>
+                                <p>Curve, Yearn Finance - Ottimizzazione automatica di rendimenti attraverso strategie
+                                    di farming complesse.</p>
+                                <strong>APYs: 20-1000%+</strong>
+                            </div>
+                            <div class="defi-app">
+                                <h4>🔗 Cross-Chain Bridges</h4>
+                                <p>Multichain, Arbitrum Bridge - Connettività tra diverse blockchain per liquidità
+                                    unificata.</p>
+                                <strong>Assets Bridged: $100B+</strong>
+                            </div>
+                            <div class="defi-app">
+                                <h4>🎯 Liquid Staking</h4>
+                                <p>Lido, Frax - Staking di criptovalute con token liquidi per mantenere DeFi
+                                    composability.</p>
+                                <strong>Staked Assets: $20B+</strong>
+                            </div>
+                        </div>
+
+                        <h3>3.1 Automated Market Makers (AMM)</h3>
+                        <div class="code-block">
+                            import numpy as np
+                            from typing import Tuple, List
+
+                            class AutomatedMarketMaker:
+                            """
+                            Implementazione di Automated Market Maker (AMM) simile a Uniswap V2
+                            """
+
+                            def __init__(self, token_a_reserve: float, token_b_reserve: float, fee: float = 0.003):
+                            """
+                            Inizializza AMM pool
+
+                            Args:
+                            token_a_reserve: Riserva iniziale token A
+                            token_b_reserve: Riserva iniziale token B
+                            fee: Fee di trading (0.3% default)
+                            """
+                            self.token_a_reserve = token_a_reserve
+                            self.token_b_reserve = token_b_reserve
+                            self.fee = fee
+                            self.k = token_a_reserve * token_b_reserve # Costante prodotto AMM
+                            self.total_liquidity_tokens = np.sqrt(token_a_reserve * token_b_reserve)
+
+                            def get_amount_out(self, amount_in: float, reserve_in: float, reserve_out: float) -> float:
+                            """
+                            Calcola amount out usando formula AMM con fee
+
+                            Formula: amount_out = (amount_in * (1 - fee) * reserve_out) / (reserve_in + amount_in * (1 -
+                            fee))
+                            """
+                            amount_in_with_fee = amount_in * (1 - self.fee)
+                            numerator = amount_in_with_fee * reserve_out
+                            denominator = reserve_in + amount_in_with_fee
+                            return numerator / denominator
+
+                            def swap_a_for_b(self, amount_a_in: float) -> Tuple[float, float, float]:
+                            """
+                            Swap token A per token B
+
+                            Returns:
+                            (amount_b_out, new_reserve_a, new_reserve_b)
+                            """
+                            amount_b_out = self.get_amount_out(amount_a_in, self.token_a_reserve, self.token_b_reserve)
+
+                            new_reserve_a = self.token_a_reserve + amount_a_in
+                            new_reserve_b = self.token_b_reserve - amount_b_out
+
+                            # Verifica che k sia mantenuto (approssimativamente)
+                            new_k = new_reserve_a * new_reserve_b
+                            assert abs(new_k - self.k) / self.k < 0.01, "Invariant violated" return amount_b_out,
+                                new_reserve_a, new_reserve_b def swap_b_for_a(self, amount_b_in: float) -> Tuple[float,
+                                float, float]:
+                                """
+                                Swap token B per token A
+
+                                Returns:
+                                (amount_a_out, new_reserve_a, new_reserve_b)
+                                """
+                                amount_a_out = self.get_amount_out(amount_b_in, self.token_b_reserve,
+                                self.token_a_reserve)
+
+                                new_reserve_b = self.token_b_reserve + amount_b_in
+                                new_reserve_a = self.token_a_reserve - amount_a_out
+
+                                return amount_a_out, new_reserve_a, new_reserve_b
+
+                                def add_liquidity(self, amount_a: float, amount_b: float) -> float:
+                                """
+                                Aggiungi liquidità al pool
+
+                                Returns:
+                                liquidity_tokens: Token di liquidità mintati
+                                """
+                                # Calcola quanto liquidità aggiungere mantenendo ratio
+                                if self.token_a_reserve == 0 or self.token_b_reserve == 0:
+                                # Pool vuoto
+                                liquidity_tokens = np.sqrt(amount_a * amount_b)
+                                else:
+                                # Calcola basato sul token più limitante
+                                liquidity_a = amount_a * self.total_liquidity_tokens / self.token_a_reserve
+                                liquidity_b = amount_b * self.total_liquidity_tokens / self.token_b_reserve
+                                liquidity_tokens = min(liquidity_a, liquidity_b)
+
+                                # Aggiorna riserve
+                                self.token_a_reserve += amount_a
+                                self.token_b_reserve += amount_b
+                                self.total_liquidity_tokens += liquidity_tokens
+                                self.k = self.token_a_reserve * self.token_b_reserve
+
+                                return liquidity_tokens
+
+                                def remove_liquidity(self, liquidity_tokens: float) -> Tuple[float, float]:
+                                """
+                                Rimuovi liquidità dal pool
+
+                                Returns:
+                                (amount_a_out, amount_b_out)
+                                """
+                                # Calcola quote
+                                amount_a_out = liquidity_tokens * self.token_a_reserve / self.total_liquidity_tokens
+                                amount_b_out = liquidity_tokens * self.token_b_reserve / self.total_liquidity_tokens
+
+                                # Aggiorna riserve
+                                self.token_a_reserve -= amount_a_out
+                                self.token_b_reserve -= amount_b_out
+                                self.total_liquidity_tokens -= liquidity_tokens
+                                self.k = self.token_a_reserve * self.token_b_reserve
+
+                                return amount_a_out, amount_b_out
+
+                                def get_price(self) -> float:
+                                """
+                                Restituisce prezzo spot A in termini di B
+                                """
+                                return self.token_b_reserve / self.token_a_reserve
+
+                                def get_slippage(self, trade_size: float, is_a_for_b: bool = True) -> float:
+                                """
+                                Calcola slippage per una data dimensione trade
+                                """
+                                if is_a_for_b:
+                                amount_out = self.get_amount_out(trade_size, self.token_a_reserve, self.token_b_reserve)
+                                price_impact = amount_out / trade_size
+                                spot_price = self.get_price()
+                                execution_price = amount_out / trade_size
+                                slippage = (execution_price - spot_price) / spot_price
+                                else:
+                                amount_out = self.get_amount_out(trade_size, self.token_b_reserve, self.token_a_reserve)
+                                spot_price = 1 / self.get_price()
+                                execution_price = amount_out / trade_size
+                                slippage = (execution_price - spot_price) / spot_price
+
+                                return slippage
+
+                                def impermanent_loss(self, price_ratio_change: float) -> float:
+                                """
+                                Calcola impermanent loss per un cambio nel price ratio
+
+                                Args:
+                                price_ratio_change: Nuovo prezzo / vecchio prezzo
+                                """
+                                r = price_ratio_change
+                                impermanent_loss = 2 * np.sqrt(r) / (1 + r) - 1
+                                return impermanent_loss
+
+                                # Esempio di utilizzo
+                                amm = AutomatedMarketMaker(token_a_reserve=100000, token_b_reserve=100000)
+
+                                # Swap
+                                amount_out, new_a, new_b = amm.swap_a_for_b(1000)
+                                print(f"Swapped 1000 A for {amount_out:.2f} B")
+
+                                # Calcola slippage
+                                slippage = amm.get_slippage(1000)
+                                print(f"Slippage: {slippage:.4%}")
+
+                                # Aggiungi liquidità
+                                liq_tokens = amm.add_liquidity(10000, 10000)
+                                print(f"Added liquidity, received {liq_tokens:.2f} LP tokens")
+
+                                # Calcola impermanent loss
+                                il = amm.impermanent_loss(1.2) # 20% price increase
+                                print(f"Impermanent loss: {il:.4%}")
+                        </div>
+
+                        <h2>4. Central Bank Digital Currency (CBDC)</h2>
+                        <p>Le CBDC rappresentano l'evoluzione delle valute centrali in formato digitale, combinando i
+                            vantaggi della moneta elettronica con il controllo sovrano delle banche centrali.</p>
+
+                        <div class="pros-cons">
+                            <div class="pros">
+                                <h4>✅ Vantaggi delle CBDC</h4>
+                                <ul>
+                                    <li><strong>Efficienza nei Pagamenti:</strong> Transazioni instantanee 24/7</li>
+                                    <li><strong>Riduzione Costi:</strong> Eliminazione intermediari tradizionali</li>
+                                    <li><strong>Inclusione Finanziaria:</strong> Accesso universale ai servizi
+                                        finanziari</li>
+                                    <li><strong>Programmability:</strong> Moneta programmabile con condizioni</li>
+                                    <li><strong>Anti-Money Laundering:</strong> Tracking completo delle transazioni</li>
+                                </ul>
+                            </div>
+                            <div class="cons">
+                                <h4>❌ Sfide delle CBDC</h4>
+                                <ul>
+                                    <li><strong>Privacy:</strong> Rischio sorveglianza di massa</li>
+                                    <li><strong>Disintermediazione:</strong> Impatto sui depositi bancari</li>
+                                    <li><strong>Cybersecurity:</strong> Target di attacchi sofisticati</li>
+                                    <li><strong>Interoperabilità:</strong> Coordinamento internazionale complesso</li>
+                                    <li><strong>Financial Stability:</strong> Rischi sistemici da digitalizzazione</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <h3>4.1 Architettura CBDC</h3>
+                        <div class="code-block">
+                            from enum import Enum
+                            from typing import Dict, List, Optional
+                            from datetime import datetime
+                            import hashlib
+                            import json
+
+                            class TransactionType(Enum):
+                            ISSUE = "issue"
+                            TRANSFER = "transfer"
+                            REDEEM = "redeem"
+                            FREEZE = "freeze"
+                            CONFISCATE = "confiscate"
+
+                            class AccountStatus(Enum):
+                            ACTIVE = "active"
+                            FROZEN = "frozen"
+                            CLOSED = "closed"
+
+                            class CBDCTransaction:
+                            def __init__(self, tx_type: TransactionType, sender: str, receiver: str,
+                            amount: float, currency: str = "EUR", metadata: Dict = None):
+                            self.tx_type = tx_type
+                            self.sender = sender
+                            self.receiver = receiver
+                            self.amount = amount
+                            self.currency = currency
+                            self.timestamp = datetime.utcnow().isoformat()
+                            self.metadata = metadata or {}
+                            self.tx_id = self._generate_tx_id()
+
+                            def _generate_tx_id(self) -> str:
+                            """Genera ID univoco per la transazione"""
+                            data = f"{self.tx_type.value}{self.sender}{self.receiver}{self.amount}{self.timestamp}"
+                            return hashlib.sha256(data.encode()).hexdigest()[:16]
+
+                            def to_dict(self) -> Dict:
+                            return {
+                            "tx_id": self.tx_id,
+                            "type": self.tx_type.value,
+                            "sender": self.sender,
+                            "receiver": self.receiver,
+                            "amount": self.amount,
+                            "currency": self.currency,
+                            "timestamp": self.timestamp,
+                            "metadata": self.metadata
+                            }
+
+                            class CBDCAccount:
+                            def __init__(self, account_id: str, owner_id: str, initial_balance: float = 0):
+                            self.account_id = account_id
+                            self.owner_id = owner_id
+                            self.balance = initial_balance
+                            self.status = AccountStatus.ACTIVE
+                            self.created_at = datetime.utcnow().isoformat()
+                            self.transactions: List[CBDCTransaction] = []
+
+                            def credit(self, amount: float, tx: CBDCTransaction) -> bool:
+                            """Credita conto"""
+                            if self.status != AccountStatus.ACTIVE:
+                            return False
+
+                            self.balance += amount
+                            self.transactions.append(tx)
+                            return True
+
+                            def debit(self, amount: float, tx: CBDCTransaction) -> bool:
+                            """Debita conto"""
+                            if self.status != AccountStatus.ACTIVE or self.balance < amount: return False self.balance
+                                -=amount self.transactions.append(tx) return True def freeze(self) -> bool:
+                                """Congela conto"""
+                                if self.status == AccountStatus.ACTIVE:
+                                self.status = AccountStatus.FROZEN
+                                return True
+                                return False
+
+                                def unfreeze(self) -> bool:
+                                """Scongela conto"""
+                                if self.status == AccountStatus.FROZEN:
+                                self.status = AccountStatus.ACTIVE
+                                return True
+                                return False
+
+                                class CentralBank:
+                                def __init__(self, currency: str = "EUR"):
+                                self.currency = currency
+                                self.accounts: Dict[str, CBDCAccount] = {}
+                                self.total_supply = 0
+                                self.reserve_accounts: Dict[str, float] = {}
+
+                                def create_account(self, owner_id: str, initial_balance: float = 0) -> str:
+                                """Crea nuovo conto CBDC"""
+                                account_id = f"{self.currency}_{owner_id}_{len(self.accounts)}"
+                                account = CBDCAccount(account_id, owner_id, initial_balance)
+                                self.accounts[account_id] = account
+
+                                if initial_balance > 0:
+                                # Issue iniziale
+                                tx = CBDCTransaction(
+                                TransactionType.ISSUE,
+                                "central_bank",
+                                account_id,
+                                initial_balance,
+                                self.currency
+                                )
+                                account.credit(initial_balance, tx)
+                                self.total_supply += initial_balance
+
+                                return account_id
+
+                                def transfer(self, sender_id: str, receiver_id: str, amount: float) -> bool:
+                                """Trasferimento tra conti"""
+                                if sender_id not in self.accounts or receiver_id not in self.accounts:
+                                return False
+
+                                sender = self.accounts[sender_id]
+                                receiver = self.accounts[receiver_id]
+
+                                if sender.balance < amount: return False # Crea transazione tx=CBDCTransaction(
+                                    TransactionType.TRANSFER, sender_id, receiver_id, amount, self.currency ) # Esegui
+                                    trasferimento if sender.debit(amount, tx) and receiver.credit(amount, tx): return
+                                    True return False def issue_money(self, account_id: str, amount: float, purpose:
+                                    str="" ) -> bool:
+                                    """Emissione di moneta"""
+                                    if account_id not in self.accounts:
+                                    return False
+
+                                    account = self.accounts[account_id]
+                                    tx = CBDCTransaction(
+                                    TransactionType.ISSUE,
+                                    "central_bank",
+                                    account_id,
+                                    amount,
+                                    self.currency,
+                                    {"purpose": purpose}
+                                    )
+
+                                    if account.credit(amount, tx):
+                                    self.total_supply += amount
+                                    return True
+
+                                    return False
+
+                                    def redeem_money(self, account_id: str, amount: float) -> bool:
+                                    """Ritiro di moneta"""
+                                    if account_id not in self.accounts:
+                                    return False
+
+                                    account = self.accounts[account_id]
+                                    tx = CBDCTransaction(
+                                    TransactionType.REDEEM,
+                                    account_id,
+                                    "central_bank",
+                                    amount,
+                                    self.currency
+                                    )
+
+                                    if account.debit(amount, tx):
+                                    self.total_supply -= amount
+                                    return True
+
+                                    return False
+
+                                    def freeze_account(self, account_id: str, reason: str = "") -> bool:
+                                    """Congela conto per investigazione"""
+                                    if account_id not in self.accounts:
+                                    return False
+
+                                    account = self.accounts[account_id]
+                                    tx = CBDCTransaction(
+                                    TransactionType.FREEZE,
+                                    "central_bank",
+                                    account_id,
+                                    0,
+                                    self.currency,
+                                    {"reason": reason}
+                                    )
+
+                                    account.transactions.append(tx)
+                                    return account.freeze()
+
+                                    def confiscate_funds(self, account_id: str, amount: float, reason: str = "") ->
+                                    bool:
+                                    """Confisca fondi per attività illecite"""
+                                    if account_id not in self.accounts:
+                                    return False
+
+                                    account = self.accounts[account_id]
+                                    tx = CBDCTransaction(
+                                    TransactionType.CONFISCATE,
+                                    account_id,
+                                    "central_bank",
+                                    amount,
+                                    self.currency,
+                                    {"reason": reason}
+                                    )
+
+                                    if account.debit(amount, tx):
+                                    self.total_supply -= amount
+                                    return True
+
+                                    return False
+
+                                    def get_system_stats(self) -> Dict:
+                                    """Statistiche sistema CBDC"""
+                                    active_accounts = sum(1 for acc in self.accounts.values() if acc.status ==
+                                    AccountStatus.ACTIVE)
+                                    frozen_accounts = sum(1 for acc in self.accounts.values() if acc.status ==
+                                    AccountStatus.FROZEN)
+                                    total_balance = sum(acc.balance for acc in self.accounts.values())
+
+                                    return {
+                                    "currency": self.currency,
+                                    "total_supply": self.total_supply,
+                                    "active_accounts": active_accounts,
+                                    "frozen_accounts": frozen_accounts,
+                                    "total_balance_in_accounts": total_balance,
+                                    "reserve_ratio": (self.total_supply - total_balance) / self.total_supply if
+                                    self.total_supply > 0 else 0
+                                    }
+
+                                    def get_account_balance(self, account_id: str) -> Optional[float]:
+                                    """Ottieni saldo conto"""
+                                    if account_id in self.accounts:
+                                    return self.accounts[account_id].balance
+                                    return None
+
+                                    def get_transaction_history(self, account_id: str) -> List[Dict]:
+                                    """Storico transazioni conto"""
+                                    if account_id in self.accounts:
+                                    return [tx.to_dict() for tx in self.accounts[account_id].transactions]
+                                    return []
+
+                                    # Esempio di utilizzo sistema CBDC
+                                    central_bank = CentralBank("EUR")
+
+                                    # Crea conti
+                                    alice_account = central_bank.create_account("alice", 1000)
+                                    bob_account = central_bank.create_account("bob", 500)
+
+                                    print(f"Created accounts: Alice={alice_account}, Bob={bob_account}")
+
+                                    # Trasferimento
+                                    success = central_bank.transfer(alice_account, bob_account, 200)
+                                    print(f"Transfer successful: {success}")
+
+                                    # Controlla saldi
+                                    alice_balance = central_bank.get_account_balance(alice_account)
+                                    bob_balance = central_bank.get_account_balance(bob_account)
+                                    print(f"Balances: Alice={alice_balance}, Bob={bob_balance}")
+
+                                    # Statistiche sistema
+                                    stats = central_bank.get_system_stats()
+                                    print(f"System stats: {stats}")
+
+                                    # Storico transazioni Alice
+                                    alice_history = central_bank.get_transaction_history(alice_account)
+                                    print(f"Alice transaction count: {len(alice_history)}")
+                        </div>
+
+                        <h2>5. Security e Regulatory Considerations</h2>
+                        <p>La sicurezza e la regolamentazione rappresentano aspetti critici per l'adozione mainstream
+                            delle tecnologie blockchain e criptovalute.</p>
+
+                        <div class="case-study">
+                            <h4>Case Study: The DAO Hack (2016)</h4>
+                            <p><strong>Contesto:</strong> The DAO era un fondo di investimento decentralizzato su
+                                Ethereum che raccolse $150M in crowdfunding.</p>
+                            <p><strong>Vulnerabilità:</strong> Reentrancy attack che permise il drain di $50M dai
+                                contratti smart.</p>
+                            <p><strong>Lezione Appresa:</strong> Necessità di audit di sicurezza approfonditi e best
+                                practices di programmazione.</p>
+                            <p><strong>Impatto:</strong> Hard fork di Ethereum per recuperare i fondi, creazione di
+                                Ethereum Classic.</p>
+                        </div>
+
+                        <div class="implementation-steps">
+                            <div class="step">Implementare multifactor authentication per tutti gli accessi wallet</div>
+                            <div class="step">Utilizzare hardware security modules (HSM) per chiavi crittografiche</div>
+                            <div class="step">Condurre audit di sicurezza regolari con firme specializzate</div>
+                            <div class="step">Implementare circuit breakers per fermare trading in condizioni estreme
+                            </div>
+                            <div class="step">Sviluppare piani di disaster recovery e business continuity</div>
+                            <div class="step">Monitorare continuamente per vulnerabilità zero-day</div>
+                            <div class="step">Educare utenti su best practices di sicurezza</div>
+                            <div class="step">Collaborare con autorità regolamentari per compliance</div>
+                        </div>
+
+                        <h2>6. Futuro della Blockchain e Criptovalute</h2>
+
+                        <div class="future-trends">
+                            <h3>Tendenze Emergenti</h3>
+
+                            <div class="trend">
+                                <h4>🔄 Web3 e Metaverso</h4>
+                                <p>Integrazione della blockchain con realtà virtuale e aumentata, creando economie
+                                    digitali immersive con NFT e token governance.</p>
+                            </div>
+
+                            <div class="trend">
+                                <h4>🌱 Sustainable Blockchain</h4>
+                                <p>Sviluppo di consensus mechanisms eco-sostenibili e compensazione carbon credits per
+                                    transazioni blockchain.</p>
+                            </div>
+
+                            <div class="trend">
+                                <h4>🤖 AI + Blockchain</h4>
+                                <p>Integrazione di intelligenza artificiale con blockchain per smart contracts
+                                    auto-ottimizzanti e predictive analytics.</p>
+                            </div>
+
+                            <div class="trend">
+                                <h4>🌐 Interoperabilità Cross-Chain</h4>
+                                <p>Sviluppo di protocolli per comunicazione seamless tra diverse blockchain, creando un
+                                    internet of value unificato.</p>
+                            </div>
+
+                            <div class="trend">
+                                <h4>🏛️ Institutional Adoption</h4>
+                                <p>Adozione massiva da parte di istituzioni finanziarie tradizionali, con tokenized
+                                    assets e security token offerings.</p>
+                            </div>
+
+                            <div class="trend">
+                                <h4>⚖️ Regulatory Frameworks</h4>
+                                <p>Sviluppo di quadri regolamentari chiari e proporzionati che bilancino innovazione con
+                                    protezione degli investitori.</p>
+                            </div>
+                        </div>
+
+                        <div class="footnotes">
+                            <h3>Riferimenti e Approfondimenti</h3>
+                            <ol>
+                                <li><strong>Nakamoto, S.</strong> (2008). Bitcoin: A Peer-to-Peer Electronic Cash
+                                    System. Whitepaper originale Bitcoin.</li>
+                                <li><strong>Christidis, K. & Devetsikiotis, M.</strong> (2016). Blockchains and Smart
+                                    Contracts for the IoT. IEEE Access.</li>
+                                <li><strong>Zheng, Z. et al.</strong> (2018). Blockchain Challenges and Opportunities: A
+                                    Survey. International Journal of Web and Grid Services.</li>
+                                <li><strong>Voshmgir, S.</strong> (2019). Token Economy: How the Web3 reinvents the
+                                    Internet. Token Kitchen.</li>
+                                <li><strong>Gartner</strong> (2023). Blockchain Technology Market Forecast Report.</li>
+                                <li><strong>World Economic Forum</strong> (2023). Building the Metaverse: Blockchain
+                                    Opportunities and Challenges.</li>
+                            </ol>
+
+                            <p><em>Disclaimer: Questo documento è fornito esclusivamente a scopo informativo e
+                                    educativo. Le criptovalute e le tecnologie blockchain comportano rischi
+                                    significativi di perdita di capitale. Si consiglia di consultare professionisti
+                                    qualificati prima di intraprendere qualsiasi attività finanziaria.</em></p>
+                        </div>
+        </div>
+</body>
+
+</html>

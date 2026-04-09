@@ -1,0 +1,3 @@
+"""
+Core package - Pipeline components
+"""

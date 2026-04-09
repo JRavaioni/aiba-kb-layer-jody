@@ -1,0 +1,31 @@
+{
+    "title": "Manuale Sicurezza Informatica",
+    "author": "Dipartimento Sicurezza IT",
+    "created_date": "2023-11-20",
+    "modified_date": "2024-02-28",
+    "version": "1.8",
+    "language": "it",
+    "category": "security",
+    "tags": [
+        "sicurezza",
+        "cybersecurity",
+        "policy",
+        "compliance",
+        "risk-management"
+    ],
+    "word_count": 3200,
+    "pages": 25,
+    "description": "Manuale completo sulla sicurezza informatica aziendale, inclusi protocolli, procedure e best practices",
+    "keywords": [
+        "information security",
+        "cyber threats",
+        "data protection",
+        "GDPR",
+        "ISO 27001"
+    ],
+    "source": "corporate",
+    "confidentiality": "confidential",
+    "review_date": "2024-11-20",
+    "approved_by": "CISO",
+    "classification": "restricted"
+}

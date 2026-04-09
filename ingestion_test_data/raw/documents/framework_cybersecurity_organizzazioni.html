@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Framework di Cybersecurity per Organizzazioni Moderne</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 50px;
+            text-align: center;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .content {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: #2c3e50;
+            font-size: 2.2em;
+            border-bottom: 4px solid #3498db;
+            padding-bottom: 15px;
+            margin-top: 50px;
+            margin-bottom: 25px;
+        }
+
+        h3 {
+            color: #34495e;
+            font-size: 1.6em;
+            margin-top: 35px;
+            margin-bottom: 15px;
+        }
+
+        h4 {
+            color: #7f8c8d;
+            font-size: 1.3em;
+            margin-top: 25px;
+            margin-bottom: 10px;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin: 25px 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            border-left: 5px solid #e74c3c;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .success-box {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            border-left: 5px solid #27ae60;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .code-snippet {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-size: 0.9em;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            border: 1px solid #ddd;
+            padding: 15px;
+            text-align: left;
+        }
+
+        .comparison-table th {
+            background: #3498db;
+            color: white;
+            font-weight: 600;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .implementation-steps {
+            counter-reset: step-counter;
+            margin: 30px 0;
+        }
+
+        .step {
+            counter-increment: step-counter;
+            margin: 25px 0;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 5px solid #3498db;
+            position: relative;
+            transition: transform 0.2s;
+        }
+
+        .step:hover {
+            transform: translateX(5px);
+        }
+
+        .step::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: -20px;
+            top: 25px;
+            background: #3498db;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .metric-card {
+            background: white;
+            border: 2px solid #e1e8ed;
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .metric-card:hover {
+            border-color: #3498db;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .metric-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #3498db;
+            margin-bottom: 10px;
+        }
+
+        .metric-label {
+            color: #7f8c8d;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .framework-overview {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 12px;
+            margin: 25px 0;
+            border: 1px solid #dee2e6;
+        }
+
+        .framework-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+
+        .tool-recommendation {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+
+        .tool-recommendation h4 {
+            margin-top: 0;
+            color: white;
+        }
+
+        .case-study {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            padding: 25px;
+            border-radius: 12px;
+            margin: 25px 0;
+            border: 1px solid #ffcc80;
+        }
+
+        .case-study h4 {
+            color: #e65100;
+            margin-top: 0;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 30px;
+            background: #2c3e50;
+            color: white;
+            border-radius: 15px;
+        }
+
+        .footer h3 {
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        .footer p {
+            opacity: 0.8;
+            line-height: 1.8;
+        }
+
+        .toc {
+            background: #ecf0f1;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .toc ul {
+            list-style: none;
+            padding: 0;
+            column-count: 2;
+            column-gap: 30px;
+        }
+
+        .toc li {
+            margin: 8px 0;
+            break-inside: avoid;
+        }
+
+        .toc a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .toc a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .toc ul {
+                column-count: 1;
+            }
+
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        <h1>Framework di Cybersecurity per Organizzazioni Moderne</h1>
+        <p>Strategie Integrate per la Protezione dei Sistemi, dei Dati e delle Operazioni Aziendali</p>
+        <p><em>Dr. Elena Rossi - Chief Information Security Officer, TechSecure Italia</em></p>
+    </div>
+
+    <div class="content toc">
+        <h2>Sommario Esecutivo</h2>
+        <ul>
+            <li><a href="#introduzione">1. Introduzione al Framework di Cybersecurity</a></li>
+            <li><a href="#assessment">2. Risk Assessment e Governance</a></li>
+            <li><a href="#architettura">3. Architettura di Sicurezza</a></li>
+            <li><a href="#endpoint">4. Sicurezza degli Endpoint</a></li>
+            <li><a href="#rete">5. Sicurezza di Rete</a></li>
+            <li><a href="#dati">6. Data Protection e Privacy</a></li>
+            <li><a href="#identita">7. Identity and Access Management</a></li>
+            <li><a href="#monitoraggio">8. Monitoraggio e Response</a></li>
+            <li><a href="#incident">9. Incident Response e Recovery</a></li>
+            <li><a href="#compliance">10. Compliance e Audit</a></li>
+            <li><a href="#metriche">11. Metriche e KPI di Sicurezza</a></li>
+            <li><a href="#implementazione">12. Roadmap di Implementazione</a></li>
+        </ul>
+    </div>
+
+    <div class="content" id="introduzione">
+        <h2>1. Introduzione al Framework di Cybersecurity</h2>
+
+        <div class="highlight-box">
+            <h3>Il Contesto Attuale delle Minacce</h3>
+            <p>Nel 2024, le organizzazioni affrontano un panorama di minacce in evoluzione costante. Secondo il rapporto
+                Verizon DBIR 2024, l'85% delle violazioni coinvolge un elemento umano, mentre il 74% delle violazioni di
+                rete avviene attraverso credenziali compromesse.</p>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-value">300B</div>
+                    <div class="metric-label">Dollari di Perdite Globali Annue</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">2,200</div>
+                    <div class="metric-label">Attacchi al Giorno per Organizzazione</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">24/7</div>
+                    <div class="metric-label">Monitoraggio Richiesto</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">85%</div>
+                    <div class="metric-label">Violazioni con Fattore Umano</div>
+                </div>
+            </div>
+        </div>
+
+        <h3>1.1 Il Framework Integrato</h3>
+        <p>Questo framework adotta un approccio olistico alla cybersecurity, integrando prevenzione, detection, response
+            e recovery in un sistema coerente e misurabile.</p>
+
+        <div class="framework-overview">
+            <h4>Principi Fondamentali</h4>
+            <div class="framework-section">
+                <h5>Defense in Depth</h5>
+                <p>Implementazione di multiple linee di difesa per garantire che se una falla viene compromessa, altre
+                    barriere possano contenere l'impatto.</p>
+            </div>
+            <div class="framework-section">
+                <h5>Zero Trust Architecture</h5>
+                <p>"Never trust, always verify" - ogni richiesta di accesso deve essere autenticata e autorizzata
+                    indipendentemente dalla provenienza.</p>
+            </div>
+            <div class="framework-section">
+                <h5>Risk-Based Approach</h5>
+                <p>Allocazione delle risorse di sicurezza basata sulla valutazione quantitativa e qualitativa dei rischi
+                    specifici dell'organizzazione.</p>
+            </div>
+            <div class="framework-section">
+                <h5>Continuous Monitoring</h5>
+                <p>Monitoraggio 24/7 di tutti i sistemi e processi per identificare anomalie e minacce in tempo reale.
+                </p>
+            </div>
+        </div>
+
+        <h3>1.2 Benefici del Framework</h3>
+        <ul>
+            <li><strong>Riduzione dei Rischi:</strong> Identificazione proattiva e mitigazione delle vulnerabilità</li>
+            <li><strong>Compliance Automatica:</strong> Allineamento con standard internazionali (ISO 27001, NIST, GDPR)
+            </li>
+            <li><strong>Efficienza Operativa:</strong> Automazione dei processi di sicurezza per ridurre il carico
+                manuale</li>
+            <li><strong>Business Continuity:</strong> Minimizzazione dei downtime e impatto sugli affari</li>
+            <li><strong>Trust degli Stakeholder:</strong> Dimostrazione di commitment alla sicurezza e protezione dei
+                dati</li>
+        </ul>
+    </div>
+
+    <div class="content" id="assessment">
+        <h2>2. Risk Assessment e Governance</h2>
+
+        <h3>2.1 Metodologia di Risk Assessment</h3>
+
+        <div class="implementation-steps">
+            <div class="step">
+                <h4>Asset Identification</h4>
+                <p>Catalogare tutti gli asset critici dell'organizzazione: dati, sistemi, processi, reputazione.
+                    Assegnare valori di business e livelli di sensibilità.</p>
+            </div>
+            <div class="step">
+                <h4>Threat Modeling</h4>
+                <p>Identificare potenziali minacce utilizzando framework come STRIDE (Spoofing, Tampering, Repudiation,
+                    Information Disclosure, Denial of Service, Elevation of Privilege).</p>
+            </div>
+            <div class="step">
+                <h4>Vulnerability Assessment</h4>
+                <p>Scansione regolare dei sistemi per identificare vulnerabilità tecniche. Utilizzare tool automatizzati
+                    combinati con penetration testing manuale.</p>
+            </div>
+            <div class="step">
+                <h4>Impact Analysis</h4>
+                <p>Valutare l'impatto potenziale di ogni scenario di rischio utilizzando metriche quantitative (tempo di
+                    downtime, costi di recovery) e qualitative (danno reputazionale).</p>
+            </div>
+            <div class="step">
+                <h4>Risk Prioritization</h4>
+                <p>Calcolare il risk score combinando probabilità e impatto. Utilizzare matrice di rischio per
+                    classificare e prioritizzare le contromisure.</p>
+            </div>
+        </div>
+
+        <h3>2.2 Governance Structure</h3>
+
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Ruolo</th>
+                    <th>Responsabilità</th>
+                    <th>Reporting</th>
+                    <th>Frequenza</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>CISO</strong></td>
+                    <td>Strategia sicurezza, risk management, compliance</td>
+                    <td>CEO/Board</td>
+                    <td>Settimanale/Mensile</td>
+                </tr>
+                <tr>
+                    <td><strong>Security Team</strong></td>
+                    <td>Implementazione controlli, monitoring, response</td>
+                    <td>CISO</td>
+                    <td>24/7</td>
+                </tr>
+                <tr>
+                    <td><strong>Risk Committee</strong></td>
+                    <td>Approvazione rischi, allocazione risorse</td>
+                    <td>Board</td>
+                    <td>Mensile</td>
+                </tr>
+                <tr>
+                    <td><strong>IT Department</strong></td>
+                    <td>Implementazione tecnica, manutenzione</td>
+                    <td>CISO</td>
+                    <td>Giornaliera</td>
+                </tr>
+                <tr>
+                    <td><strong>Business Units</strong></td>
+                    <td>Compliance locale, awareness</td>
+                    <td>Line Managers</td>
+                    <td>Settimanale</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="content" id="architettura">
+        <h2>3. Architettura di Sicurezza</h2>
+
+        <h3>3.1 Zero Trust Architecture</h3>
+
+        <div class="success-box">
+            <h4>Implementazione Zero Trust</h4>
+            <p>Zero Trust elimina l'assunto di fiducia implicita nella rete interna tradizionale, richiedendo verifica
+                continua per ogni accesso.</p>
+        </div>
+
+        <h4>Componenti Chiave</h4>
+        <ul>
+            <li><strong>Identity & Access Management:</strong> Autenticazione forte e controllo accessi basato su ruolo
+            </li>
+            <li><strong>Micro-Segmentation:</strong> Isolamento di workload e dati sensibili</li>
+            <li><strong>Continuous Monitoring:</strong> Analisi comportamentale per identificare anomalie</li>
+            <li><strong>Device Health Checks:</strong> Verifica integrità dispositivi prima dell'accesso</li>
+            <li><strong>Least Privilege Access:</strong> Concessione solo delle autorizzazioni necessarie</li>
+        </ul>
+
+        <h3>3.2 Cloud Security Architecture</h3>
+
+        <div class="tool-recommendation">
+            <h4>Modello di Responsabilità Condivisa</h4>
+            <p><strong>IaaS:</strong> Provider gestisce infrastruttura fisica, cliente gestisce OS e applicazioni</p>
+            <p><strong>PaaS:</strong> Provider gestisce anche runtime e middleware</p>
+            <p><strong>SaaS:</strong> Provider gestisce tutto, cliente configura e utilizza</p>
+        </div>
+
+        <h4>Best Practices Cloud Security</h4>
+        <ul>
+            <li><strong>Encryption at Rest & in Transit:</strong> Crittografia sempre abilitata</li>
+            <li><strong>Identity Federation:</strong> Single sign-on con directory aziendale</li>
+            <li><strong>Network Security Groups:</strong> Controllo traffico inbound/outbound</li>
+            <li><strong>Regular Backups:</strong> Strategia 3-2-1 (3 copie, 2 media, 1 offsite)</li>
+            <li><strong>Container Security:</strong> Scanning immagini e runtime protection</li>
+        </ul>
+    </div>
+
+    <div class="content" id="endpoint">
+        <h2>4. Sicurezza degli Endpoint</h2>
+
+        <h3>4.1 Endpoint Detection and Response (EDR)</h3>
+
+        <div class="highlight-box">
+            <h4>Perché EDR è Essenziale</h4>
+            <p>Con il lavoro ibrido e BYOD, gli endpoint rappresentano il 70% dei vettori di attacco. EDR fornisce
+                visibilità completa e response automatizzata.</p>
+        </div>
+
+        <h4>Funzionalità EDR Avanzate</h4>
+        <ul>
+            <li><strong>Behavioral Analytics:</strong> Machine learning per identificare comportamenti anomali</li>
+            <li><strong>Automated Response:</strong> Isolamento automatico di endpoint compromessi</li>
+            <li><strong>Threat Hunting:</strong> Ricerca proattiva di minacce nascoste</li>
+            <li><strong>Forensic Capabilities:</strong> Analisi dettagliata di incidenti</li>
+            <li><strong>Integration con SOAR:</strong> Orchestrazione automated response</li>
+        </ul>
+
+        <h3>4.2 Device Management e Compliance</h3>
+
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Soluzione</th>
+                    <th>Pro</th>
+                    <th>Contro</th>
+                    <th>Use Case</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Microsoft Intune</strong></td>
+                    <td>Integrazione nativa con M365, gestione unificata</td>
+                    <td>Costo per device, complessità setup</td>
+                    <td>Ambiente Microsoft-centric</td>
+                </tr>
+                <tr>
+                    <td><strong>JAMF</strong></td>
+                    <td>Eccellente per macOS, user-friendly</td>
+                    <td>Focus su Apple, costo elevato</td>
+                    <td>Organizzazioni creative/design</td>
+                </tr>
+                <tr>
+                    <td><strong>IBM MaaS360</strong></td>
+                    <td>Unified endpoint management, sicurezza enterprise</td>
+                    <td>Interfaccia complessa, learning curve</td>
+                    <td>Large enterprises</td>
+                </tr>
+                <tr>
+                    <td><strong>VMware Workspace ONE</strong></td>
+                    <td>Digital workspace completo, multi-cloud</td>
+                    <td>Costo totale ownership elevato</td>
+                    <td>Distributed workforce</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="content" id="rete">
+        <h2>5. Sicurezza di Rete</h2>
+
+        <h3>5.1 Next-Generation Firewall (NGFW)</h3>
+
+        <div class="tool-recommendation">
+            <h4>NGFW Capabilities</h4>
+            <ul>
+                <li>Application awareness e control</li>
+                <li>SSL/TLS inspection</li>
+                <li>Advanced threat protection</li>
+                <li>User identity integration</li>
+                <li>Automated policy enforcement</li>
+            </ul>
+        </div>
+
+        <h3>5.2 Network Segmentation</h3>
+
+        <div class="code-snippet">
+            # Esempio configurazione VLAN per segmentation
+            interface GigabitEthernet0/1
+            description "Finance Department"
+            switchport mode access
+            switchport access vlan 100
+            switchport port-security
+            switchport port-security maximum 3
+            switchport port-security violation restrict
+            spanning-tree portfast
+
+            # ACL per controllo traffico inter-VLAN
+            access-list 100 permit ip 192.168.100.0 0.0.0.255 192.168.200.0 0.0.0.255
+            access-list 100 deny ip any any
+        </div>
+
+        <h3>5.3 Secure Access Service Edge (SASE)</h3>
+
+        <div class="success-box">
+            <h4>SASE: Il Futuro della Network Security</h4>
+            <p>SASE combina networking e sicurezza in un servizio cloud-based, ideale per workforce distribuita e
+                applicazioni cloud-native.</p>
+        </div>
+
+        <h4>Componenti SASE</h4>
+        <ul>
+            <li><strong>SWG (Secure Web Gateway):</strong> Protezione navigazione web</li>
+            <li><strong>CASB (Cloud Access Security Broker):</strong> Sicurezza applicazioni cloud</li>
+            <li><strong>ZTNA (Zero Trust Network Access):</strong> Accesso sicuro basato su identità</li>
+            <li><strong>FWaaS (Firewall as a Service):</strong> Firewall cloud-managed</li>
+            <li><strong>DNS Security:</strong> Protezione da malware e phishing</li>
+        </ul>
+    </div>
+
+    <div class="content" id="dati">
+        <h2>6. Data Protection e Privacy</h2>
+
+        <h3>6.1 Data Loss Prevention (DLP)</h3>
+
+        <div class="warning-box">
+            <h4>Statistiche Allarmanti</h4>
+            <p>Il 74% delle violazioni coinvolge dati sensibili. DLP è essenziale per prevenire exfiltration di dati.
+            </p>
+        </div>
+
+        <h4>Strategie DLP</h4>
+        <ul>
+            <li><strong>Content Classification:</strong> Identificazione automatica dati sensibili</li>
+            <li><strong>Policy Enforcement:</strong> Blocco trasferimento dati non autorizzati</li>
+            <li><strong>Encryption:</strong> Crittografia dati in transito e at rest</li>
+            <li><strong>Data Watermarking:</strong> Tracciamento origine dati compromessi</li>
+            <li><strong>User Training:</strong> Awareness su rischi condivisione dati</li>
+        </ul>
+
+        <h3>6.2 GDPR e Privacy Compliance</h3>
+
+        <div class="implementation-steps">
+            <div class="step">
+                <h4>Data Mapping</h4>
+                <p>Identificare tutti i dati personali processati, loro provenienza, utilizzo e storage location.</p>
+            </div>
+            <div class="step">
+                <h4>Legal Basis Assessment</h4>
+                <p>Verificare che ogni processamento abbia base legale valida (consenso, legitimate interest, contract).
+                </p>
+            </div>
+            <div class="step">
+                <h4>Privacy by Design</h4>
+                <p>Implementare controlli privacy in ogni nuovo sistema o processo.</p>
+            </div>
+            <div class="step">
+                <h4>Data Subject Rights</h4>
+                <p>Processi per gestire richieste accesso, rettifica, cancellazione dati personali.</p>
+            </div>
+            <div class="step">
+                <h4>Data Protection Impact Assessment</h4>
+                <p>Valutazione rischi privacy per progetti ad alto impatto.</p>
+            </div>
+        </div>
+
+        <h3>6.3 Encryption Strategy</h3>
+
+        <div class="code-snippet">
+            // Implementazione AES-256 encryption
+            const crypto = require('crypto');
+
+            function encryptData(data, key) {
+            const iv = crypto.randomBytes(16);
+            const cipher = crypto.createCipher('aes-256-cbc', key);
+            let encrypted = cipher.update(data, 'utf8', 'hex');
+            encrypted += cipher.final('hex');
+            return { encrypted, iv: iv.toString('hex') };
+            }
+
+            function decryptData(encryptedData, key, iv) {
+            const decipher = crypto.createDecipher('aes-256-cbc', key);
+            let decrypted = decipher.update(encryptedData, 'hex', 'utf8');
+            decrypted += decipher.final('utf8');
+            return decrypted;
+            }
+            </code-snippet>
+        </div>
+
+        <div class="content" id="identita">
+            <h2>7. Identity and Access Management</h2>
+
+            <h3>7.1 Multi-Factor Authentication (MFA)</h3>
+
+            <div class="highlight-box">
+                <h4>MFA: Non più Opzionale</h4>
+                <p>L'80% delle violazioni aziendali coinvolge credenziali compromesse. MFA blocca il 99.9% degli
+                    attacchi account compromise.</p>
+            </div>
+
+            <h4>Tipi di MFA</h4>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Metodo</th>
+                        <th>Sicurezza</th>
+                        <th>Usabilità</th>
+                        <th>Costo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>App Authenticator</strong></td>
+                        <td>Alta</td>
+                        <td>Buona</td>
+                        <td>Basso</td>
+                    </tr>
+                    <tr>
+                        <td><strong>SMS</strong></td>
+                        <td>Media</td>
+                        <td>Eccellente</td>
+                        <td>Basso</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Hardware Token</strong></td>
+                        <td>Molto Alta</td>
+                        <td>Media</td>
+                        <td>Alto</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Biometric</strong></td>
+                        <td>Alta</td>
+                        <td>Eccellente</td>
+                        <td>Medio</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>7.2 Privileged Access Management (PAM)</h3>
+
+            <div class="tool-recommendation">
+                <h4>Principi PAM</h4>
+                <ul>
+                    <li>Just-in-Time Access: concessione temporanea</li>
+                    <li>Session Isolation: recording e monitoring</li>
+                    <li>Password Vaulting: storage sicuro credenziali</li>
+                    <li>Threat Analytics: rilevamento uso anomalo</li>
+                </ul>
+            </div>
+
+            <h3>7.3 Single Sign-On (SSO) e Federation</h3>
+
+            <div class="code-snippet">
+                # Esempio configurazione SAML SSO
+                <saml:Assertion xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion">
+                    <saml:Issuer>IdentityProvider</saml:Issuer>
+                    <saml:Subject>
+                        <saml:NameID>user@company.com</saml:NameID>
+                    </saml:Subject>
+                    <saml:Conditions>
+                        <saml:AudienceRestriction>
+                            <saml:Audience>ServiceProvider</saml:Audience>
+                        </saml:AudienceRestriction>
+                    </saml:Conditions>
+                </saml:Assertion>
+                </code-snippet>
+            </div>
+
+            <div class="content" id="monitoraggio">
+                <h2>8. Monitoraggio e Response</h2>
+
+                <h3>8.1 Security Information and Event Management (SIEM)</h3>
+
+                <div class="success-box">
+                    <h4>SIEM: Il Cervello della Security Operations</h4>
+                    <p>SIEM aggrega log da tutti i sistemi, correlaziona eventi e genera alert per identificare minacce
+                        in tempo reale.</p>
+                </div>
+
+                <h4>Funzionalità SIEM Avanzate</h4>
+                <ul>
+                    <li><strong>Log Aggregation:</strong> Raccolta da 1000+ fonti</li>
+                    <li><strong>Correlation Rules:</strong> Identificazione pattern complessi</li>
+                    <li><strong>Machine Learning:</strong> Riduzione false positive</li>
+                    <li><strong>Threat Intelligence:</strong> Integration feed esterni</li>
+                    <li><strong>Automated Response:</strong> Trigger azioni correttive</li>
+                </ul>
+
+                <h3>8.2 Security Orchestration, Automation and Response (SOAR)</h3>
+
+                <div class="tool-recommendation">
+                    <h4>SOAR Use Cases</h4>
+                    <ul>
+                        <li>Automated incident triage</li>
+                        <li>Phishing email quarantine</li>
+                        <li>Malware isolation</li>
+                        <li>Compliance report generation</li>
+                        <li>Threat hunting automation</li>
+                    </ul>
+                </div>
+
+                <h3>8.3 Threat Hunting</h3>
+
+                <div class="implementation-steps">
+                    <div class="step">
+                        <h4>Hypothesis Development</h4>
+                        <p>Formulare ipotesi basate su threat intelligence e conoscenza dominio.</p>
+                    </div>
+                    <div class="step">
+                        <h4>Data Collection</h4>
+                        <p>Raccogliere dati rilevanti da varie fonti (endpoint, network, cloud).</p>
+                    </div>
+                    <div class="step">
+                        <h4>Analysis Execution</h4>
+                        <p>Utilizzare tool avanzati per identificare anomalie e IOCs.</p>
+                    </div>
+                    <div class="step">
+                        <h4>Finding Validation</h4>
+                        <p>Verificare che i risultati rappresentino minacce reali, non falsi positivi.</p>
+                    </div>
+                    <div class="step">
+                        <h4>Response Planning</h4>
+                        <p>Sviluppare piani per neutralizzare minacce identificate.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content" id="incident">
+                <h2>9. Incident Response e Recovery</h2>
+
+                <h3>9.1 Incident Response Plan (IRP)</h3>
+
+                <div class="warning-box">
+                    <h4>Perché un IRP è Critico</h4>
+                    <p>Organizzazioni con IRP formale risolvono incidenti 50% più velocemente e con 53% meno impatto
+                        finanziario.</p>
+                </div>
+
+                <h4>Fasi IRP (NIST SP 800-61)</h4>
+                <ol>
+                    <li><strong>Preparation:</strong> Team, tool, piani di comunicazione</li>
+                    <li><strong>Identification:</strong> Rilevamento e assessment iniziale</li>
+                    <li><strong>Containment:</strong> Isolamento short-term e long-term</li>
+                    <li><strong>Eradication:</strong> Rimozione root cause</li>
+                    <li><strong>Recovery:</strong> Ripristino sistemi e monitoraggio</li>
+                    <li><strong>Lessons Learned:</strong> Review e miglioramento processi</li>
+                </ol>
+
+                <h3>9.2 Digital Forensics</h3>
+
+                <div class="tool-recommendation">
+                    <h4>Strumenti Forensics</h4>
+                    <ul>
+                        <li>EnCase, FTK per disk imaging</li>
+                        <li>Volatility per memory analysis</li>
+                        <li>Wireshark per network forensics</li>
+                        <li>Autopsy per triage iniziale</li>
+                    </ul>
+                </div>
+
+                <h3>9.3 Business Continuity e Disaster Recovery</h3>
+
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Metrica</th>
+                            <th>Obiettivo</th>
+                            <th>Esempio</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>RTO</strong></td>
+                            <td>Tempo per ripristinare servizio</td>
+                            <td>4 ore per sistemi critici</td>
+                        </tr>
+                        <tr>
+                            <td><strong>RPO</strong></td>
+                            <td>Data loss massima accettabile</td>
+                            <td>1 ora di transazioni</td>
+                        </tr>
+                        <tr>
+                            <td><strong>MTTR</strong></td>
+                            <td>Mean Time To Recovery</td>
+                            <td>2 ore per incident</td>
+                        </tr>
+                        <tr>
+                            <td><strong>MTTD</strong></td>
+                            <td>Mean Time To Detect</td>
+                            <td>15 minuti per breach</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="content" id="compliance">
+                <h2>10. Compliance e Audit</h2>
+
+                <h3>10.1 Framework di Compliance</h3>
+
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-value">ISO 27001</div>
+                        <div class="metric-label">Information Security Management</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">NIST CSF</div>
+                        <div class="metric-label">Cybersecurity Framework</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">GDPR</div>
+                        <div class="metric-label">Data Protection Regulation</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">PCI DSS</div>
+                        <div class="metric-label">Payment Card Industry</div>
+                    </div>
+                </div>
+
+                <h3>10.2 Audit e Assessment</h3>
+
+                <div class="case-study">
+                    <h4>Caso Studio: Implementazione ISO 27001</h4>
+                    <p>Una società fintech ha implementato ISO 27001 riducendo incidenti di sicurezza del 60% e
+                        migliorando la fiducia dei clienti.</p>
+                    <ul>
+                        <li><strong>Fase 1:</strong> Gap analysis iniziale (3 mesi)</li>
+                        <li><strong>Fase 2:</strong> Implementazione controlli (6 mesi)</li>
+                        <li><strong>Fase 3:</strong> Internal audit e remediation (2 mesi)</li>
+                        <li><strong>Fase 4:</strong> Certificazione esterna (1 mese)</li>
+                        <li><strong>Risultati:</strong> ROI del 300% nei primi 2 anni</li>
+                    </ul>
+                </div>
+
+                <h3>10.3 Continuous Compliance Monitoring</h3>
+
+                <div class="code-snippet">
+                    # Esempio script compliance monitoring
+                    def check_compliance():
+                    checks = {
+                    'mfa_enabled': count_users_without_mfa() == 0,
+                    'encryption_at_rest': verify_database_encryption(),
+                    'access_reviews': check_recent_access_reviews(),
+                    'patch_management': verify_patch_compliance(),
+                    'backup_integrity': test_backup_restoration()
+                    }
+
+                    failed_checks = [k for k, v in checks.items() if not v]
+
+                    if failed_checks:
+                    alert_compliance_team(failed_checks)
+                    return False
+                    else:
+                    log_compliance_success()
+                    return True
+
+                    # Esecuzione giornaliera
+                    schedule.every().day.at("06:00").do(check_compliance)
+                    </code-snippet>
+                </div>
+
+                <div class="content" id="metriche">
+                    <h2>11. Metriche e KPI di Sicurezza</h2>
+
+                    <h3>11.1 Metriche Operative</h3>
+
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <div class="metric-value">MTTD</div>
+                            <div class="metric-label">Mean Time To Detect</div>
+                            <p>Target: < 24 ore</p>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value">MTTR</div>
+                            <div class="metric-label">Mean Time To Respond</div>
+                            <p>Target: < 4 ore</p>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value">UPTIME</div>
+                            <div class="metric-label">System Availability</div>
+                            <p>Target: > 99.9%</p>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value">PATCH</div>
+                            <div class="metric-label">Compliance Rate</div>
+                            <p>Target: > 95%</p>
+                        </div>
+                    </div>
+
+                    <h3>11.2 Metriche di Efficacia</h3>
+
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Metrica</th>
+                                <th>Definizione</th>
+                                <th>Target</th>
+                                <th>Frequenza</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Security Incidents</strong></td>
+                                <td>Numero incidenti di sicurezza per mese</td>
+                                <td>
+                                    < 5</td>
+                                <td>Mensile</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Phishing Success Rate</strong></td>
+                                <td>% utenti che cliccano email phishing</td>
+                                <td>
+                                    < 2%</td>
+                                <td>Trimestrale</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Vulnerability Remediation</strong></td>
+                                <td>Tempo medio fix vulnerabilità critiche</td>
+                                <td>
+                                    < 30 giorni</td>
+                                <td>Settimanale</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Compliance Score</strong></td>
+                                <td>% controlli compliance implementati</td>
+                                <td>> 95%</td>
+                                <td>Mensile</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>11.3 Dashboard e Reporting</h3>
+
+                    <div class="tool-recommendation">
+                        <h4>Strumenti per Dashboard Sicurezza</h4>
+                        <ul>
+                            <li>Microsoft Power BI per executive reporting</li>
+                            <li>Elasticsearch/Kibana per real-time monitoring</li>
+                            <li>Splunk per log analysis e alerting</li>
+                            <li>Tableau per advanced analytics</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="content" id="implementazione">
+                    <h2>12. Roadmap di Implementazione</h2>
+
+                    <h3>12.1 Fasi di Implementazione</h3>
+
+                    <div class="implementation-steps">
+                        <div class="step">
+                            <h4>Assessment (Mesi 1-2)</h4>
+                            <p>Valutazione corrente maturità sicurezza, gap analysis, definizione obiettivi. Stakeholder
+                                alignment e budget approval.</p>
+                        </div>
+                        <div class="step">
+                            <h4>Foundation (Mesi 3-6)</h4>
+                            <p>Implementazione controlli base: MFA, patch management, basic monitoring. Formazione team
+                                e definizione processi.</p>
+                        </div>
+                        <div class="step">
+                            <h4>Enhancement (Mesi 7-12)</h4>
+                            <p>Advanced controls: EDR, SIEM, zero trust. Automazione processi e integration sistemi
+                                esistenti.</p>
+                        </div>
+                        <div class="step">
+                            <h4>Optimization (Mesi 13-18)</h4>
+                            <p>Machine learning per threat detection, SOAR implementation, continuous monitoring
+                                optimization.</p>
+                        </div>
+                        <div class="step">
+                            <h4>Mature (Mesi 19+)</h4>
+                            <p>Threat hunting proattivo, AI-driven security, continuous improvement. Certificazioni e
+                                audit regolari.</p>
+                        </div>
+                    </div>
+
+                    <h3>12.2 Budget e ROI</h3>
+
+                    <div class="case-study">
+                        <h4>ROI Framework di Sicurezza</h4>
+                        <p>Investimento iniziale: €500,000 per organizzazione media</p>
+                        <ul>
+                            <li><strong>Risparmi Anno 1:</strong> €200,000 (incident prevention)</li>
+                            <li><strong>Risparmi Anno 2:</strong> €350,000 (efficienza operativa)</li>
+                            <li><strong>Risparmi Anno 3:</strong> €500,000 (business continuity)</li>
+                            <li><strong>Payback Period:</strong> 18 mesi</li>
+                            <li><strong>ROI Annuale:</strong> 150-200%</li>
+                        </ul>
+                    </div>
+
+                    <h3>12.3 Change Management</h3>
+
+                    <div class="warning-box">
+                        <h4>Sfida del Change Management</h4>
+                        <p>L'80% dei progetti sicurezza falliscono per resistenza al cambiamento. Communication e
+                            training sono critici.</p>
+                    </div>
+
+                    <h4>Strategie di Successo</h4>
+                    <ul>
+                        <li><strong>Executive Sponsorship:</strong> Supporto visibile leadership</li>
+                        <li><strong>Change Champions:</strong> Influencer in ogni dipartimento</li>
+                        <li><strong>Communication Plan:</strong> Messaggi chiari e frequenti</li>
+                        <li><strong>Training Program:</strong> Sessioni pratiche e reinforcement</li>
+                        <li><strong>Quick Wins:</strong> Dimostrare valore precoce</li>
+                        <li><strong>Feedback Loop:</strong> Raccolta e azione su feedback</li>
+                    </ul>
+                </div>
+
+                <div class="footer">
+                    <h3>Risorse e Supporto</h3>
+                    <p>
+                        <strong>Framework di Riferimento:</strong><br>
+                        NIST Cybersecurity Framework, ISO 27001, CIS Controls, MITRE ATT&CK
+                    </p>
+                    <p>
+                        <strong>Community e Formazione:</strong><br>
+                        ISC², ISACA, OWASP, SANS Institute, EC-Council
+                    </p>
+                    <p>
+                        <strong>Strumenti Consigliati:</strong><br>
+                        SIEM: Splunk, IBM QRadar, LogRhythm<br>
+                        EDR: CrowdStrike, SentinelOne, Microsoft Defender<br>
+                        Vulnerability: Tenable, Rapid7, Qualys<br>
+                        Training: KnowBe4, Proofpoint, SANS
+                    </p>
+                    <p>
+                        <strong>Contatti:</strong><br>
+                        Per consulenze specifiche o implementazioni personalizzate,<br>
+                        contattare: security@techsecure.it | +39 02 1234 5678
+                    </p>
+                    <p><em>Questo framework è stato sviluppato basandosi su best practices internazionali e casi di
+                            successo reali. L'implementazione deve essere adattata al contesto specifico di ciascuna
+                            organizzazione.</em></p>
+                    <p><strong>Versione:</strong> 3.1 | <strong>Data:</strong> Dicembre 2024 |
+                        <strong>Revisione:</strong> Annuale</p>
+                </div>
+
+</body>
+
+</html>

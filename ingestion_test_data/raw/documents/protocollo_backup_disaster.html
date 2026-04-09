@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protocollo Backup e Disaster Recovery</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+
+        .protocol-section {
+            margin: 30px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+        }
+
+        .critical {
+            background-color: #ffe6e6;
+            border-left: 4px solid #dc3545;
+        }
+
+        .warning {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+        }
+
+        .info {
+            background-color: #d1ecf1;
+            border-left: 4px solid #17a2b8;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 20px 0;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .step {
+            font-weight: bold;
+            color: #007bff;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Protocollo di Backup e Disaster Recovery</h1>
+
+    <div class="info">
+        <h3>Informazioni Documento</h3>
+        <p><strong>Versione:</strong> 3.2</p>
+        <p><strong>Data:</strong> 15 Marzo 2024</p>
+        <p><strong>Approvato da:</strong> Comitato IT Security</p>
+        <p><strong>Revisione programmata:</strong> Marzo 2025</p>
+    </div>
+
+    <div class="protocol-section">
+        <h2>1. Scopo e Applicabilità</h2>
+
+        <h3>1.1 Scopo</h3>
+        <p>Questo protocollo definisce le procedure standard per:</p>
+        <ul>
+            <li>Eseguire backup regolari e affidabili dei dati aziendali</li>
+            <li>Gestire eventi di disaster recovery</li>
+            <li>Minimizzare downtime e perdita di dati</li>
+            <li>Garantire continuità operativa</li>
+        </ul>
+
+        <h3>1.2 Applicabilità</h3>
+        <p>Il protocollo si applica a:</p>
+        <ul>
+            <li>Tutti i sistemi di produzione</li>
+            <li>Dati critici e non critici</li>
+            <li>Infrastruttura on-premise e cloud</li>
+            <li>Applicazioni business-critical</li>
+        </ul>
+    </div>
+
+    <div class="protocol-section">
+        <h2>2. Strategia di Backup</h2>
+
+        <h3>2.1 Classificazione Dati</h3>
+        <table>
+            <tr>
+                <th>Livello Criticità</th>
+                <th>Esempi</th>
+                <th>Frequenza Backup</th>
+                <th>Retention</th>
+            </tr>
+            <tr>
+                <td class="critical">Critico</td>
+                <td>Database produzione, file finanziari</td>
+                <td>Ogni 4 ore</td>
+                <td>90 giorni</td>
+            </tr>
+            <tr>
+                <td class="warning">Alto</td>
+                <td>Email, documenti condivisi</td>
+                <td>Giornaliero</td>
+                <td>60 giorni</td>
+            </tr>
+            <tr>
+                <td>Medio</td>
+                <td>File utente, configurazioni</td>
+                <td>Settimanale</td>
+                <td>30 giorni</td>
+            </tr>
+            <tr>
+                <td>Basso</td>
+                <td>Log temporanei, cache</td>
+                <td>Mensile</td>
+                <td>7 giorni</td>
+            </tr>
+        </table>
+
+        <h3>2.2 Metodi di Backup</h3>
+
+        <h4>Full Backup</h4>
+        <p>Copia completa di tutti i dati. Eseguito settimanalmente per sistemi critici.</p>
+
+        <h4>Incremental Backup</h4>
+        <p>Copia solo modifiche dall'ultimo backup. Eseguito giornalmente.</p>
+
+        <h4>Differential Backup</h4>
+        <p>Copia modifiche dall'ultimo full backup. Alternativa per alcuni sistemi.</p>
+
+        <h3>2.3 Storage Backup</h3>
+        <ul>
+            <li><strong>On-site</strong>: NAS locale per recovery rapido</li>
+            <li><strong>Off-site</strong>: Cloud storage per disaster recovery</li>
+            <li><strong>Hybrid</strong>: Combinazione per ottimale sicurezza</li>
+        </ul>
+    </div>
+
+    <div class="protocol-section">
+        <h2>3. Procedure Operative</h2>
+
+        <h3>3.1 Backup Routine</h3>
+
+        <div class="step">Passo 1: Pre-Backup Check</div>
+        <ul>
+            <li>Verifica integrità sistemi sorgente</li>
+            <li>Controlla spazio disponibile storage</li>
+            <li>Valida connettività reti</li>
+            <li>Notifica stakeholders se necessario</li>
+        </ul>
+
+        <div class="step">Passo 2: Esecuzione Backup</div>
+        <ul>
+            <li>Avvia job di backup secondo schedule</li>
+            <li>Monitora progresso in tempo reale</li>
+            <li>Log tutte le operazioni</li>
+            <li>Gestisci errori automaticamente</li>
+        </ul>
+
+        <div class="step">Passo 3: Post-Backup Validation</div>
+        <ul>
+            <li>Verifica integrità backup</li>
+            <li>Test restore parziale</li>
+            <li>Confronta dimensioni e checksum</li>
+            <li>Genera report di completamento</li>
+        </ul>
+
+        <h3>3.2 Monitoraggio e Alerting</h3>
+        <ul>
+            <li><strong>Success Alert</strong>: Notifica completamento riuscito</li>
+            <li><strong>Warning Alert</strong>: Avviso problemi minori</li>
+            <li><strong>Critical Alert</strong>: Allarme fallimento backup</li>
+            <li><strong>Escalation</strong>: Notifica management per problemi critici</li>
+        </ul>
+    </div>
+
+    <div class="protocol-section critical">
+        <h2>4. Disaster Recovery Plan</h2>
+
+        <h3>4.1 Scenari di Disaster</h3>
+
+        <h4>Livello 1: Minor Incident</h4>
+        <p>Perdita singola componente, recovery entro 4 ore.</p>
+
+        <h4>Livello 2: Major Incident</h4>
+        <p>Perdita sistema completo, recovery entro 24 ore.</p>
+
+        <h4>Livello 3: Catastrophic Disaster</h4>
+        <p>Perdita data center, recovery entro 72 ore.</p>
+
+        <h3>4.2 Recovery Time Objective (RTO)</h3>
+        <table>
+            <tr>
+                <th>Sistema</th>
+                <th>RTO</th>
+                <th>RPO</th>
+            </tr>
+            <tr>
+                <td>Database Core</td>
+                <td>2 ore</td>
+                <td>15 minuti</td>
+            </tr>
+            <tr>
+                <td>Applicazioni Web</td>
+                <td>4 ore</td>
+                <td>1 ora</td>
+            </tr>
+            <tr>
+                <td>Email System</td>
+                <td>8 ore</td>
+                <td>4 ore</td>
+            </tr>
+            <tr>
+                <td>File Server</td>
+                <td>12 ore</td>
+                <td>8 ore</td>
+            </tr>
+        </table>
+
+        <h3>4.3 Recovery Procedures</h3>
+
+        <div class="step">Fase 1: Assessment</div>
+        <ul>
+            <li>Valutare impatto del disaster</li>
+            <li>Attivare Incident Response Team</li>
+            <li>Comunicare con stakeholders</li>
+            <li>Documentare evento</li>
+        </ul>
+
+        <div class="step">Fase 2: Containment</div>
+        <ul>
+            <li>Isolare sistemi compromessi</li>
+            <li>Attivare backup systems</li>
+            <li>Implementare workarounds</li>
+            <li>Comunicare status aggiornamenti</li>
+        </ul>
+
+        <div class="step">Fase 3: Recovery</div>
+        <ul>
+            <li>Ripristinare da backup</li>
+            <li>Testare funzionalità</li>
+            <li>Migrare traffico gradualmente</li>
+            <li>Monitorare performance</li>
+        </ul>
+
+        <div class="step">Fase 4: Restoration</div>
+        <ul>
+            <li>Ripristinare sistemi primari</li>
+            <li>Analizzare causa root</li>
+            <li>Implementare miglioramenti</li>
+            <li>Aggiornare documentazione</li>
+        </ul>
+    </div>
+
+    <div class="protocol-section">
+        <h2>5. Testing e Manutenzione</h2>
+
+        <h3>5.1 Test di Backup</h3>
+
+        <h4>Test Quotidiani</h4>
+        <ul>
+            <li>Verifica automatica integrità</li>
+            <li>Confronto dimensioni</li>
+            <li>Alert per anomalie</li>
+        </ul>
+
+        <h4>Test Mensili</h4>
+        <ul>
+            <li>Restore test parziale</li>
+            <li>Verifica accessibilità</li>
+            <li>Performance testing</li>
+        </ul>
+
+        <h4>Test Annuali</h4>
+        <ul>
+            <li>Full disaster recovery drill</li>
+            <li>Cross-site failover test</li>
+            <li>Business continuity validation</li>
+        </ul>
+
+        <h3>5.2 Manutenzione</h3>
+        <ul>
+            <li><strong>Cleanup</strong>: Eliminazione backup obsoleti</li>
+            <li><strong>Encryption</strong>: Rotazione chiavi crittografiche</li>
+            <li><strong>Updates</strong>: Aggiornamento software backup</li>
+            <li><strong>Audits</strong>: Verifica compliance periodica</li>
+        </ul>
+    </div>
+
+    <div class="protocol-section">
+        <h2>6. Sicurezza e Compliance</h2>
+
+        <h3>6.1 Sicurezza Backup</h3>
+        <ul>
+            <li><strong>Crittografia</strong>: AES-256 per dati in transito e riposo</li>
+            <li><strong>Access Control</strong>: RBAC per accesso backup</li>
+            <li><strong>Integrity Checks</strong>: Hash verification</li>
+            <li><strong>Physical Security</strong>: Protezione storage off-site</li>
+        </ul>
+
+        <h3>6.2 Compliance</h3>
+        <ul>
+            <li><strong>GDPR</strong>: Data protection e privacy</li>
+            <li><strong>SOX</strong>: Financial data retention</li>
+            <li><strong>ISO 27001</strong>: Information security</li>
+            <li><strong>Industry Standards</strong>: Settore-specifiche requirements</li>
+        </ul>
+    </div>
+
+    <div class="protocol-section">
+        <h2>7. Ruoli e Responsabilità</h2>
+
+        <h3>7.1 Incident Response Team</h3>
+        <ul>
+            <li><strong>Team Leader</strong>: Coordinamento generale</li>
+            <li><strong>Technical Lead</strong>: Recovery tecnico</li>
+            <li><strong>Communications</strong>: Stakeholder management</li>
+            <li><strong>Business Rep</strong>: Impatto business</li>
+        </ul>
+
+        <h3>7.2 Responsabilità Operative</h3>
+        <table>
+            <tr>
+                <th>Ruolo</th>
+                <th>Responsabilità Backup</th>
+                <th>Responsabilità DR</th>
+            </tr>
+            <tr>
+                <td>IT Operations</td>
+                <td>Esecuzione quotidiana</td>
+                <td>Technical recovery</td>
+            </tr>
+            <tr>
+                <td>System Admin</td>
+                <td>Configurazione sistemi</td>
+                <td>System restoration</td>
+            </tr>
+            <tr>
+                <td>Security Team</td>
+                <td>Security validation</td>
+                <td>Security assessment</td>
+            </tr>
+            <tr>
+                <td>Business Units</td>
+                <td>Data classification</td>
+                <td>Business continuity</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="protocol-section warning">
+        <h2>8. Procedure di Emergenza</h2>
+
+        <h3>8.1 Contatti Critici</h3>
+        <ul>
+            <li><strong>IT Emergency</strong>: +39 02 1234 5678 (24/7)</li>
+            <li><strong>Management</strong>: CEO/CIO numeri personali</li>
+            <li><strong>Vendors</strong>: Support lines fornitori critici</li>
+            <li><strong>External Help</strong>: Consulenti disaster recovery</li>
+        </ul>
+
+        <h3>8.2 Decision Tree</h3>
+        <p>Per ogni incidente, seguire questo flusso decisionale:</p>
+        <ol>
+            <li>Incident detected → Attivare alert</li>
+            <li>Assessment → Determinare severity</li>
+            <li>Response → Attivare piano appropriato</li>
+            <li>Escalation → Notificare management se necessario</li>
+            <li>Resolution → Eseguire recovery</li>
+            <li>Review → Analisi post-evento</li>
+        </ol>
+    </div>
+
+    <div class="protocol-section">
+        <h2>9. Metriche e Reporting</h2>
+
+        <h3>9.1 KPI Backup</h3>
+        <ul>
+            <li><strong>Success Rate</strong>: % backup completati con successo</li>
+            <li><strong>Recovery Time</strong>: Tempo medio per restore</li>
+            <li><strong>Data Loss</strong>: Quantità dati persi in incidenti</li>
+            <li><strong>Storage Efficiency</strong>: Utilizzo spazio backup</li>
+        </ul>
+
+        <h3>9.2 Reporting</h3>
+        <ul>
+            <li><strong>Daily</strong>: Status backup giornaliero</li>
+            <li><strong>Weekly</strong>: Report performance settimanale</li>
+            <li><strong>Monthly</strong>: Analisi trend e compliance</li>
+            <li><strong>Quarterly</strong>: Business review con management</li>
+        </ul>
+    </div>
+
+    <hr>
+    <p><em>Questo protocollo è soggetto a revisione annuale e aggiornamenti in caso di cambiamenti significativi
+            nell'infrastruttura o nelle minacce.</em></p>
+    <p><em>Per emergenze, contattare immediatamente il Disaster Recovery Team.</em></p>
+
+</body>
+
+</html>

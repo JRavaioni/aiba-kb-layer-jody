@@ -1,0 +1,1336 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Sistemi di Rischio nel Trading Finanziario: Modelli Quantitativi e Implementazioni Pratiche -->
+<document xmlns="http://www.example.com/trading-risk"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://www.example.com/trading-risk trading-risk.xsd"
+         id="trading-risk-systems-2024"
+         version="1.3"
+         language="it">
+
+    <metadata>
+        <title>Sistemi di Rischio nel Trading Finanziario: Modelli Quantitativi e Implementazioni Pratiche</title>
+        <author>
+            <name>Dott. Alessandro Martini</name>
+            <institution>Università degli Studi di Milano - Dipartimento di Finanza</institution>
+            <email>alessandro.martini@unimi.it</email>
+            <specialization>Risk Management, Quantitative Finance</specialization>
+        </author>
+        <publication_info>
+            <publisher>Edizioni Quantitative Finance Italia</publisher>
+            <publication_date>2024-01-22</publication_date>
+            <isbn>978-88-12345-68-0</isbn>
+            <edition>Prima Edizione</edition>
+        </publication_info>
+        <abstract>
+            Analisi approfondita dei sistemi di gestione del rischio nel trading finanziario,
+            con focus su modelli quantitativi avanzati, implementazioni pratiche e
+            considerazioni regolamentari. Il documento esplora Value at Risk, Expected Shortfall,
+            stress testing e sistemi di risk management in tempo reale.
+        </abstract>
+        <technical_details>
+            <word_count>4980</word_count>
+            <page_count>124</page_count>
+            <figures_count>45</figures_count>
+            <tables_count>28</tables_count>
+            <code_examples>15</code_examples>
+        </technical_details>
+    </metadata>
+
+    <table_of_contents>
+        <chapter number="1" title="Introduzione ai Sistemi di Risk Management" level="1">
+            <section number="1.1" title="Evoluzione del Risk Management"/>
+            <section number="1.2" title="Framework Regolamentari"/>
+            <section number="1.3" title="Tipologie di Rischio nel Trading"/>
+        </chapter>
+        <chapter number="2" title="Value at Risk (VaR) Models" level="1">
+            <section number="2.1" title="VaR Parametrico"/>
+            <section number="2.2" title="VaR Storico"/>
+            <section number="2.3" title="Monte Carlo Simulation"/>
+            <section number="2.4" title="Backtesting e Validation"/>
+        </chapter>
+        <chapter number="3" title="Expected Shortfall e Coherent Risk Measures" level="1">
+            <section number="3.1" title="Limiti del VaR"/>
+            <section number="3.2" title="Expected Shortfall (ES)"/>
+            <section number="3.3" title="Conditional VaR"/>
+            <section number="3.4" title="Spectral Risk Measures"/>
+        </chapter>
+        <chapter number="4" title="Stress Testing e Scenario Analysis" level="1">
+            <section number="4.1" title="Stress Testing Framework"/>
+            <section number="4.2" title="Historical Scenarios"/>
+            <section number="4.3" title="Hypothetical Scenarios"/>
+            <section number="4.4" title="Reverse Stress Testing"/>
+        </chapter>
+        <chapter number="5" title="Risk Management in Tempo Reale" level="1">
+            <section number="5.1" title="High-Frequency Risk Monitoring"/>
+            <section number="5.2" title="Circuit Breakers"/>
+            <section number="5.3" title="Dynamic Risk Limits"/>
+            <section number="5.4" title="Automated Risk Controls"/>
+        </chapter>
+        <chapter number="6" title="Portfolio Risk Management" level="1">
+            <section number="6.1" title="Risk Decomposition"/>
+            <section number="6.2" title="Risk Attribution"/>
+            <section number="6.3" title="Hedging Strategies"/>
+            <section number="6.4" title="Portfolio Optimization"/>
+        </chapter>
+        <chapter number="7" title="Implementazione Pratica" level="1">
+            <section number="7.1" title="Architettura di Sistema"/>
+            <section number="7.2" title="Data Pipeline"/>
+            <section number="7.3" title="Reporting e Compliance"/>
+            <section number="7.4" title="Performance Monitoring"/>
+        </section>
+        <chapter number="8" title="Case Studies" level="1">
+            <section number="8.1" title="Long-Term Capital Management (1998)"/>
+            <section number="8.2" title="Knight Capital (2012)"/>
+            <section number="8.3" title="JPMorgan London Whale (2012)"/>
+            <section number="8.4" title="Archegos Capital (2021)"/>
+        </section>
+    </table_of_contents>
+
+    <content>
+        <chapter number="1" title="Introduzione ai Sistemi di Risk Management">
+            <section number="1.1" title="Evoluzione del Risk Management">
+                <paragraph>
+                    Il risk management nel trading finanziario ha subito una trasformazione radicale
+                    dagli anni '90 ad oggi, passando da approcci qualitativi a sistemi quantitativi
+                    altamente sofisticati. Questa evoluzione è stata guidata da crisi finanziarie,
+                    avanzamenti tecnologici e requisiti regolamentari sempre più stringenti.
+                </paragraph>
+
+                <timeline>
+                    <milestone year="1970s" event="Portfolio Theory (Markowitz)"/>
+                    <milestone year="1980s" event="Value at Risk introduction"/>
+                    <milestone year="1990s" event="RiskMetrics (JPMorgan)"/>
+                    <milestone year="2000s" event="Basel II, stress testing"/>
+                    <milestone year="2010s" event="High-frequency risk management"/>
+                    <milestone year="2020s" event="AI-driven risk systems"/>
+                </timeline>
+
+                <key_developments>
+                    <development period="pre-1990s">
+                        <description>Approcci qualitativi basati su giudizio esperto</description>
+                        <limitations>Subbiettivo, non scalabile, limitata quantificazione</limitations>
+                    </development>
+                    <development period="1990s-2000s">
+                        <description>Introduzione modelli quantitativi (VaR, stress testing)</description>
+                        <advancements>Standardizzazione, misurabilità, confronto rischio/rendimento</advancements>
+                    </development>
+                    <development period="2010s">
+                        <description>Big data, machine learning, real-time monitoring</description>
+                        <capabilities>Predittività, automazione, granularità</capabilities>
+                    </development>
+                </key_developments>
+            </section>
+
+            <section number="1.2" title="Framework Regolamentari">
+                <regulatory_frameworks>
+                    <framework name="Basel Accords">
+                        <version>Basel III</version>
+                        <key_requirements>
+                            <requirement>Capital adequacy ratios</requirement>
+                            <requirement>Liquidity coverage ratio (LCR)</requirement>
+                            <requirement>Net stable funding ratio (NSFR)</requirement>
+                            <requirement>Leverage ratio</requirement>
+                        </key_requirements>
+                        <implementation>Global adoption by G20 countries</implementation>
+                    </framework>
+
+                    <framework name="Dodd-Frank Act (USA)">
+                        <focus>Systemically important financial institutions</focus>
+                        <requirements>
+                            <requirement>Living wills (resolution plans)</requirement>
+                            <requirement>Stress testing requirements</requirement>
+                            <requirement>Enhanced prudential standards</requirement>
+                        </requirements>
+                    </framework>
+
+                    <framework name="EMIR (EU)">
+                        <scope>OTC derivatives clearing and reporting</scope>
+                        <requirements>
+                            <requirement>Central clearing obligation</requirement>
+                            <requirement>Trade reporting to repositories</requirement>
+                            <requirement>Risk mitigation techniques</requirement>
+                        </requirements>
+                    </framework>
+
+                    <framework name="MiFID II (EU)">
+                        <trading_venues>Algorithmic trading requirements</trading_venues>
+                        <requirements>
+                            <requirement>Pre-trade transparency</requirement>
+                            <requirement>Order record keeping</requirement>
+                            <requirement>Algorithm testing and monitoring</requirement>
+                        </requirements>
+                    </framework>
+                </regulatory_frameworks>
+            </section>
+
+            <section number="1.3" title="Tipologie di Rischio nel Trading">
+                <risk_categories>
+                    <risk_category type="market_risk">
+                        <definition>Rischio di perdite derivanti da movimenti avversi dei prezzi di mercato</definition>
+                        <subtypes>
+                            <subtype>Directional risk (beta exposure)</subtype>
+                            <subtype>Volatility risk (gamma, vega)</subtype>
+                            <subtype>Correlation risk (rho)</subtype>
+                        </subtypes>
+                        <measurement>VaR, stress testing, scenario analysis</measurement>
+                    </risk_category>
+
+                    <risk_category type="credit_risk">
+                        <definition>Rischio di default del controparte o deterioramento qualità creditizia</definition>
+                        <subtypes>
+                            <subtype>Default risk</subtype>
+                            <subtype>Downgrade risk</subtype>
+                            <subtype>Settlement risk</subtype>
+                        </subtypes>
+                        <measurement>Credit VaR, CVA, expected loss</measurement>
+                    </risk_category>
+
+                    <risk_category type="liquidity_risk">
+                        <definition>Rischio di non poter liquidare posizioni a prezzi ragionevoli</definition>
+                        <subtypes>
+                            <subtype>Market liquidity risk</subtype>
+                            <subtype>Funding liquidity risk</subtype>
+                            <subtype>Operational liquidity risk</subtype>
+                        </subtypes>
+                        <measurement>Liquidity-adjusted VaR, funding gap analysis</measurement>
+                    </risk_category>
+
+                    <risk_category type="operational_risk">
+                        <definition>Rischio di perdite derivanti da processi interni fallati, persone o sistemi</definition>
+                        <subtypes>
+                            <subtype>Execution risk</subtype>
+                            <subtype>Model risk</subtype>
+                            <subtype>Cybersecurity risk</subtype>
+                        </subtypes>
+                        <measurement>Operational VaR, loss distribution approach</measurement>
+                    </risk_category>
+                </risk_categories>
+            </section>
+        </chapter>
+
+        <chapter number="2" title="Value at Risk (VaR) Models">
+            <section number="2.1" title="VaR Parametrico">
+                <parametric_var>
+                    <formula>
+                        <standard>VaR = -μ + z_α * σ</standard>
+                        <confidence_levels>
+                            <level alpha="0.01" z_score="-2.33" description="99% confidence"/>
+                            <level alpha="0.05" z_score="-1.65" description="95% confidence"/>
+                            <level alpha="0.10" z_score="-1.28" description="90% confidence"/>
+                        </confidence_levels>
+                    </formula>
+
+                    <assumptions>
+                        <assumption>Distribuzione normale dei rendimenti</assumption>
+                        <assumption>Stazionarietà dei parametri</assumption>
+                        <assumption>Indipendenza delle osservazioni</assumption>
+                    </assumptions>
+
+                    <implementation>
+                        <code language="python" description="Implementazione VaR parametrico">
+                            <![CDATA[
+import numpy as np
+from scipy import stats
+
+class ParametricVaR:
+    def __init__(self, confidence_level=0.95):
+        self.confidence_level = confidence_level
+        self.z_score = stats.norm.ppf(1 - confidence_level)
+
+    def calculate_var(self, returns, portfolio_value=1000000):
+        """
+        Calcola VaR parametrico giornaliero
+
+        Parameters:
+        returns (array): Serie storiche rendimenti
+        portfolio_value (float): Valore portafoglio
+
+        Returns:
+        float: VaR in termini assoluti
+        """
+        mean_return = np.mean(returns)
+        std_return = np.std(returns, ddof=1)
+
+        var_return = -(mean_return + self.z_score * std_return)
+        var_absolute = var_return * portfolio_value
+
+        return var_absolute
+
+    def calculate_var_multi_asset(self, weights, returns_matrix, portfolio_value=1000000):
+        """
+        Calcola VaR per portafoglio multi-asset
+
+        Parameters:
+        weights (array): Pesi degli asset
+        returns_matrix (matrix): Matrice rendimenti storici
+        portfolio_value (float): Valore portafoglio
+
+        Returns:
+        float: VaR portafoglio
+        """
+        # Calcola rendimento e volatilità portafoglio
+        portfolio_returns = np.dot(returns_matrix, weights)
+        mean_portfolio = np.mean(portfolio_returns)
+        std_portfolio = np.std(portfolio_returns, ddof=1)
+
+        var_return = -(mean_portfolio + self.z_score * std_portfolio)
+        var_absolute = var_return * portfolio_value
+
+        return var_absolute
+
+# Esempio utilizzo
+var_calculator = ParametricVaR(confidence_level=0.99)
+
+# Rendimenti giornalieri (esempio)
+returns = np.random.normal(0.0001, 0.02, 1000)
+
+# VaR per singolo asset
+single_var = var_calculator.calculate_var(returns, 1000000)
+print(f"VaR 99% giornaliero: ${single_var:,.2f}")
+
+# VaR per portafoglio multi-asset
+weights = np.array([0.4, 0.3, 0.3])  # 40% stocks, 30% bonds, 30% gold
+returns_matrix = np.random.multivariate_normal(
+    mean=[0.0001, 0.00005, 0.00008],
+    cov=[[0.0004, 0.00002, 0.00001],
+         [0.00002, 0.0001, 0.000005],
+         [0.00001, 0.000005, 0.0002]],
+    size=1000
+)
+
+portfolio_var = var_calculator.calculate_var_multi_asset(weights, returns_matrix, 1000000)
+print(f"VaR 99% portafoglio: ${portfolio_var:,.2f}")
+                            ]]>
+                        </code>
+                    </implementation>
+                </parametric_var>
+            </section>
+
+            <section number="2.2" title="VaR Storico">
+                <historical_var>
+                    <methodology>
+                        <description>
+                            Il VaR storico utilizza dati passati direttamente senza assunzioni
+                            sulla distribuzione dei rendimenti. È considerato più conservativo
+                            del VaR parametrico.
+                        </description>
+                        <steps>
+                            <step>Ordina rendimenti storici in ordine crescente</step>
+                            <step>Identifica percentile corrispondente al livello di confidenza</step>
+                            <step>Moltiplica per valore portafoglio per ottenere VaR assoluto</step>
+                        </steps>
+                    </methodology>
+
+                    <advantages>
+                        <advantage>No distributional assumptions</advantage>
+                        <advantage>Captures fat tails and extreme events</advantage>
+                        <advantage>Straightforward implementation</advantage>
+                    </advantages>
+
+                    <implementation>
+                        <code language="python" description="Implementazione VaR storico">
+                            <![CDATA[
+import numpy as np
+import pandas as pd
+
+class HistoricalVaR:
+    def __init__(self, confidence_level=0.95):
+        self.confidence_level = confidence_level
+
+    def calculate_var(self, returns, portfolio_value=1000000):
+        """
+        Calcola VaR storico
+
+        Parameters:
+        returns (array): Serie storiche rendimenti
+        portfolio_value (float): Valore portafoglio
+
+        Returns:
+        float: VaR storico
+        """
+        # Ordina rendimenti (peggiori scenari per primi)
+        sorted_returns = np.sort(returns)
+
+        # Trova indice corrispondente al percentile
+        # Per VaR al 95%, prendiamo il 5° percentile dei rendimenti peggiori
+        index = int((1 - self.confidence_level) * len(sorted_returns))
+
+        # VaR è la perdita massima al livello di confidenza
+        var_return = -sorted_returns[index]  # Negativo perché sorted_returns è crescente
+        var_absolute = var_return * portfolio_value
+
+        return var_absolute
+
+    def calculate_var_distribution(self, returns, portfolio_value=1000000):
+        """
+        Calcola distribuzione VaR per diversi livelli di confidenza
+
+        Returns:
+        dict: VaR per diversi confidence levels
+        """
+        sorted_returns = np.sort(returns)
+        var_levels = {}
+
+        for confidence in [0.90, 0.95, 0.99]:
+            index = int((1 - confidence) * len(sorted_returns))
+            var_return = -sorted_returns[index]
+            var_levels[f"{int(confidence*100)}%"] = var_return * portfolio_value
+
+        return var_levels
+
+    def expected_shortfall(self, returns, portfolio_value=1000000, confidence_level=0.95):
+        """
+        Calcola Expected Shortfall (CVaR) usando approccio storico
+
+        Parameters:
+        returns (array): Serie storiche rendimenti
+        portfolio_value (float): Valore portafoglio
+        confidence_level (float): Livello di confidenza
+
+        Returns:
+        float: Expected Shortfall
+        """
+        sorted_returns = np.sort(returns)
+        index = int((1 - confidence_level) * len(sorted_returns))
+
+        # ES è media delle perdite oltre il VaR
+        tail_losses = sorted_returns[:index+1]  # Peggiori rendimenti
+        es_return = -np.mean(tail_losses)  # Expected Shortfall nei rendimenti
+        es_absolute = es_return * portfolio_value
+
+        return es_absolute
+
+# Esempio utilizzo
+historical_var = HistoricalVaR(confidence_level=0.99)
+
+# Dati storici (esempio con distribuzione fat-tailed)
+np.random.seed(42)
+normal_returns = np.random.normal(0.0001, 0.02, 950)
+extreme_returns = np.random.normal(-0.05, 0.03, 50)  # Eventi estremi
+returns = np.concatenate([normal_returns, extreme_returns])
+
+portfolio_value = 1000000
+
+# Calcola VaR storico
+var_99 = historical_var.calculate_var(returns, portfolio_value)
+print(f"VaR Storico 99%: ${var_99:,.2f}")
+
+# Distribuzione VaR
+var_distribution = historical_var.calculate_var_distribution(returns, portfolio_value)
+for level, value in var_distribution.items():
+    print(f"VaR {level}: ${value:,.2f}")
+
+# Expected Shortfall
+es_99 = historical_var.expected_shortfall(returns, portfolio_value, 0.99)
+print(f"Expected Shortfall 99%: ${es_99:,.2f}")
+                            ]]>
+                        </code>
+                    </implementation>
+                </historical_var>
+            </section>
+
+            <section number="2.3" title="Monte Carlo Simulation">
+                <monte_carlo_var>
+                    <description>
+                        La simulazione Monte Carlo genera molteplici scenari futuri basati
+                        su modelli stocastici, calcolando VaR come percentile della distribuzione
+                        delle perdite simulate.
+                    </description>
+
+                    <methodology>
+                        <step>Definisci modello stocastico per i fattori di rischio</step>
+                        <step>Genera N scenari casuali</step>
+                        <step>Calcola P&L per ogni scenario</step>
+                        <step>Ordina perdite e identifica percentile desiderato</step>
+                    </methodology>
+
+                    <models>
+                        <model name="Geometric Brownian Motion">
+                            <equation>dS = μS dt + σS dW</equation>
+                            <use_case>Prezzi azionari, indici</use_case>
+                        </model>
+                        <model name="Ornstein-Uhlenbeck">
+                            <equation>dx = κ(θ - x) dt + σ dW</equation>
+                            <use_case>Tassi di interesse, spread creditizi</use_case>
+                        </model>
+                        <model name="GARCH">
+                            <equation>σ_t² = ω + α ε_{t-1}² + β σ_t-1²</equation>
+                            <use_case>Volatilità condizionale</use_case>
+                        </model>
+                    </models>
+
+                    <implementation>
+                        <code language="python" description="Simulazione Monte Carlo per VaR">
+                            <![CDATA[
+import numpy as np
+from scipy import stats
+import pandas as pd
+
+class MonteCarloVaR:
+    def __init__(self, confidence_level=0.95, n_simulations=10000):
+        self.confidence_level = confidence_level
+        self.n_simulations = n_simulations
+
+    def simulate_gbm(self, s0, mu, sigma, t, n_steps):
+        """
+        Simula Geometric Brownian Motion
+
+        Parameters:
+        s0 (float): Prezzo iniziale
+        mu (float): Rendimento atteso
+        sigma (float): Volatilità
+        t (float): Tempo orizzonte
+        n_steps (int): Numero passi simulazione
+
+        Returns:
+        array: Percorso prezzo simulato
+        """
+        dt = t / n_steps
+        prices = np.zeros(n_steps + 1)
+        prices[0] = s0
+
+        for i in range(1, n_steps + 1):
+            dW = np.random.normal(0, np.sqrt(dt))
+            prices[i] = prices[i-1] * np.exp((mu - 0.5 * sigma**2) * dt + sigma * dW)
+
+        return prices
+
+    def calculate_portfolio_var_mc(self, portfolio, time_horizon=1):
+        """
+        Calcola VaR portafoglio usando Monte Carlo
+
+        Parameters:
+        portfolio (dict): {'asset': {'weight': float, 'price': float, 'mu': float, 'sigma': float}}
+        time_horizon (float): Orizzonte temporale in anni
+
+        Returns:
+        float: VaR Monte Carlo
+        """
+        portfolio_value = sum(asset['weight'] * asset['price'] for asset in portfolio.values())
+
+        # Simula rendimenti portafoglio
+        portfolio_returns = []
+
+        for _ in range(self.n_simulations):
+            portfolio_return = 0
+
+            for asset_name, asset_data in portfolio.items():
+                # Simula prezzo finale
+                final_price = self.simulate_gbm(
+                    asset_data['price'],
+                    asset_data['mu'],
+                    asset_data['sigma'],
+                    time_horizon,
+                    252  # Giorni di trading
+                )[-1]
+
+                asset_return = (final_price - asset_data['price']) / asset_data['price']
+                portfolio_return += asset_data['weight'] * asset_return
+
+            portfolio_returns.append(portfolio_return)
+
+        # Calcola VaR come percentile delle perdite
+        losses = -np.array(portfolio_returns) * portfolio_value
+        losses_sorted = np.sort(losses)
+
+        var_index = int((1 - self.confidence_level) * self.n_simulations)
+        var_value = losses_sorted[var_index]
+
+        return var_value
+
+    def calculate_var_with_correlations(self, assets_data, weights, time_horizon=1):
+        """
+        Calcola VaR considerando correlazioni tra asset
+
+        Parameters:
+        assets_data (dict): Dati asset con correlazioni
+        weights (array): Pesi portafoglio
+        time_horizon (float): Orizzonte temporale
+
+        Returns:
+        float: VaR con correlazioni
+        """
+        n_assets = len(weights)
+        portfolio_value = sum(assets_data[asset]['price'] * weights[i]
+                            for i, asset in enumerate(assets_data.keys()))
+
+        # Matrice correlazione
+        correlation_matrix = np.array(assets_data['correlation_matrix'])
+
+        # Simula rendimenti correlati
+        portfolio_returns = []
+
+        for _ in range(self.n_simulations):
+            # Genera rendimenti correlati usando multivariate normal
+            mean_returns = np.array([assets_data[asset]['mu'] * time_horizon
+                                   for asset in assets_data.keys() if asset != 'correlation_matrix'])
+            cov_matrix = np.zeros((n_assets, n_assets))
+
+            for i in range(n_assets):
+                for j in range(n_assets):
+                    asset_i = list(assets_data.keys())[i]
+                    asset_j = list(assets_data.keys())[j]
+                    if asset_i != 'correlation_matrix' and asset_j != 'correlation_matrix':
+                        vol_i = assets_data[asset_i]['sigma'] * np.sqrt(time_horizon)
+                        vol_j = assets_data[asset_j]['sigma'] * np.sqrt(time_horizon)
+                        corr = correlation_matrix[i, j]
+                        cov_matrix[i, j] = vol_i * vol_j * corr
+
+            correlated_returns = np.random.multivariate_normal(mean_returns, cov_matrix)
+            portfolio_return = np.dot(weights, correlated_returns)
+            portfolio_returns.append(portfolio_return)
+
+        # Calcola VaR
+        losses = -np.array(portfolio_returns) * portfolio_value
+        losses_sorted = np.sort(losses)
+
+        var_index = int((1 - self.confidence_level) * self.n_simulations)
+        var_value = losses_sorted[var_index]
+
+        return var_value
+
+# Esempio utilizzo
+mc_var = MonteCarloVaR(confidence_level=0.99, n_simulations=50000)
+
+# Portafoglio semplice
+portfolio = {
+    'AAPL': {'weight': 0.4, 'price': 150, 'mu': 0.12, 'sigma': 0.25},
+    'MSFT': {'weight': 0.3, 'price': 280, 'mu': 0.15, 'sigma': 0.22},
+    'GOOGL': {'weight': 0.3, 'price': 2500, 'mu': 0.18, 'sigma': 0.28}
+}
+
+var_mc = mc_var.calculate_portfolio_var_mc(portfolio, time_horizon=1)
+print(f"VaR Monte Carlo 99% (1 anno): ${var_mc:,.2f}")
+
+# Con correlazioni
+assets_data = {
+    'AAPL': {'price': 150, 'mu': 0.12, 'sigma': 0.25},
+    'MSFT': {'price': 280, 'mu': 0.15, 'sigma': 0.22},
+    'GOOGL': {'price': 2500, 'mu': 0.18, 'sigma': 0.28},
+    'correlation_matrix': np.array([
+        [1.0, 0.6, 0.5],
+        [0.6, 1.0, 0.7],
+        [0.5, 0.7, 1.0]
+    ])
+}
+
+weights = np.array([0.4, 0.3, 0.3])
+var_corr = mc_var.calculate_var_with_correlations(assets_data, weights, time_horizon=1)
+print(f"VaR con correlazioni 99% (1 anno): ${var_corr:,.2f}")
+                            ]]>
+                        </code>
+                    </implementation>
+                </monte_carlo_var>
+            </section>
+
+            <section number="2.4" title="Backtesting e Validation">
+                <backtesting>
+                    <methodology>
+                        <description>
+                            Il backtesting confronta le previsioni VaR con le perdite effettive
+                            per validare l'accuratezza del modello.
+                        </description>
+                        <tests>
+                            <test name="Unconditional Coverage">
+                                <description>Test se frequenza violazioni = 1-α</description>
+                                <statistic>Kupiec test</statistic>
+                            </test>
+                            <test name="Conditional Coverage">
+                                <description>Test independenza violazioni + unconditional coverage</description>
+                                <statistic>Christoffersen test</statistic>
+                            </test>
+                            <test name="Dynamic Quantile Test">
+                                <description>Test se VaR è quantile corretto</description>
+                                <statistic>Engle-Manganelli test</statistic>
+                            </test>
+                        </tests>
+                    </methodology>
+
+                    <implementation>
+                        <code language="python" description="Backtesting VaR">
+                            <![CDATA[
+import numpy as np
+from scipy import stats
+import pandas as pd
+
+class VaRBacktesting:
+    def __init__(self, confidence_level=0.95):
+        self.confidence_level = confidence_level
+
+    def kupiec_test(self, violations, n_observations):
+        """
+        Kupiec Unconditional Coverage Test
+
+        Parameters:
+        violations (int): Numero violazioni VaR
+        n_observations (int): Numero totale osservazioni
+
+        Returns:
+        tuple: (test_statistic, p_value)
+        """
+        p = 1 - self.confidence_level  # Probabilità attesa violazioni
+        observed_violations = violations / n_observations
+
+        if violations == 0:
+            # Caso limite quando non ci sono violazioni
+            test_stat = -2 * np.log((1 - p) ** n_observations)
+        else:
+            test_stat = -2 * np.log(
+                (p ** violations) * ((1 - p) ** (n_observations - violations))
+            ) + 2 * np.log(
+                (observed_violations ** violations) *
+                ((1 - observed_violations) ** (n_observations - violations))
+            )
+
+        # Distribuito come chi-quadro con 1 grado libertà
+        p_value = 1 - stats.chi2.cdf(test_stat, 1)
+
+        return test_stat, p_value
+
+    def christoffersen_test(self, violations_series):
+        """
+        Christoffersen Conditional Coverage Test
+
+        Parameters:
+        violations_series (array): Serie binaria violazioni (1=violazione, 0=no)
+
+        Returns:
+        tuple: (test_statistic, p_value)
+        """
+        violations = violations_series.sum()
+        n = len(violations_series)
+
+        # Calcola probabilità di transizione
+        # P(1|0): probabilità violazione dopo non-violazione
+        # P(1|1): probabilità violazione dopo violazione
+
+        transitions = np.zeros((2, 2))
+        for i in range(1, n):
+            prev = int(violations_series[i-1])
+            curr = int(violations_series[i])
+            transitions[prev, curr] += 1
+
+        # Probabilità condizionate
+        if transitions[0, :].sum() > 0:
+            p_01 = transitions[0, 1] / transitions[0, :].sum()  # P(violazione|no violazione)
+        else:
+            p_01 = 0
+
+        if transitions[1, :].sum() > 0:
+            p_11 = transitions[1, 1] / transitions[1, :].sum()  # P(violazione|violazione)
+        else:
+            p_11 = 0
+
+        # Test statistico
+        if p_01 == p_11:
+            test_stat = 0
+        else:
+            test_stat = -2 * np.log(
+                ((1 - p_01) ** (transitions[0, 0] + transitions[1, 0])) *
+                (p_01 ** (transitions[0, 1] + transitions[1, 1])) *
+                ((1 - p_11) ** transitions[1, 0]) *
+                (p_11 ** transitions[1, 1])
+            ) + 2 * np.log(
+                ((1 - (violations/n)) ** (n - violations)) *
+                ((violations/n) ** violations)
+            )
+
+        p_value = 1 - stats.chi2.cdf(test_stat, 1)
+
+        return test_stat, p_value
+
+    def analyze_backtesting_results(self, var_series, returns, portfolio_value=1000000):
+        """
+        Analizza risultati backtesting completo
+
+        Parameters:
+        var_series (array): Serie valori VaR
+        returns (array): Serie rendimenti effettivi
+        portfolio_value (float): Valore portafoglio
+
+        Returns:
+        dict: Risultati analisi
+        """
+        # Calcola perdite
+        losses = -returns * portfolio_value
+
+        # Identifica violazioni
+        violations = losses > var_series
+        n_violations = violations.sum()
+        n_observations = len(violations)
+
+        # Percentuale violazioni
+        violation_rate = n_violations / n_observations
+
+        # Test statistici
+        kupiec_stat, kupiec_p = self.kupiec_test(n_violations, n_observations)
+        christoffersen_stat, christoffersen_p = self.christoffersen_test(violations.astype(int))
+
+        # Metriche aggiuntive
+        avg_var = np.mean(var_series)
+        avg_loss = np.mean(losses)
+        max_loss = np.max(losses)
+        var_coverage = np.mean(losses <= var_series)  # % volte VaR contiene perdita
+
+        results = {
+            'n_observations': n_observations,
+            'n_violations': n_violations,
+            'violation_rate': violation_rate,
+            'expected_violation_rate': 1 - self.confidence_level,
+            'kupiec_test_stat': kupiec_stat,
+            'kupiec_p_value': kupiec_p,
+            'christoffersen_test_stat': christoffersen_stat,
+            'christoffersen_p_value': christoffersen_p,
+            'average_var': avg_var,
+            'average_loss': avg_loss,
+            'maximum_loss': max_loss,
+            'var_coverage': var_coverage,
+            'model_performance': 'GOOD' if kupiec_p > 0.05 and christoffersen_p > 0.05 else 'POOR'
+        }
+
+        return results
+
+# Esempio utilizzo
+backtester = VaRBacktesting(confidence_level=0.99)
+
+# Dati di esempio
+np.random.seed(42)
+n_days = 500
+returns = np.random.normal(0.0001, 0.02, n_days)
+
+# Simula VaR (con qualche errore per realisticità)
+var_values = []
+for i in range(n_days):
+    # VaR parametrico con errore occasionale
+    base_var = 0.02 * 2.33 * 1000000  # μ + zσ semplificato
+    error = np.random.normal(0, 0.1 * base_var) if np.random.random() < 0.1 else 0
+    var_values.append(base_var + error)
+
+var_series = np.array(var_values)
+
+# Esegui backtesting
+results = backtester.analyze_backtesting_results(var_series, returns)
+
+print("=== Risultati Backtesting VaR ===")
+print(f"Osservazioni: {results['n_observations']}")
+print(f"Violazioni: {results['n_violations']}")
+print(f"Tasso violazioni: {results['violation_rate']:.3f} (atteso: {results['expected_violation_rate']:.3f})")
+print(f"Kupiec test p-value: {results['kupiec_p_value']:.4f}")
+print(f"Christoffersen test p-value: {results['christoffersen_p_value']:.4f}")
+print(f"Performance modello: {results['model_performance']}")
+                            ]]>
+                        </code>
+                    </implementation>
+                </backtesting>
+            </section>
+        </chapter>
+
+        <chapter number="3" title="Expected Shortfall e Coherent Risk Measures">
+            <section number="3.1" title="Limiti del VaR">
+                <var_limitations>
+                    <limitation>
+                        <name>Non subadditivo</name>
+                        <description>VaR(A+B) può essere > VaR(A) + VaR(B)</description>
+                        <implication>Non misura correttamente rischio diversificazione</implication>
+                    </limitation>
+                    <limitation>
+                        <name>Non informa sulla coda</name>
+                        <description>VaR non dice nulla su perdite oltre il quantile</description>
+                        <implication>Sottostima rischio in distribuzioni fat-tailed</implication>
+                    </limitation>
+                    <limitation>
+                        <name>Sensibile alla distribuzione</name>
+                        <description>VaR dipende fortemente dalle assunzioni distributive</description>
+                        <implication>Modelli parametrici possono fallire in condizioni estreme</implication>
+                    </limitation>
+                </var_limitations>
+            </section>
+
+            <section number="3.2" title="Expected Shortfall (ES)">
+                <expected_shortfall>
+                    <definition>
+                        L'Expected Shortfall misura la perdita attesa condizionata al superamento del VaR.
+                        È anche conosciuto come Conditional VaR (CVaR).
+                    </definition>
+
+                    <formula>
+                        <mathematical>ES_α = E[X | X ≤ -VaR_α]</mathematical>
+                        <discrete>ES_α = - (1/(n(1-α))) * Σ_{i=1}^{k} X_{(i)}</discrete>
+                        <continuous>ES_α = - (1/(1-α)) * ∫_{-∞}^{-VaR_α} x f(x) dx</continuous>
+                    </formula>
+
+                    <properties>
+                        <property>Coerente (subadditivo)</property>
+                        <property>Sensibile alla coda della distribuzione</property>
+                        <property>Maggiormente conservativo del VaR</property>
+                        <property>Regolamentaremente richiesto (Basel III)</property>
+                    </properties>
+
+                    <implementation>
+                        <code language="python" description="Calcolo Expected Shortfall">
+                            <![CDATA[
+import numpy as np
+from scipy import stats
+
+class ExpectedShortfall:
+    def __init__(self, confidence_level=0.95):
+        self.confidence_level = confidence_level
+
+    def calculate_es_parametric(self, returns, portfolio_value=1000000):
+        """
+        Calcola ES parametrico assumendo distribuzione normale
+
+        Parameters:
+        returns (array): Serie rendimenti
+        portfolio_value (float): Valore portafoglio
+
+        Returns:
+        float: Expected Shortfall
+        """
+        mean_return = np.mean(returns)
+        std_return = np.std(returns, ddof=1)
+
+        # VaR parametrico
+        z_score = stats.norm.ppf(1 - self.confidence_level)
+        var_return = -(mean_return + z_score * std_return)
+
+        # ES per distribuzione normale
+        # ES = μ + σ * (φ(z_α) / (1-α))
+        # dove φ è densità normale standard
+        phi_z = stats.norm.pdf(z_score)
+        es_return = -(mean_return + std_return * (phi_z / (1 - self.confidence_level)))
+
+        return es_return * portfolio_value
+
+    def calculate_es_historical(self, returns, portfolio_value=1000000):
+        """
+        Calcola ES storico
+
+        Parameters:
+        returns (array): Serie rendimenti
+        portfolio_value (float): Valore portafoglio
+
+        Returns:
+        float: Expected Shortfall
+        """
+        sorted_returns = np.sort(returns)
+
+        # Trova indice VaR
+        index = int((1 - self.confidence_level) * len(sorted_returns))
+
+        # ES come media dei rendimenti peggiori del VaR
+        tail_returns = sorted_returns[:index+1]
+        es_return = -np.mean(tail_returns)
+
+        return es_return * portfolio_value
+
+    def calculate_es_mc(self, returns, portfolio_value=1000000, n_simulations=10000):
+        """
+        Calcola ES usando simulazione Monte Carlo
+
+        Parameters:
+        returns (array): Serie rendimenti per fitting distribuzione
+        portfolio_value (float): Valore portafoglio
+        n_simulations (int): Numero simulazioni
+
+        Returns:
+        float: Expected Shortfall Monte Carlo
+        """
+        # Fit distribuzione normale ai dati storici
+        mean_return = np.mean(returns)
+        std_return = np.std(returns, ddof=1)
+
+        # Simula rendimenti futuri
+        simulated_returns = np.random.normal(mean_return, std_return, n_simulations)
+
+        # Calcola VaR simulato
+        sorted_sim_returns = np.sort(simulated_returns)
+        var_index = int((1 - self.confidence_level) * n_simulations)
+        var_return = -sorted_sim_returns[var_index]
+
+        # Calcola ES come media delle perdite oltre VaR
+        tail_losses = sorted_sim_returns[:var_index+1]
+        es_return = -np.mean(tail_losses)
+
+        return es_return * portfolio_value
+
+    def compare_risk_measures(self, returns, portfolio_value=1000000):
+        """
+        Confronta VaR ed ES per diversi metodi
+
+        Returns:
+        dict: Confronto misure rischio
+        """
+        results = {}
+
+        # Parametrico
+        var_param = self.calculate_es_parametric(returns, portfolio_value)
+        es_param = self.calculate_es_parametric(returns, portfolio_value)
+
+        # Storico
+        var_hist = self.calculate_es_historical(returns, portfolio_value)
+        es_hist = self.calculate_es_historical(returns, portfolio_value)
+
+        # Monte Carlo
+        var_mc = self.calculate_es_mc(returns, portfolio_value)
+        es_mc = self.calculate_es_mc(returns, portfolio_value)
+
+        results['parametric'] = {'var': var_param, 'es': es_param}
+        results['historical'] = {'var': var_hist, 'es': es_hist}
+        results['monte_carlo'] = {'var': var_mc, 'es': es_mc}
+
+        return results
+
+# Esempio utilizzo
+es_calculator = ExpectedShortfall(confidence_level=0.99)
+
+# Dati di esempio con eventi estremi
+np.random.seed(42)
+normal_returns = np.random.normal(0.0001, 0.02, 950)
+extreme_returns = np.random.normal(-0.08, 0.05, 50)  # Crisis events
+returns = np.concatenate([normal_returns, extreme_returns])
+
+portfolio_value = 1000000
+
+# Calcola ES con diversi metodi
+es_param = es_calculator.calculate_es_parametric(returns, portfolio_value)
+es_hist = es_calculator.calculate_es_historical(returns, portfolio_value)
+es_mc = es_calculator.calculate_es_mc(returns, portfolio_value)
+
+print("=== Expected Shortfall 99% ===")
+print(f"Parametrico: ${es_param:,.2f}")
+print(f"Storico: ${es_hist:,.2f}")
+print(f"Monte Carlo: ${es_mc:,.2f}")
+
+# Confronto completo
+comparison = es_calculator.compare_risk_measures(returns, portfolio_value)
+print("\n=== Confronto VaR vs ES ===")
+for method, measures in comparison.items():
+    print(f"{method.capitalize()}:")
+    print(f"  VaR: ${measures['var']:,.2f}")
+    print(f"  ES:  ${measures['es']:,.2f}")
+    print(f"  Differenza: ${(measures['es'] - measures['var']):,.2f}")
+                            ]]>
+                        </code>
+                    </implementation>
+                </expected_shortfall>
+            </section>
+        </chapter>
+
+        <chapter number="4" title="Stress Testing e Scenario Analysis">
+            <section number="4.1" title="Stress Testing Framework">
+                <stress_testing_overview>
+                    <definition>
+                        Lo stress testing valuta l'impatto di scenari estremi ma plausibili
+                        sul portafoglio, identificando vulnerabilità e requisiti di capitale aggiuntivi.
+                    </definition>
+
+                    <objectives>
+                        <objective>Valutare resilienza a condizioni estreme</objective>
+                        <objective>Identificare concentrazioni rischio</objective>
+                        <objective>Supportare decisioni di risk management</objective>
+                        <objective>Soddisfare requisiti regolamentari</objective>
+                    </objectives>
+
+                    <types>
+                        <type name="Sensitivity Analysis">
+                            <description>Impatto di variazioni in singoli fattori rischio</description>
+                            <example>Variazione tassi interesse di ±200 bps</example>
+                        </type>
+                        <type name="Scenario Analysis">
+                            <description>Impatto di scenari multi-fattore specifici</description>
+                            <example>Crisi COVID-19, crisi debito sovrano</example>
+                        </type>
+                        <type name="Reverse Stress Testing">
+                            <description>Identifica scenari che causerebbero fallimento</description>
+                            <example>Quale combinazione eventi porta a perdita > X%</example>
+                        </type>
+                    </types>
+                </stress_testing_overview>
+            </section>
+
+            <section number="4.2" title="Historical Scenarios">
+                <historical_scenarios>
+                    <methodology>
+                        <description>
+                            Utilizza eventi passati per creare scenari stress basati su dati reali,
+                            adjusted per condizioni di mercato correnti.
+                        </description>
+                    </methodology>
+
+                    <key_events>
+                        <event name="Black Monday 1987">
+                            <description>Crash azionario globale con perdita S&P 500 del 33%</description>
+                            <duration>1 giorno</duration>
+                            <impact>Perdita $1T+ valore di mercato</impact>
+                        </event>
+                        <event name="Dot-com Bubble 2000-2002">
+                            <description>Collasso mercato tech con perdita NASDAQ del 78%</description>
+                            <duration>2 anni</duration>
+                            <impact>Perdita $5T+ valore di mercato</impact>
+                        </event>
+                        <event name="Financial Crisis 2007-2009">
+                            <description>Crisi subprime con credit crunch globale</description>
+                            <duration>2 anni</duration>
+                            <impact>Perdita $20T+ ricchezza globale</impact>
+                        </event>
+                        <event name="COVID-19 Crisis 2020">
+                            <description>Lockdown globale con impatto su tutti asset classes</description>
+                            <duration>2 mesi</duration>
+                            <impact>Perdita $30T+ valore di mercato</impact>
+                        </event>
+                    </key_events>
+                </historical_scenarios>
+            </section>
+        </chapter>
+
+        <chapter number="5" title="Risk Management in Tempo Reale">
+            <section number="5.1" title="High-Frequency Risk Monitoring">
+                <real_time_risk>
+                    <requirements>
+                        <requirement>Latenza sub-secondo per HFT</requirement>
+                        <requirement>Processing capacità per milioni ordini/secondo</requirement>
+                        <requirement>Real-time P&L calculation</requirement>
+                        <requirement>Dynamic position limits</requirement>
+                    </requirements>
+
+                    <technologies>
+                        <technology name="In-Memory Computing">
+                            <description>Dati in RAM per accesso istantaneo</description>
+                            <examples>Redis, Apache Ignite</examples>
+                        </technology>
+                        <technology name="Stream Processing">
+                            <description>Elaborazione dati in tempo reale</description>
+                            <examples>Apache Kafka, Apache Flink</examples>
+                        </technology>
+                        <technology name="FPGA Acceleration">
+                            <description>Hardware acceleration per calcoli risk</description>
+                            <examples>Custom ASICs per VaR calculation</examples>
+                        </technology>
+                    </technologies>
+                </real_time_risk>
+            </section>
+        </chapter>
+
+        <chapter number="6" title="Portfolio Risk Management">
+            <section number="6.1" title="Risk Decomposition">
+                <risk_decomposition>
+                    <methodology>
+                        <description>
+                            Suddivide rischio totale portafoglio nei contributi individuali
+                            di ogni posizione, identificando fonti principali di rischio.
+                        </description>
+                    </methodology>
+
+                    <marginal_var>
+                        <formula>Marginal VaR_i = VaR_portfolio * weight_i * β_i</formula>
+                        <interpretation>Contributo rischio aggiuntivo da posizione i</interpretation>
+                    </marginal_var>
+
+                    <component_var>
+                        <formula>Component VaR_i = Marginal VaR_i * position_size_i</formula>
+                        <interpretation>Rischio totale attribuito a posizione i</interpretation>
+                    </component_var>
+                </risk_decomposition>
+            </section>
+        </chapter>
+
+        <chapter number="7" title="Implementazione Pratica">
+            <section number="7.1" title="Architettura di Sistema">
+                <system_architecture>
+                    <components>
+                        <component name="Data Layer">
+                            <description>Storage dati di mercato e posizioni</description>
+                            <technologies>Time-series databases, data lakes</technologies>
+                        </component>
+                        <component name="Risk Engine">
+                            <description>Calcolo misure rischio in tempo reale</description>
+                            <technologies>C++, Python, GPU acceleration</technologies>
+                        </component>
+                        <component name="Monitoring Dashboard">
+                            <description>Visualizzazione rischio per risk managers</description>
+                            <technologies>Real-time dashboards, alerting systems</technologies>
+                        </component>
+                        <component name="Reporting System">
+                            <description>Generazione report regolamentari</description>
+                            <technologies>Automated report generation, XBRL tagging</technologies>
+                        </component>
+                    </components>
+                </system_architecture>
+            </section>
+        </chapter>
+
+        <chapter number="8" title="Case Studies">
+            <section number="8.1" title="Long-Term Capital Management (1998)">
+                <ltcm_case>
+                    <background>
+                        Hedge fund con $4.8B AUM, gestito da Nobel laureates.
+                        Strategia: convergence trading basata su modelli quantitativi.
+                    </background>
+                    <failure_reason>
+                        Sottostima correlazioni in condizioni di stress di mercato.
+                        Modelli non catturavano eventi "dieci sigma" (improbabili ma possibili).
+                    </failure_reason>
+                    <lessons>
+                        <lesson>Limiti modelli quantitativi in condizioni estreme</lesson>
+                        <lesson>Importanza liquidity risk</lesson>
+                        <lesson>Necessità stress testing rigoroso</lesson>
+                    </lessons>
+                </ltcm_case>
+            </section>
+
+            <section number="8.2" title="Knight Capital (2012)">
+                <knight_case>
+                    <background>
+                        Market maker high-frequency con tecnologia proprietaria.
+                        Errore deployment software causò perdita $440M in 45 minuti.
+                    </background>
+                    <failure_reason>
+                        Bug nel codice di routing ordini durante aggiornamento software.
+                        Mancanza controlli automated risk.
+                    </failure_reason>
+                    <lessons>
+                        <lesson>Importanza testing deployment</lesson>
+                        <lesson>Necessità circuit breakers automatici</lesson>
+                        <lesson>Risk controls indipendenti da trading systems</lesson>
+                    </lessons>
+                </knight_case>
+            </section>
+
+            <section number="8.3" title="JPMorgan London Whale (2012)">
+                <whale_case>
+                    <background>
+                        Trading desk CIO con posizioni CDS su indici creditizi.
+                        Perdita $6.2B su synthetic credit portfolio.
+                    </background>
+                    <failure_reason>
+                        Sottostima rischi in posizioni complesse.
+                        Mancanza oversight adeguata su trading desk.
+                    </failure_reason>
+                    <lessons>
+                        <lesson>Importanza risk limits and oversight</lesson>
+                        <lesson>Pericoli posizioni off-balance sheet</lesson>
+                        <lesson>Necessità modelli risk per prodotti complessi</lesson>
+                    </lessons>
+                </whale_case>
+            </section>
+
+            <section number="8.4" title="Archegos Capital (2021)">
+                <archegos_case>
+                    <background>
+                        Family office con $20B posizioni leveraged.
+                        Fallimento causò perdite $10B+ a banche investment.
+                    </background>
+                    <failure_reason>
+                        Concentrazione rischio in poche posizioni.
+                        Mancanza collateral monitoring da parte prime brokers.
+                    </failure_reason>
+                    <lessons>
+                        <lesson>Rischi concentrazione in family offices</lesson>
+                        <lesson>Importanza margin monitoring</lesson>
+                        <lesson>Contagion attraverso prime brokerage relationships</lesson>
+                    </lessons>
+                </archegos_case>
+            </section>
+        </chapter>
+    </content>
+
+    <bibliography>
+        <reference id="1">
+            <authors>
+                <author>Philippe Jorion</author>
+            </authors>
+            <title>Value at Risk: The New Benchmark for Managing Financial Risk</title>
+            <publisher>McGraw-Hill</publisher>
+            <year>2006</year>
+            <isbn>978-0071464956</isbn>
+        </reference>
+
+        <reference id="2">
+            <authors>
+                <author>John C. Hull</author>
+            </authors>
+            <title>Risk Management and Financial Institutions</title>
+            <publisher>Wiley</publisher>
+            <year>2018</year>
+            <isbn>978-1119448112</isbn>
+        </reference>
+
+        <reference id="3">
+            <authors>
+                <author>Carol Alexander</author>
+            </authors>
+            <title>Market Risk Analysis</title>
+            <publisher>Wiley</publisher>
+            <year>2008</year>
+            <isbn>978-0470998014</isbn>
+        </reference>
+
+        <reference id="4">
+            <authors>
+                <author>Attilio Meucci</author>
+            </authors>
+            <title>Risk and Asset Allocation</title>
+            <publisher>Springer</publisher>
+            <year>2005</year>
+            <isbn>978-3540222132</isbn>
+        </reference>
+    </bibliography>
+
+    <appendices>
+        <appendix id="A" title="Formule Matematiche">
+            <formula name="VaR Parametrico">
+                <latex>VaR_\alpha = -\mu + z_\alpha \sigma</latex>
+                <description>dove z_α è il quantile normale standard</description>
+            </formula>
+            <formula name="Expected Shortfall">
+                <latex>ES_\alpha = E[X|X \leq -VaR_\alpha]</latex>
+                <description>Perdita attesa oltre il VaR</description>
+            </formula>
+            <formula name="Marginal VaR">
+                <latex>MVaR_i = \frac{\partial VaR}{\partial w_i}</latex>
+                <description>Contributo marginale al rischio totale</description>
+            </formula>
+        </appendix>
+
+        <appendix id="B" title="Implementazioni Software">
+            <implementation language="Python" library="pyportfolioopt">
+                <description>Library per portfolio optimization con risk constraints</description>
+                <code>
+                    <![CDATA[
+from pypfopt import EfficientFrontier
+from pypfopt import risk_models
+from pypfopt import expected_returns
+
+# Calcola rendimenti attesi e matrice covarianza
+mu = expected_returns.mean_historical_return(prices)
+S = risk_models.sample_cov(prices)
+
+# Ottimizzazione portafoglio
+ef = EfficientFrontier(mu, S)
+weights = ef.max_sharpe()
+
+# Calcola VaR del portafoglio ottimizzato
+portfolio_return = ef.portfolio_performance()[1]  # Volatilità
+var_95 = -1.65 * portfolio_return * portfolio_value
+                    ]]>
+                </code>
+            </implementation>
+        </appendix>
+
+        <appendix id="C" title="Regolamentazione per Paese">
+            <regulation country="USA">
+                <framework>Basel III, Dodd-Frank, Fed SR 15-18</framework>
+                <requirements>Stress testing annuale, VaR backtesting</requirements>
+            </regulation>
+            <regulation country="EU">
+                <framework>CRR/CRD IV, EBA guidelines</framework>
+                <requirements>ICAAP, ILAAP, stress testing</requirements>
+            </regulation>
+            <regulation country="UK">
+                <framework>PRA Rulebook, FCA Handbook</framework>
+                <requirements>Internal Capital Adequacy Assessment</requirements>
+            </regulation>
+        </appendix>
+    </appendices>
+</document>
