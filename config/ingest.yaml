@@ -39,7 +39,7 @@ ingest:
   # ID GENERATION (DETERMINISTIC)
   # ============================================================================
   id_generation:
-    strategy: sha256-16  # Deterministic: sha256-16, sha256-32
+    strategy: sha256-32  # Deterministic: sha256-16, sha256-32
     prefix: ""  # NO PREFIX - use full document ID only
     suffix: ""
   
@@ -89,7 +89,7 @@ ingest:
   # DOCUMENT CONVERSION
   # ============================================================================
   conversion:
-    doc_to_pdf: true
+    doc_to_pdf: true # Convert Word docs to PDF before text extraction
     backend: auto
     timeout: 60
   

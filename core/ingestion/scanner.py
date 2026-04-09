@@ -14,6 +14,7 @@ import fnmatch
 
 from .config import InputConfig, ZipExtractionConfig
 from .types import DocumentRef, ScanException
+from ..utils.directory_keeper import ensure_keepme_file
 
 log = logging.getLogger(__name__)
 
@@ -194,6 +195,7 @@ class DocumentScanner:
             ) as temp_dir:
                 temp_path = Path(temp_dir)
                 context.temp_dirs.append(temp_path)
+                ensure_keepme_file(temp_path)
                 
                 log.info(f"Extracting ZIP: {zip_path} → {temp_path}")
                 

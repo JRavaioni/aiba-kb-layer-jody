@@ -23,6 +23,7 @@ from .types import (
     IngestException,
     LoadException,
 )
+from ..utils.directory_keeper import ensure_keepme_file
 
 log = logging.getLogger(__name__)
 
@@ -62,6 +63,7 @@ class IngestService:
         self.config = config
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(parents=True, exist_ok=True)
+        ensure_keepme_file(self.output_dir)
         
         # Validate config
         errors = config.validate()
@@ -70,7 +72,7 @@ class IngestService:
         
         # Initialize components
         self.scanner = DocumentScanner(config.input, config.zip_extraction)
-        self.loader = DocumentLoader(config.loader)
+        self.loader = DocumentLoader(config.loader, config.conversion)
         
         # Configure sidecar metadata base paths
         # Include output directory for internal ingestion output

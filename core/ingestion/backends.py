@@ -11,6 +11,7 @@ import logging
 
 from .types import IngestedDocument, IngestManifest, PersistenceException
 from .config import OutputConfig
+from ..utils.directory_keeper import ensure_keepme_file
 
 log = logging.getLogger(__name__)
 
@@ -77,6 +78,7 @@ class FilesystemBackend(PersistenceBackend):
         dir_name = fs_config.dir_pattern.replace("{doc_id}", document.metadata.doc_id)
         doc_dir = self.output_dir / dir_name
         doc_dir.mkdir(parents=True, exist_ok=True)
+        ensure_keepme_file(doc_dir)
         
         # Persist artifacts based on config
         if output_config.artifacts_extracted_text and document.extracted_text:

@@ -7,8 +7,11 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional
 import logging
+import shutil
+import subprocess
+import tempfile
 
-from .config import LoaderConfig
+from .config import LoaderConfig, ConversionConfig
 from .types import DocumentRef, LoadException
 
 log = logging.getLogger(__name__)
@@ -34,8 +37,9 @@ class DocumentLoader:
     Load and extract text from various document formats.
     """
     
-    def __init__(self, config: LoaderConfig):
+    def __init__(self, config: LoaderConfig, conversion_config: Optional[ConversionConfig] = None):
         self.config = config
+        self.conversion_config = conversion_config or ConversionConfig()
     
     def load(self, file_ref: DocumentRef) -> LoadedDocument:
         """
@@ -76,9 +80,7 @@ class DocumentLoader:
                 extracted_text = self._load_docx(raw_bytes)
             
             elif file_ref.format == "doc":
-                # DOC files typically need conversion first
-                # For now, return bytes without extraction
-                log.warning(f"DOC format not directly supported: {file_ref.real_path}")
+                extracted_text = self._load_doc(file_ref.real_path, raw_bytes)
             
             elif file_ref.format == "md":
                 extracted_text = self._load_markdown(raw_bytes)
@@ -107,6 +109,168 @@ class DocumentLoader:
             extracted_text=extracted_text,
             pages_count=pages_count,
         )
+
+    def _load_doc(self, path: Path, raw_bytes: bytes) -> Optional[str]:
+        """Extract text from legacy DOC via DOC->PDF conversion."""
+        if not self.config.doc_extract_text:
+            return None
+
+        if not self.conversion_config.doc_to_pdf:
+            log.warning(f"DOC text extraction disabled by conversion.doc_to_pdf=false: {path}")
+            return None
+
+        with tempfile.TemporaryDirectory(prefix="ingest_doc_") as temp_dir:
+            temp_path = Path(temp_dir)
+            temp_doc = temp_path / path.name
+            temp_pdf = temp_path / f"{path.stem}.pdf"
+
+            try:
+                temp_doc.write_bytes(raw_bytes)
+            except Exception as e:
+                log.warning(f"Failed to prepare temporary DOC for conversion {path}: {e}")
+                return None
+
+            if not self._convert_doc_to_pdf(temp_doc, temp_pdf):
+                log.warning(f"DOC conversion failed (no PDF produced): {path}")
+                return None
+
+            try:
+                pdf_bytes = temp_pdf.read_bytes()
+            except Exception as e:
+                log.warning(f"Failed to read converted PDF for {path}: {e}")
+                return None
+
+            extracted_text, _ = self._load_pdf(pdf_bytes, temp_pdf)
+            return extracted_text
+
+    def _convert_doc_to_pdf(self, input_doc: Path, output_pdf: Path) -> bool:
+        """Convert DOC to PDF according to conversion backend strategy."""
+        backend = (self.conversion_config.backend or "auto").lower()
+
+        if backend == "auto":
+            strategies = [
+                ("win32", self._convert_doc_with_win32),
+                ("libreoffice", self._convert_doc_with_soffice),
+                ("unoconv", self._convert_doc_with_unoconv),
+            ]
+            for name, strategy in strategies:
+                if strategy(input_doc, output_pdf):
+                    log.info(f"DOC converted to PDF using backend={name}: {input_doc}")
+                    return True
+            return False
+
+        if backend == "win32":
+            return self._convert_doc_with_win32(input_doc, output_pdf)
+        if backend == "libreoffice":
+            return self._convert_doc_with_soffice(input_doc, output_pdf)
+        if backend == "unoconv":
+            return self._convert_doc_with_unoconv(input_doc, output_pdf)
+
+        log.warning(f"Unknown conversion backend '{backend}' for DOC conversion")
+        return False
+
+    def _convert_doc_with_win32(self, input_doc: Path, output_pdf: Path) -> bool:
+        """Convert DOC to PDF using Microsoft Word COM automation."""
+        try:
+            import pythoncom
+            import win32com.client
+        except ImportError:
+            log.debug("pywin32 not installed; win32 DOC conversion unavailable")
+            return False
+
+        word = None
+        document = None
+        try:
+            pythoncom.CoInitialize()
+            word = win32com.client.DispatchEx("Word.Application")
+            word.Visible = False
+            word.DisplayAlerts = 0
+
+            document = word.Documents.Open(str(input_doc.resolve()), ReadOnly=True)
+            wdFormatPDF = 17
+            document.SaveAs(str(output_pdf.resolve()), FileFormat=wdFormatPDF)
+            return output_pdf.exists()
+        except Exception as e:
+            log.debug(f"win32 DOC conversion failed for {input_doc}: {e}")
+            return False
+        finally:
+            if document is not None:
+                try:
+                    document.Close(False)
+                except Exception:
+                    pass
+            if word is not None:
+                try:
+                    word.Quit()
+                except Exception:
+                    pass
+            try:
+                pythoncom.CoUninitialize()
+            except Exception:
+                pass
+
+    def _convert_doc_with_soffice(self, input_doc: Path, output_pdf: Path) -> bool:
+        """Convert DOC to PDF using LibreOffice (soffice)."""
+        soffice_cmd = shutil.which("soffice")
+        if not soffice_cmd:
+            return False
+
+        try:
+            result = subprocess.run(
+                [
+                    soffice_cmd,
+                    "--headless",
+                    "--convert-to",
+                    "pdf",
+                    "--outdir",
+                    str(output_pdf.parent),
+                    str(input_doc),
+                ],
+                capture_output=True,
+                text=True,
+                timeout=self.conversion_config.timeout,
+                check=False,
+            )
+            if result.returncode != 0:
+                log.debug(f"LibreOffice conversion returned code {result.returncode}: {result.stderr}")
+            return output_pdf.exists()
+        except subprocess.TimeoutExpired:
+            log.warning(f"DOC conversion timeout with backend=libreoffice for {input_doc}")
+            return False
+        except Exception as e:
+            log.debug(f"LibreOffice DOC conversion failed for {input_doc}: {e}")
+            return False
+
+    def _convert_doc_with_unoconv(self, input_doc: Path, output_pdf: Path) -> bool:
+        """Convert DOC to PDF using unoconv."""
+        unoconv_cmd = shutil.which("unoconv")
+        if not unoconv_cmd:
+            return False
+
+        try:
+            result = subprocess.run(
+                [
+                    unoconv_cmd,
+                    "-f",
+                    "pdf",
+                    "-o",
+                    str(output_pdf),
+                    str(input_doc),
+                ],
+                capture_output=True,
+                text=True,
+                timeout=self.conversion_config.timeout,
+                check=False,
+            )
+            if result.returncode != 0:
+                log.debug(f"unoconv conversion returned code {result.returncode}: {result.stderr}")
+            return output_pdf.exists()
+        except subprocess.TimeoutExpired:
+            log.warning(f"DOC conversion timeout with backend=unoconv for {input_doc}")
+            return False
+        except Exception as e:
+            log.debug(f"unoconv DOC conversion failed for {input_doc}: {e}")
+            return False
     
     def _load_pdf(self, data: bytes, path: Path) -> tuple[Optional[str], Optional[int]]:
         """
