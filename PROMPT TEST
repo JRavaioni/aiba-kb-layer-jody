@@ -376,3 +376,111 @@ pytest test/unit/ -v               # Unit tests only
 pytest test/e2e/ -v                # E2E tests only
 pytest test/integration/ -v        # Integration tests only
 pytest test/ --cov=core/ingestion  # Coverage
+
+---
+
+## Tests Generated - Implementation Log
+
+### STEP 1: Initial Test Suite Generation
+
+Six new files created covering the highest-priority gaps across unit and integration layers.
+
+#### test/unit/t_scanner_unit.py - 5 tests
+- test_scan_flat_directory_yields_only_supported_formats
+- test_scan_respects_max_depth
+- test_scan_skips_excluded_directory
+- test_scan_zip_extracts_and_preserves_logical_prefix
+- test_scan_missing_input_dir_raises
+
+#### test/unit/t_backends_unit.py - 5 tests
+- test_filesystem_backend_persist_writes_required_artifacts
+- test_filesystem_backend_raises_when_text_expected_but_missing
+- test_save_manifest_respects_create_manifest_flag
+- test_backend_factory_creates_filesystem_backend
+- test_backend_factory_unknown_backend_raises
+
+#### test/unit/t_builder_unit.py - 6 tests
+- test_builder_requires_output_dir
+- test_builder_with_config_value_updates_nested_field
+- test_builder_enable_analyzers_switch
+- test_builder_custom_components_update_strategy_fields
+- test_builder_build_returns_ingest_service
+- test_create_ingest_service_from_yaml
+
+#### test/unit/t_main_unit.py - 4 tests
+Uses monkeypatch to isolate CLI from real filesystem and service.
+- test_main_exits_zero_on_success
+- test_main_exits_one_if_no_valid_input_dirs
+- test_main_exits_one_when_manifest_has_errors
+- test_main_exits_one_on_missing_config_file
+
+#### test/unit/t_config_unit.py - 8 tests
+- test_default_config_is_valid
+- test_from_dict_normalizes_supported_formats_case
+- test_from_yaml_requires_ingest_root
+- test_from_yaml_loads_ingest_section
+- test_validate_rejects_non_bool_html_switch
+- test_validate_rejects_non_list_pipeline
+- test_validate_rejects_non_dict_pipeline_entry
+- test_set_updates_nested_value_with_dot_notation
+
+#### test/integration/t_component_integration.py - 4 tests
+- test_scanner_loader_integration_reads_discovered_documents
+- test_loader_id_backend_integration_persists_under_generated_id
+- test_config_service_integration_applies_runtime_configuration
+- test_metadata_sidecar_integration_persists_sidecar_data
+
+Step 1 total: 32 new tests. Result: 73 passed.
+
+
+### STEP 2: Three Additional Blocks
+
+#### test/contract/t_scanner_contract.py - 3 tests
+Invariant and robustness contracts beyond basic scanner behavior.
+- test_scanner_symlink_to_file_is_handled (skipped on Windows without symlink privileges)
+- test_scanner_permission_error_is_non_fatal
+- test_zip_scanning_respects_depth_limit
+
+#### test/unit/t_id_generator_unit.py - 6 tests
+Edge cases and format invariants for all ID strategies.
+- test_sha256_16_deterministic_and_length
+- test_sha256_32_uses_full_hexdigest
+- test_prefix_suffix_are_preserved
+- test_uuid4_generator_produces_non_deterministic_values
+- test_invalid_strategy_raises_value_error
+- test_empty_and_large_payloads_supported
+
+#### test/unit/t_types_unit.py - 3 tests
+Dataclass serialization shape and computed manifest fields.
+- test_ingested_document_to_dict_contains_expected_fields
+- test_analyzer_result_to_dict_roundtrip_shape
+- test_manifest_summary_and_timestamps_are_computed
+
+#### test/e2e/t_zip_resilience_e2e.py - 2 tests
+Full-pipeline E2E for ZIP edge cases and batch error resilience.
+- test_ingest_nested_zip_extracts_inner_and_outer_documents
+- test_ingest_continues_when_one_document_fails
+
+Step 2 total: 14 new tests. Result: 86 passed, 1 skipped.
+
+
+### STEP 3: Bug Fix - ZIP Premature Temp-Dir Cleanup
+
+Root cause: ctx.cleanup() was placed in the finally block of each document processing iteration
+inside IngestService.ingest(). For a ZIP archive containing multiple files, the shared temp
+directory was deleted after processing the first document, making all subsequent files from
+the same archive unreadable at load time.
+
+Fix applied to core/ingestion/ingest_service.py:
+- Added scan_context = None before the scan loop
+- Assigned scan_context = ctx on each iteration (keeps a reference across documents)
+- Removed ctx.cleanup() from the per-document finally block
+- Added outer finally section that calls scan_context.cleanup() once after the full scan
+
+Test strengthened in test/e2e/t_zip_resilience_e2e.py:
+- test_ingest_nested_zip_extracts_inner_and_outer_documents:
+  Added root.txt as a sibling entry inside outer.zip alongside inner.zip.
+  Assertion updated from len(manifest.ingested) == 1 to == 2.
+  Verifies both outer/inner/inner.txt and outer/root.txt appear in the manifest.
+
+Final result: 86 passed, 1 skipped (Windows symlink without privileges)

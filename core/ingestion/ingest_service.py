@@ -92,12 +92,14 @@ class IngestService:
         """
         input_dir = Path(input_dir)
         manifest = IngestManifest()
+        scan_context = None
         
         log.info(f"Starting ingestion from {input_dir}")
         
         try:
             # Scan for documents
             for ctx, doc_ref in self.scanner.scan(input_dir, temp_root_dir):
+                scan_context = ctx
                 try:
                     log.debug(f"Processing: {doc_ref.logical_path}")
                     
@@ -156,16 +158,16 @@ class IngestService:
                 except Exception as e:
                     log.error(f"Failed to ingest {doc_ref.logical_path}: {e}", exc_info=True)
                     manifest.errors[doc_ref.logical_path] = str(e)
-                
-                finally:
-                    # Clean up temporary directories
-                    ctx.cleanup()
         
         except IngestException as e:
             log.error(f"Ingestion failed: {e}", exc_info=True)
             raise
         
         finally:
+            # Clean up scanner temp dirs once the scan has completed.
+            if scan_context is not None:
+                scan_context.cleanup()
+
             # Complete manifest
             manifest.completed_at = datetime.now(UTC)
             

@@ -22,7 +22,7 @@ def _service_for(input_dir: Path, output_dir: Path) -> IngestService:
     return IngestService(config, output_dir)
 
 
-def test_ingest_nested_zip_extracts_inner_documents(tmp_path: Path):
+def test_ingest_nested_zip_extracts_inner_and_outer_documents(tmp_path: Path):
     input_dir = tmp_path / "in"
     output_dir = tmp_path / "out"
     input_dir.mkdir()
@@ -34,12 +34,14 @@ def test_ingest_nested_zip_extracts_inner_documents(tmp_path: Path):
     outer_zip_path = input_dir / "outer.zip"
     with zipfile.ZipFile(outer_zip_path, "w") as outer_zip:
         outer_zip.writestr("inner.zip", inner_bytes.getvalue())
+        outer_zip.writestr("root.txt", "root data")
 
     manifest = _service_for(input_dir, output_dir).ingest(input_dir)
 
-    assert len(manifest.ingested) == 1
+    assert len(manifest.ingested) == 2
     assert manifest.errors == {}
     assert any("outer/inner/inner.txt" in logical for logical in manifest.ingested)
+    assert any("outer/root.txt" in logical for logical in manifest.ingested)
 
 
 def test_ingest_continues_when_one_document_fails(tmp_path: Path):
