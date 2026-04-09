@@ -2,7 +2,7 @@
 
 ## ✅ Completato: Modulo Ingestione Documenti General-Purpose
 
-Un sistema di ingestione pronto per produzione, basato su configurazione, progettato come **primo passo di qualsiasi pipeline di dati**.
+Un sistema di ingestione pronto per produzione, basato su configurazione YAML.
 
 ---
 
@@ -47,9 +47,8 @@ pipeline-ingestion/
 ## 🎯 Caratteristiche Chiave
 
 ### ✅ Basato su Configurazione
-- **Fonte Unica di Verità**: Tutto il comportamento è parametrizzato in YAML
+- Tutto il comportamento è parametrizzato in YAML
 - **Nessuna Logica Hardcoded**: Agnostic client, riutilizzabile tra progetti
-- **Override Runtime**: Personalizzazione configurazione programmatica
 
 ### ✅ Supporto Multi-Formato
 - PDF (con estrazione testo)

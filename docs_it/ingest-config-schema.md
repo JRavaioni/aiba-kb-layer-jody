@@ -1,6 +1,6 @@
 # Schema Configurazione Ingestione - Riferimento Completo
 
-Questo documento fornisce il riferimento completo per tutte le opzioni di configurazione YAML supportate dal modulo di ingestione.
+Riferimento completo per tutte le opzioni di configurazione YAML supportate dal modulo di ingestione.
 
 ## Struttura Generale
 
