@@ -45,6 +45,9 @@ from .analyzers import (
     TextExtractorAnalyzer,
     AnalyzerPipeline,
     AnalyzerFactory,
+    HtmlParserAnalyzer,
+    XmlParserAnalyzer,
+    JsonFormatterAnalyzer,
 )
 
 __all__ = [
@@ -91,6 +94,9 @@ __all__ = [
     "TextExtractorAnalyzer",
     "AnalyzerPipeline",
     "AnalyzerFactory",
+    "HtmlParserAnalyzer",
+    "XmlParserAnalyzer",
+    "JsonFormatterAnalyzer",
 ]
 
 __version__ = "1.0.0"

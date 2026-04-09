@@ -72,7 +72,7 @@ class IngestService:
         
         # Initialize components
         self.scanner = DocumentScanner(config.input, config.zip_extraction)
-        self.loader = DocumentLoader(config.loader, config.conversion)
+        self.loader = DocumentLoader(config.loader)
         
         # Configure sidecar metadata base paths
         # Include output directory for internal ingestion output
@@ -123,32 +123,12 @@ class IngestService:
                     # Load document
                     loaded = self.loader.load(doc_ref)
                     
-                    # STRICT VALIDATION: Enforce ingestion correctness for text-extractable formats
-                    # HTML documents MUST have valid extracted text or ingestion FAILS for that document
-                    # This prevents partial success and ensures downstream processing gets valid data
-                    if doc_ref.format in ['html', 'htm']:
-                        if not loaded.extracted_text or not loaded.extracted_text.strip():
-                            raise LoadException(
-                                f"HTML document {doc_ref.logical_path} failed strict text extraction validation - "
-                                "no readable content extracted. Ingestion cannot proceed for this document."
-                            )
-                        # Additional validation: ensure text has visible characters
-                        visible_chars = [c for c in loaded.extracted_text if c.isprintable() and not c.isspace()]
-                        if not visible_chars:
-                            raise LoadException(
-                                f"HTML document {doc_ref.logical_path} contains no visible printable characters - "
-                                "ingestion failed for data quality reasons."
-                            )
-                    
                     # Validate text extraction for other supported formats (warnings only for now)
                     text_extraction_required = doc_ref.format in ['txt', 'md']
                     if text_extraction_required and not loaded.extracted_text:
                         log.warning(f"Text extraction failed for {doc_ref.logical_path} ({doc_ref.format})")
                         # For now, continue processing but mark as warning
                         # Could be changed to raise exception for strict validation
-                    
-                    # Generate deterministic ID
-                    doc_id = self.id_generator.generate(loaded.raw_bytes)
                     
                     # Generate deterministic ID
                     doc_id = self.id_generator.generate(loaded.raw_bytes)
@@ -178,6 +158,9 @@ class IngestService:
                     
                     # Run analyzers
                     document.analyzer_output = self.analyzer_pipeline.run(document)
+
+                    # Keep metadata aligned with analyzer-updated text.
+                    document.metadata.extracted_text_length = len(document.extracted_text) if document.extracted_text else 0
                     
                     # Persist
                     self.persistence.persist(document, self.config.output)

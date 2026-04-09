@@ -16,7 +16,6 @@ from .analyzers import Analyzer
 class IngestBuilder:
     """
     Builder for constructing IngestService instances.
-    Supports fluent configuration API.
     """
     
     def __init__(self, config: IngestConfig):

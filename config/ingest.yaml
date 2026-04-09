@@ -53,45 +53,11 @@ ingest:
       - cp1252
       - iso-8859-1
     max_text_length: 1000000
-    
-    # Format-specific text extraction settings
-    pdf:
-      extract_text: true
-      max_pages: 0
-    docx:
-      extract_text: true
-    doc:
-      extract_text: true
-    html:
-      extract_text: true
-      keep_html: false
-    txt:
-      extract_text: true
-    
+
+    # Format-specific settings used by ingestion loader
     pdf:
       extract_text: true
       max_pages: 0  # 0 = all pages
-    
-    docx:
-      extract_text: true
-    
-    doc:
-      extract_text: true
-    
-    html:
-      extract_text: true
-      keep_html: false
-    
-    txt:
-      extract_text: true
-  
-  # ============================================================================
-  # DOCUMENT CONVERSION
-  # ============================================================================
-  conversion:
-    doc_to_pdf: true # Convert Word docs to PDF before text extraction
-    backend: auto
-    timeout: 60
   
   # ============================================================================
   # METADATA HANDLING (SIDECAR FILES)
@@ -139,7 +105,26 @@ ingest:
   # ============================================================================
   analyzers:
     enabled: true
+    html_parsing_enabled: true
     pipeline:
+      - name: html_parser
+        enabled: true
+        config:
+          remove_scripts: true
+          strip_whitespace: true
+
+      - name: xml_parser
+        enabled: true
+        config:
+          parser: xml
+          strip_whitespace: true
+
+      - name: json_formatter
+        enabled: true
+        config:
+          indent: 2
+          ensure_ascii: false
+
       - name: text_extractor
         enabled: true
         config:

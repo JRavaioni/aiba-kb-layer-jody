@@ -1,17 +1,14 @@
 """
-Document loading and text extraction.
-Handles multiple formats: PDF, DOCX, HTML, plain text, etc.
+Document loading and basic text extraction.
+Ingestion keeps format decoding minimal; semantic parsing belongs to analyzers.
 """
 from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional
 import logging
-import shutil
-import subprocess
-import tempfile
 
-from .config import LoaderConfig, ConversionConfig
+from .config import LoaderConfig
 from .types import DocumentRef, LoadException
 
 log = logging.getLogger(__name__)
@@ -22,6 +19,7 @@ class LoadedDocument:
     """
     Normalized document content after loading.
     """
+    # normalized means read the file, extract the text if possible and store the raw_bytes
     raw_bytes: bytes
     extracted_text: Optional[str] = None
     pages_count: Optional[int] = None
@@ -37,9 +35,8 @@ class DocumentLoader:
     Load and extract text from various document formats.
     """
     
-    def __init__(self, config: LoaderConfig, conversion_config: Optional[ConversionConfig] = None):
+    def __init__(self, config: LoaderConfig):
         self.config = config
-        self.conversion_config = conversion_config or ConversionConfig()
     
     def load(self, file_ref: DocumentRef) -> LoadedDocument:
         """
@@ -79,9 +76,6 @@ class DocumentLoader:
             elif file_ref.format == "docx":
                 extracted_text = self._load_docx(raw_bytes)
             
-            elif file_ref.format == "doc":
-                extracted_text = self._load_doc(file_ref.real_path, raw_bytes)
-            
             elif file_ref.format == "md":
                 extracted_text = self._load_markdown(raw_bytes)
             
@@ -90,7 +84,10 @@ class DocumentLoader:
             
             elif file_ref.format == "json":
                 extracted_text = self._load_json(raw_bytes)
-            
+
+            elif file_ref.format == "doc":
+                extracted_text = self._load_doc(file_ref.real_path, raw_bytes)
+
             # Enforce max text length
             if extracted_text and self.config.max_text_length > 0:
                 if len(extracted_text) > self.config.max_text_length:
@@ -110,168 +107,6 @@ class DocumentLoader:
             pages_count=pages_count,
         )
 
-    def _load_doc(self, path: Path, raw_bytes: bytes) -> Optional[str]:
-        """Extract text from legacy DOC via DOC->PDF conversion."""
-        if not self.config.doc_extract_text:
-            return None
-
-        if not self.conversion_config.doc_to_pdf:
-            log.warning(f"DOC text extraction disabled by conversion.doc_to_pdf=false: {path}")
-            return None
-
-        with tempfile.TemporaryDirectory(prefix="ingest_doc_") as temp_dir:
-            temp_path = Path(temp_dir)
-            temp_doc = temp_path / path.name
-            temp_pdf = temp_path / f"{path.stem}.pdf"
-
-            try:
-                temp_doc.write_bytes(raw_bytes)
-            except Exception as e:
-                log.warning(f"Failed to prepare temporary DOC for conversion {path}: {e}")
-                return None
-
-            if not self._convert_doc_to_pdf(temp_doc, temp_pdf):
-                log.warning(f"DOC conversion failed (no PDF produced): {path}")
-                return None
-
-            try:
-                pdf_bytes = temp_pdf.read_bytes()
-            except Exception as e:
-                log.warning(f"Failed to read converted PDF for {path}: {e}")
-                return None
-
-            extracted_text, _ = self._load_pdf(pdf_bytes, temp_pdf)
-            return extracted_text
-
-    def _convert_doc_to_pdf(self, input_doc: Path, output_pdf: Path) -> bool:
-        """Convert DOC to PDF according to conversion backend strategy."""
-        backend = (self.conversion_config.backend or "auto").lower()
-
-        if backend == "auto":
-            strategies = [
-                ("win32", self._convert_doc_with_win32),
-                ("libreoffice", self._convert_doc_with_soffice),
-                ("unoconv", self._convert_doc_with_unoconv),
-            ]
-            for name, strategy in strategies:
-                if strategy(input_doc, output_pdf):
-                    log.info(f"DOC converted to PDF using backend={name}: {input_doc}")
-                    return True
-            return False
-
-        if backend == "win32":
-            return self._convert_doc_with_win32(input_doc, output_pdf)
-        if backend == "libreoffice":
-            return self._convert_doc_with_soffice(input_doc, output_pdf)
-        if backend == "unoconv":
-            return self._convert_doc_with_unoconv(input_doc, output_pdf)
-
-        log.warning(f"Unknown conversion backend '{backend}' for DOC conversion")
-        return False
-
-    def _convert_doc_with_win32(self, input_doc: Path, output_pdf: Path) -> bool:
-        """Convert DOC to PDF using Microsoft Word COM automation."""
-        try:
-            import pythoncom
-            import win32com.client
-        except ImportError:
-            log.debug("pywin32 not installed; win32 DOC conversion unavailable")
-            return False
-
-        word = None
-        document = None
-        try:
-            pythoncom.CoInitialize()
-            word = win32com.client.DispatchEx("Word.Application")
-            word.Visible = False
-            word.DisplayAlerts = 0
-
-            document = word.Documents.Open(str(input_doc.resolve()), ReadOnly=True)
-            wdFormatPDF = 17
-            document.SaveAs(str(output_pdf.resolve()), FileFormat=wdFormatPDF)
-            return output_pdf.exists()
-        except Exception as e:
-            log.debug(f"win32 DOC conversion failed for {input_doc}: {e}")
-            return False
-        finally:
-            if document is not None:
-                try:
-                    document.Close(False)
-                except Exception:
-                    pass
-            if word is not None:
-                try:
-                    word.Quit()
-                except Exception:
-                    pass
-            try:
-                pythoncom.CoUninitialize()
-            except Exception:
-                pass
-
-    def _convert_doc_with_soffice(self, input_doc: Path, output_pdf: Path) -> bool:
-        """Convert DOC to PDF using LibreOffice (soffice)."""
-        soffice_cmd = shutil.which("soffice")
-        if not soffice_cmd:
-            return False
-
-        try:
-            result = subprocess.run(
-                [
-                    soffice_cmd,
-                    "--headless",
-                    "--convert-to",
-                    "pdf",
-                    "--outdir",
-                    str(output_pdf.parent),
-                    str(input_doc),
-                ],
-                capture_output=True,
-                text=True,
-                timeout=self.conversion_config.timeout,
-                check=False,
-            )
-            if result.returncode != 0:
-                log.debug(f"LibreOffice conversion returned code {result.returncode}: {result.stderr}")
-            return output_pdf.exists()
-        except subprocess.TimeoutExpired:
-            log.warning(f"DOC conversion timeout with backend=libreoffice for {input_doc}")
-            return False
-        except Exception as e:
-            log.debug(f"LibreOffice DOC conversion failed for {input_doc}: {e}")
-            return False
-
-    def _convert_doc_with_unoconv(self, input_doc: Path, output_pdf: Path) -> bool:
-        """Convert DOC to PDF using unoconv."""
-        unoconv_cmd = shutil.which("unoconv")
-        if not unoconv_cmd:
-            return False
-
-        try:
-            result = subprocess.run(
-                [
-                    unoconv_cmd,
-                    "-f",
-                    "pdf",
-                    "-o",
-                    str(output_pdf),
-                    str(input_doc),
-                ],
-                capture_output=True,
-                text=True,
-                timeout=self.conversion_config.timeout,
-                check=False,
-            )
-            if result.returncode != 0:
-                log.debug(f"unoconv conversion returned code {result.returncode}: {result.stderr}")
-            return output_pdf.exists()
-        except subprocess.TimeoutExpired:
-            log.warning(f"DOC conversion timeout with backend=unoconv for {input_doc}")
-            return False
-        except Exception as e:
-            log.debug(f"unoconv DOC conversion failed for {input_doc}: {e}")
-            return False
-    
     def _load_pdf(self, data: bytes, path: Path) -> tuple[Optional[str], Optional[int]]:
         """
         Extract text from PDF.
@@ -326,103 +161,8 @@ class DocumentLoader:
             return None, None
     
     def _load_html(self, data: bytes) -> Optional[str]:
-        """
-        Extract text from HTML with STRICT correctness enforcement.
-        
-        INGESTION PHASE CONTRACT:
-        - HTML text extraction happens in INGESTION phase (not parsing)
-        - Ingestion responsibility ENDS at valid text extraction
-        - Parsing responsibility BEGINS after successful ingestion
-        
-        FAILING FAST IS MANDATORY:
-        - If text cannot be extracted with required quality, ingestion MUST FAIL
-        - No partial success allowed - empty/invalid text = ingestion failure
-        - Prevents downstream processing of corrupted/invalid documents
-        - Ensures pipeline correctness over completeness
-        
-        Args:
-            data: Raw HTML bytes
-            
-        Returns:
-            Extracted plain text
-            
-        Raises:
-            LoadException: If text extraction fails validation criteria
-        """
-        try:
-            from bs4 import BeautifulSoup
-        except ImportError:
-            raise LoadException("beautifulsoup4 not installed - required for HTML text extraction")
-        
-        try:
-            # Decode bytes to string
-            text = data.decode("utf-8", errors="replace")
-            log.debug(f"HTML decode successful, length: {len(text)}")
-            
-            if not self.config.html_extract_text:
-                log.debug("HTML text extraction disabled in config")
-                # When keeping HTML, validate it's not empty
-                if not text.strip():
-                    raise LoadException("HTML file is empty or contains no readable content")
-                return text
-            
-            # Parse and extract text
-            soup = BeautifulSoup(text, "html.parser")
-            log.debug(f"HTML parsed successfully, title: {soup.title.string if soup.title else 'No title'}")
-            
-            # Remove script and style elements
-            scripts_removed = len(soup.find_all(["script", "style"]))
-            for script in soup(["script", "style"]):
-                script.decompose()
-            log.debug(f"Removed {scripts_removed} script/style elements")
-            
-            # Get text
-            extracted = soup.get_text()
-            log.debug(f"Raw extracted text length: {len(extracted)}")
-            
-            # Clean up whitespace
-            lines = [line.strip() for line in extracted.split("\n") if line.strip()]
-            extracted = "\n".join(lines)
-            
-            log.debug(f"Cleaned extracted text length: {len(extracted)}")
-            
-            # STRICT VALIDATION: Enforce ingestion correctness contract
-            # HTML ingestion MUST produce valid text or FAIL explicitly
-            if not extracted:
-                raise LoadException("HTML text extraction produced empty result - no readable content found")
-            
-            # Validate extracted text meets minimum quality requirements
-            extracted_trimmed = extracted.strip()
-            if not extracted_trimmed:
-                raise LoadException("HTML text extraction produced only whitespace - no readable content")
-            
-            # Check for visible characters (not just HTML entities or control chars)
-            visible_chars = [c for c in extracted_trimmed if c.isprintable() and not c.isspace()]
-            if not visible_chars:
-                raise LoadException("HTML text extraction produced no visible printable characters")
-            
-            # MINIMUM CONTENT REQUIREMENT: HTML documents must have substantial readable content
-            # Not just titles or minimal text - require at least 10 visible characters
-            # This prevents ingestion of HTML files with only titles/metadata but no actual content
-            if len(visible_chars) < 10:
-                raise LoadException(
-                    f"HTML text extraction produced insufficient content - only {len(visible_chars)} visible characters "
-                    f"(minimum 10 required). Document appears to contain only titles/metadata with no substantial content."
-                )
-            
-            # Final length validation after trimming
-            if len(extracted_trimmed) == 0:
-                raise LoadException("HTML text extraction validation failed - zero length after trimming")
-            
-            log.debug(f"HTML text extraction validation passed - {len(extracted_trimmed)} characters, {len(visible_chars)} visible")
-            return extracted_trimmed
-        
-        except LoadException:
-            # Re-raise LoadException as-is (already properly formatted)
-            raise
-        except Exception as e:
-            # Convert any other exception to LoadException with technical details
-            raise LoadException(f"HTML text extraction failed: {type(e).__name__}: {e}")
+        """Decode HTML bytes without semantic parsing."""
+        return self._decode_text(data, "html")
     
     def _load_text(self, data: bytes) -> Optional[str]:
         """Load plain text file."""
@@ -487,63 +227,81 @@ class DocumentLoader:
             return None
     
     def _load_xml(self, data: bytes) -> Optional[str]:
-        """
-        Extract text from XML.
-        For XML, we extract all text content while preserving structure information.
-        Uses lxml parser with fallback to html.parser if needed.
-        """
-        try:
-            from bs4 import BeautifulSoup
-        except ImportError:
-            log.warning("beautifulsoup4 not installed, skipping XML text extraction")
-            return None
-        
-        try:
-            # Decode bytes to string
-            text = data.decode("utf-8", errors="replace")
-            
-            # Try lxml parser first (most robust for XML)
-            try:
-                soup = BeautifulSoup(text, "xml")
-            except Exception as e:
-                # Fallback to html.parser if lxml fails
-                log.debug(f"lxml XML parsing failed, falling back to html.parser: {e}")
-                soup = BeautifulSoup(text, "html.parser")
-            
-            # Extract all text content
-            extracted = soup.get_text()
-            
-            # Clean up whitespace
-            lines = [line.strip() for line in extracted.split("\n") if line.strip()]
-            extracted = "\n".join(lines)
-            
-            return extracted if extracted.strip() else None
-        
-        except Exception as e:
-            log.warning(f"Failed to extract text from XML: {e}")
-            return None
+        """Decode XML bytes without semantic parsing."""
+        return self._decode_text(data, "xml")
     
     def _load_json(self, data: bytes) -> Optional[str]:
-        """
-        Extract text from JSON.
-        For JSON, we pretty-print it to make it readable as text.
-        """
+        """Decode JSON bytes without semantic parsing or reformatting."""
+        return self._decode_text(data, "json")
+
+    def _decode_text(self, data: bytes, format_name: str) -> Optional[str]:
+        """Decode bytes using configured fallbacks for text-like formats."""
         try:
-            import json
-            
-            # Decode bytes to string
-            text = data.decode("utf-8", errors="replace")
-            
-            # Parse and re-format JSON for readability
-            try:
-                parsed = json.loads(text)
-                # Pretty print with indentation
-                formatted = json.dumps(parsed, indent=2, ensure_ascii=False)
-                return formatted
-            except json.JSONDecodeError:
-                # If not valid JSON, return as plain text
-                return text
-        
+            for encoding in self.config.encoding_fallback:
+                try:
+                    text = data.decode(encoding)
+                    return text if text.strip() else None
+                except (UnicodeDecodeError, LookupError):
+                    continue
+
+            return data.decode("utf-8", errors="replace")
         except Exception as e:
-            log.warning(f"Failed to extract text from JSON: {e}")
+            log.warning(f"Failed to decode {format_name} file: {e}")
             return None
+
+    def _load_doc(self, path: Path, raw_bytes: bytes) -> Optional[str]:
+        """Extract text from a legacy .doc file using Word COM automation."""
+        try:
+            import pythoncom
+            import win32com.client
+        except ImportError:
+            log.warning("pywin32 not installed, skipping DOC text extraction")
+            return None
+
+        import tempfile
+        import shutil
+
+        tmp_dir = Path(tempfile.mkdtemp(prefix="ingest_doc_"))
+        word = None
+        document = None
+        initialized = False
+        text = None
+        try:
+            pythoncom.CoInitialize()
+            initialized = True
+
+            word = win32com.client.DispatchEx("Word.Application")
+            word.Visible = False
+            word.DisplayAlerts = 0
+
+            tmp_path = tmp_dir / path.name
+            tmp_path.write_bytes(raw_bytes)
+
+            document = word.Documents.Open(
+                str(tmp_path.resolve()), ReadOnly=True, AddToRecentFiles=False
+            )
+            raw_text = document.Content.Text
+            text = raw_text.strip() if raw_text and raw_text.strip() else None
+
+        except Exception as e:
+            log.warning(f"Failed to extract text from DOC {path.name}: {e}")
+        finally:
+            # Close Word before deleting temp files to release file locks
+            if document is not None:
+                try:
+                    document.Close(False)
+                except Exception:
+                    pass
+            if word is not None:
+                try:
+                    word.Quit()
+                except Exception:
+                    pass
+            if initialized:
+                try:
+                    pythoncom.CoUninitialize()
+                except Exception:
+                    pass
+            shutil.rmtree(tmp_dir, ignore_errors=True)
+
+        return text

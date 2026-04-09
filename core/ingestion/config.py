@@ -54,20 +54,6 @@ class LoaderConfig:
     # Format-specific
     pdf_extract_text: bool = True
     pdf_max_pages: int = 0
-    
-    docx_extract_text: bool = True
-    doc_extract_text: bool = True
-    html_extract_text: bool = True
-    html_keep_html: bool = False
-    txt_extract_text: bool = True
-
-
-@dataclass
-class ConversionConfig:
-    """Document conversion configuration (DOC→PDF, etc.)."""
-    doc_to_pdf: bool = True
-    backend: str = "auto"  # auto, win32, libreoffice, unoconv
-    timeout: int = 60
 
 
 @dataclass
@@ -118,6 +104,7 @@ class OutputConfig:
 class AnalyzerConfig:
     """Analyzer pipeline configuration."""
     enabled: bool = True
+    html_parsing_enabled: bool = True
     pipeline: List[Dict[str, Any]] = field(default_factory=list)
     on_analyzer_error: str = "skip"  # skip, fail_document, fail_all
 
@@ -146,7 +133,6 @@ class IngestConfig:
     zip_extraction: ZipExtractionConfig = field(default_factory=ZipExtractionConfig)
     id_generation: IDGenerationConfig = field(default_factory=IDGenerationConfig)
     loader: LoaderConfig = field(default_factory=LoaderConfig)
-    conversion: ConversionConfig = field(default_factory=ConversionConfig)
     metadata: MetadataConfig = field(default_factory=MetadataConfig)
     output: OutputConfig = field(default_factory=OutputConfig)
     analyzers: AnalyzerConfig = field(default_factory=AnalyzerConfig)
@@ -213,20 +199,6 @@ class IngestConfig:
                 max_text_length=loader_data.get("max_text_length", config.loader.max_text_length),
                 pdf_extract_text=loader_data.get("pdf", {}).get("extract_text", True),
                 pdf_max_pages=loader_data.get("pdf", {}).get("max_pages", 0),
-                docx_extract_text=loader_data.get("docx", {}).get("extract_text", True),
-                doc_extract_text=loader_data.get("doc", {}).get("extract_text", True),
-                html_extract_text=loader_data.get("html", {}).get("extract_text", True),
-                html_keep_html=loader_data.get("html", {}).get("keep_html", False),
-                txt_extract_text=loader_data.get("txt", {}).get("extract_text", True),
-            )
-        
-        # Conversion
-        if "conversion" in data:
-            conv_data = data["conversion"]
-            config.conversion = ConversionConfig(
-                doc_to_pdf=conv_data.get("doc_to_pdf", config.conversion.doc_to_pdf),
-                backend=conv_data.get("backend", config.conversion.backend),
-                timeout=conv_data.get("timeout", config.conversion.timeout),
             )
         
         # Metadata
@@ -278,6 +250,7 @@ class IngestConfig:
             analyzer_data = data["analyzers"]
             config.analyzers = AnalyzerConfig(
                 enabled=analyzer_data.get("enabled", config.analyzers.enabled),
+                html_parsing_enabled=analyzer_data.get("html_parsing_enabled", config.analyzers.html_parsing_enabled),
                 pipeline=analyzer_data.get("pipeline", []),
                 on_analyzer_error=analyzer_data.get("on_analyzer_error", "skip"),
             )
@@ -315,6 +288,9 @@ class IngestConfig:
         
         if self.analyzers.on_analyzer_error not in ["skip", "fail_document", "fail_all"]:
             errors.append(f"Invalid analyzers.on_analyzer_error: {self.analyzers.on_analyzer_error}")
+
+        if not isinstance(self.analyzers.html_parsing_enabled, bool):
+            errors.append("analyzers.html_parsing_enabled must be a boolean")
 
         if not isinstance(self.analyzers.pipeline, list):
             errors.append("analyzers.pipeline must be a list")

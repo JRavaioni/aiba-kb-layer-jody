@@ -104,7 +104,6 @@ class TestLoaderFormats:
         config = LoaderConfig(
             pdf_extract_text=True,
             pdf_max_pages=10,
-            html_extract_text=True,
             max_text_length=100000,
             encoding_fallback=["utf-8", "latin-1", "cp1252"]
         )
@@ -124,11 +123,11 @@ class TestLoaderFormats:
         """
         TEST: File HTML valido e ben-formato
         
-        VERIFICA: Testo viene estratto correttamente, script/style rimossi
+        VERIFICA: In ingestion minimale HTML viene solo decodificato.
         
         INPUT: <html><body><h1>Titolo</h1><p>Contenuto</p></body></html>
         
-        ATTESO: Testo contiene "Titolo" e "Contenuto", senza tag HTML
+        ATTESO: Output contiene markup originale (parsing avviene in analyzer).
         
         IMPORTANTE: HTML è uno dei formati più comuni nel pipeline.
         Estrazione di cattiva qualità qui ha impatto massimo.
@@ -150,7 +149,8 @@ class TestLoaderFormats:
         file_ref = DocumentRef(
             real_path=html_file,
             logical_path="test.html",
-            format="html"
+            format="html",
+            basename="test"
         )
         
         loaded = loader.load(file_ref)
@@ -159,20 +159,20 @@ class TestLoaderFormats:
         assert loaded.extracted_text is not None, "HTML: testo non estratto"
         assert len(loaded.extracted_text) > 0, "HTML: testo vuoto"
         
-        # Verifica contenuto atteso
+        # Verifica contenuto atteso in formato raw HTML
         text_lower = loaded.extracted_text.lower()
         assert "titolo" in text_lower, "HTML: titolo principale non trovato"
         assert "paragrafo" in text_lower, "HTML: paragrafo non trovato"
-        
-        # Verifica script rimosso
-        assert "script" not in text_lower or "alert" not in text_lower, \
-            "HTML: contenuto script non è stato rimosso"
+
+        # In ingestion layer lo script non viene rimosso: è compito analyzer
+        assert "<script>" in text_lower and "alert" in text_lower, \
+            "HTML raw atteso nel loader minimale"
     
     def test_load_html_empty_should_fail_ingestion(self, loader, temp_dir):
         """
         TEST: File HTML vuoto o con solo whitespace
         
-        VERIFICA: Fallisce validazione (raise LoadException o ritorna None)
+        VERIFICA: Loader minimale ritorna None per contenuto vuoto/whitespace.
         
         IMPORTANTE: Un documento HTML senza contenuto non dovrebbe
         essere ingerito con successo. È un indicatore di documento
@@ -184,16 +184,13 @@ class TestLoaderFormats:
         file_ref = DocumentRef(
             real_path=html_file,
             logical_path="empty.html",
-            format="html"
+            format="html",
+            basename="empty"
         )
         
         loaded = loader.load(file_ref)
         
-        # Documento vuoto non dovrebbe estrarre testo valido
-        # Può ritornare None o testo vuoto - l'importante è che
-        # la fase di validazione lo rifiuti
-        assert loaded.extracted_text is None or len(loaded.extracted_text.strip()) == 0, \
-            "HTML vuoto: dovrebbe ritornare None o testo vuoto per validazione fail"
+        assert loaded.extracted_text is None, "HTML vuoto: atteso None nel loader minimale"
     
     # =========================================================================
     # TEST: ESTRAZIONE TXT
@@ -214,7 +211,8 @@ class TestLoaderFormats:
         file_ref = DocumentRef(
             real_path=txt_file,
             logical_path="test.txt",
-            format="txt"
+            format="txt",
+            basename="test"
         )
         
         loaded = loader.load(file_ref)
@@ -238,7 +236,8 @@ class TestLoaderFormats:
         file_ref = DocumentRef(
             real_path=txt_file,
             logical_path="test_latin1.txt",
-            format="txt"
+            format="txt",
+            basename="test_latin1"
         )
         
         loaded = loader.load(file_ref)
@@ -255,11 +254,9 @@ class TestLoaderFormats:
         """
         TEST: File XML valido ben-formato
         
-        VERIFICA: Testo estratto da elementi XML
+        VERIFICA: In ingestion minimale XML viene solo decodificato.
         
-        IMPORTANTE: XML è usato per documenti tecnici strutturati.
-        Estrazione deve preservare contenuto significativo ignorando
-        struttura.
+        IMPORTANTE: parsing/flattening XML ora avviene in analyzer.
         """
         xml_file = temp_dir / "test.xml"
         xml_content = """<?xml version="1.0"?>
@@ -276,17 +273,17 @@ class TestLoaderFormats:
         file_ref = DocumentRef(
             real_path=xml_file,
             logical_path="test.xml",
-            format="xml"
+            format="xml",
+            basename="test"
         )
         
         loaded = loader.load(file_ref)
         
         assert loaded.extracted_text is not None, "XML: testo non estratto"
         
-        # Verifica che tag XML sono rimossi
+        # In loader minimale i tag restano presenti
         text = loaded.extracted_text
-        assert "<" not in text and ">" not in text, \
-            "XML: tag non sono stati rimossi dal testo estratto"
+        assert "<documento>" in text, "XML raw atteso nel loader minimale"
         
         # Verifica contenuto
         text_lower = text.lower()
@@ -301,9 +298,9 @@ class TestLoaderFormats:
         """
         TEST: File JSON valido
         
-        VERIFICA: JSON viene pretty-printed per leggibilità
+        VERIFICA: In ingestion minimale JSON viene decodificato senza pretty-print.
         
-        ATTESO: Output è JSON formattato con indentazione
+        ATTESO: Output contiene il JSON raw scritto su file.
         """
         json_file = temp_dir / "test.json"
         json_data = {
@@ -317,7 +314,8 @@ class TestLoaderFormats:
         file_ref = DocumentRef(
             real_path=json_file,
             logical_path="test.json",
-            format="json"
+            format="json",
+            basename="test"
         )
         
         loaded = loader.load(file_ref)
@@ -341,7 +339,8 @@ class TestLoaderFormats:
         file_ref = DocumentRef(
             real_path=json_file,
             logical_path="invalid.json",
-            format="json"
+            format="json",
+            basename="invalid"
         )
         
         # Non dovrebbe sollevare eccezione
@@ -368,7 +367,8 @@ class TestLoaderFormats:
         file_ref = DocumentRef(
             real_path=missing_file,
             logical_path="not_exists.txt",
-            format="txt"
+            format="txt",
+            basename="not_exists"
         )
         
         with pytest.raises(LoadException):
