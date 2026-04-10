@@ -296,8 +296,8 @@ La struttura output non e configurabile tramite sezione `artifacts`.
 
 Per ogni documento il backend filesystem produce sempre:
 - file originale `<doc_id>.<ext>`
-- metadati sidecar `sc_<doc_id>.json`
-- indice relazioni `rd_<doc_id>.json`
+- metadati sidecar `source.json`
+- indice relazioni `related.json`
 
 Il manifest globale viene controllato dai soli parametri della sezione `filesystem`.
 
@@ -394,4 +394,4 @@ Le estensioni supportate attualmente sono il generatore ID e il backend di persi
 
 ---
 
-**Nota**: Questa documentazione riflette l'architettura corrente con ID documento completi senza prefissi, metadati sidecar configurabili con base_paths, e struttura output per-documento con convenzioni di denominazione specifiche (sc_*.json, rd_*.json).
+**Nota**: Questa documentazione riflette l'architettura corrente con ID documento completi senza prefissi, metadati sidecar configurabili con base_paths, e struttura output per-documento con convenzioni di denominazione fisse (source.json, related.json).

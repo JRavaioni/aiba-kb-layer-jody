@@ -121,8 +121,8 @@ Directory Input
       ↓
   Persistence ────→ {output_dir}/b784e2c8dbba8d15/
                     ├── b784e2c8dbba8d15.html
-                    ├── sc_b784e2c8dbba8d15.json
-                    └── rd_b784e2c8dbba8d15.json
+                    ├── source.json
+                    └── related.json
       ↓
    Manifest (mapping: logical_path → doc_id, errori)
 ```

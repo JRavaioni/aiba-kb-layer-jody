@@ -120,7 +120,7 @@ def test_metadata_sidecar_integration_persists_sidecar_data(tmp_path: Path):
     manifest = service.ingest(input_dir)
 
     doc_id = next(iter(manifest.ingested.values()))
-    sidecar_path = output_dir / doc_id / f"sc_{doc_id}.json"
+    sidecar_path = output_dir / doc_id / "source.json"
     content = sidecar_path.read_text(encoding="utf-8")
 
     assert "team-a" in content

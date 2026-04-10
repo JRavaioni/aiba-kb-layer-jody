@@ -81,5 +81,5 @@ class TestOutputContract:
             doc_dir = output_dir / doc_id
             files = {f.name for f in doc_dir.iterdir()}
 
-            assert f"sc_{doc_id}.json" in files
-            assert f"rd_{doc_id}.json" in files
+            assert "source.json" in files
+            assert "related.json" in files

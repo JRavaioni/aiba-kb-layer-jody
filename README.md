@@ -95,8 +95,8 @@ output/
   manifest.json
   b784e2c8dbba8d15/           # Directory per documento - ID COMPLETO
     b784e2c8dbba8d15.html     # File originale - ID COMPLETO come nome file
-    sc_b784e2c8dbba8d15.json  # Metadati sidecar - prefisso sc_
-    rd_b784e2c8dbba8d15.json  # Documenti correlati - prefisso rd_
+    source.json               # Metadati sidecar
+    related.json              # Documenti correlati
 ```
 
   Nota: il sistema non crea piu file sentinella `.keepme`. Le cartelle vengono gestite senza autogenerazione di file placeholder, sia per directory nuove sia per directory gia esistenti.

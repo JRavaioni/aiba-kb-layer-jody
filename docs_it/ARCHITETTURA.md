@@ -27,8 +27,8 @@ Eccezioni specifiche:
 6. `FilesystemBackend.persist()` usa `doc_id` per directory e artefatti:
    - `{doc_id}/`
    - `{doc_id}.{ext}`
-   - `sc_{doc_id}.json`
-   - `rd_{doc_id}.json`
+   - `source.json`
+   - `related.json`
 
 ## Strategy Selection
 

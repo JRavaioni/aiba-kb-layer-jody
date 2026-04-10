@@ -35,8 +35,8 @@ def _assert_doc_artifacts(output_dir: Path, doc_id: str, extension: str = "txt")
     assert doc_dir.exists()
 
     original = doc_dir / f"{doc_id}.{extension}"
-    sidecar = doc_dir / f"sc_{doc_id}.json"
-    related = doc_dir / f"rd_{doc_id}.json"
+    sidecar = doc_dir / "source.json"
+    related = doc_dir / "related.json"
 
     assert original.exists()
     assert sidecar.exists()

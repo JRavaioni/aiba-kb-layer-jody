@@ -84,18 +84,18 @@ class FilesystemBackend(PersistenceBackend):
         original_path.write_bytes(document.raw_bytes)
         log.debug(f"Persisted original file: {original_path}")
 
-        # Save metadata as: sc_<FULL_DOCUMENT_ID>.json
+        # Save metadata as: source.json
         metadata_dict = document.metadata.__dict__.copy()
         if hasattr(document.metadata.ingested_at, 'isoformat'):
             metadata_dict['ingested_at'] = document.metadata.ingested_at.isoformat()
 
-        meta_filename = f"sc_{document.metadata.doc_id}.json"
+        meta_filename = "source.json"
         meta_path = doc_dir / meta_filename
         with open(meta_path, "w", encoding="utf-8") as f:
             json.dump(metadata_dict, f, indent=2, default=str)
         log.debug(f"Persisted sidecar metadata: {meta_path}")
 
-        # Create related documents index: rd_<FULL_DOCUMENT_ID>.json
+        # Create related documents index: related.json
         self._create_related_documents_index(doc_dir, document)
         
         # Validate required artifacts were created
@@ -109,7 +109,7 @@ class FilesystemBackend(PersistenceBackend):
         Create related documents index for the current document.
         
         INGESTION REQUIREMENT: Related documents index must be created
-        Format: rd_<FULL_DOCUMENT_ID>.json
+        Format: related.json
         Contains list of related document references with relationship types
         
         Args:
@@ -122,9 +122,8 @@ class FilesystemBackend(PersistenceBackend):
         indexer = RelatedDocumentsIndexer()
         related_docs = indexer.find_related_documents(document)
         
-        # Save as rd_<FULL_DOCUMENT_ID>.json
-        rd_filename = f"rd_{document.metadata.doc_id}.json"
-        rd_path = doc_dir / rd_filename
+        # Save as related.json
+        rd_path = doc_dir / "related.json"
         
         with open(rd_path, "w", encoding="utf-8") as f:
             json.dump(related_docs, f, indent=2, default=str)
@@ -132,8 +131,8 @@ class FilesystemBackend(PersistenceBackend):
         log.debug(f"Created related documents index: {rd_path} with {len(related_docs)} relations")
     
     # function called after persist, it validate that all required artifacts were created with correct naming convention
-    # check if sidecar metadata exists with correct naming: sc_<FULL_DOCUMENT_ID>.json
-    # check if related documents index exists with correct naming: rd_<FULL_DOCUMENT_ID>.json
+    # check if sidecar metadata exists with correct naming: source.json
+    # check if related documents index exists with correct naming: related.json
     # check if extracted text exists if the format is text-extractable and artifacts_extracted
 
     def _validate_artifacts(
@@ -147,8 +146,8 @@ class FilesystemBackend(PersistenceBackend):
         
         INGESTION REQUIREMENT: Strict validation of output composition
         - Original file: <FULL_DOCUMENT_ID>.<extension>
-        - Sidecar metadata: sc_<FULL_DOCUMENT_ID>.json
-        - Related documents: rd_<FULL_DOCUMENT_ID>.json
+        - Sidecar metadata: source.json
+        - Related documents: related.json
         
         Args:
             doc_dir: Document directory
@@ -157,10 +156,9 @@ class FilesystemBackend(PersistenceBackend):
         """
         issues = []
         
-        expected_meta_filename = f"sc_{document.metadata.doc_id}.json"
-        meta_path = doc_dir / expected_meta_filename
+        meta_path = doc_dir / "source.json"
         if not meta_path.exists():
-            issues.append(f"Missing sidecar metadata: {expected_meta_filename}")
+            issues.append("Missing sidecar metadata: source.json")
 
         extension = f".{document.metadata.format}" if output_config.filesystem.preserve_extension and document.metadata.format else ""
         expected_original_filename = f"{document.metadata.doc_id}{extension}"
@@ -168,10 +166,9 @@ class FilesystemBackend(PersistenceBackend):
         if not original_path.exists():
             issues.append(f"Missing original file: {expected_original_filename}")
         
-        expected_rd_filename = f"rd_{document.metadata.doc_id}.json"
-        rd_path = doc_dir / expected_rd_filename
+        rd_path = doc_dir / "related.json"
         if not rd_path.exists():
-            issues.append(f"Missing related documents index: {expected_rd_filename}")
+            issues.append("Missing related documents index: related.json")
         
         if issues:
             issue_text = "; ".join(issues)
