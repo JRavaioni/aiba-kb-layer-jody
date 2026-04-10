@@ -37,12 +37,10 @@ def _assert_doc_artifacts(output_dir: Path, doc_id: str, extension: str = "txt")
     original = doc_dir / f"{doc_id}.{extension}"
     sidecar = doc_dir / f"sc_{doc_id}.json"
     related = doc_dir / f"rd_{doc_id}.json"
-    extracted = doc_dir / "extracted.txt"
 
     assert original.exists()
     assert sidecar.exists()
     assert related.exists()
-    assert extracted.exists()
 
     metadata = json.loads(sidecar.read_text(encoding="utf-8"))
     assert metadata["doc_id"] == doc_id

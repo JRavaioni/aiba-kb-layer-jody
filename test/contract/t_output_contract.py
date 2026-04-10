@@ -83,4 +83,3 @@ class TestOutputContract:
 
             assert f"sc_{doc_id}.json" in files
             assert f"rd_{doc_id}.json" in files
-            assert "extracted.txt" in files

@@ -37,7 +37,6 @@ def test_filesystem_backend_persist_writes_required_artifacts(tmp_path: Path):
     doc_dir = tmp_path / relative_dir
 
     assert doc_dir.exists()
-    assert (doc_dir / "extracted.txt").exists()
     assert (doc_dir / "sc_abc123def4567890.json").exists()
     assert (doc_dir / "rd_abc123def4567890.json").exists()
 
@@ -50,7 +49,6 @@ def test_filesystem_backend_allows_missing_text_with_warning(tmp_path: Path):
     doc_dir = tmp_path / relative_dir
 
     assert doc_dir.exists()
-    assert not (doc_dir / "extracted.txt").exists()
     assert (doc_dir / "sc_abc123def4567890.json").exists()
 
 

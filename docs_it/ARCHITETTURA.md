@@ -29,7 +29,6 @@ Eccezioni specifiche:
    - `{doc_id}.{ext}`
    - `sc_{doc_id}.json`
    - `rd_{doc_id}.json`
-   - `extracted.txt`
 
 ## Strategy Selection
 

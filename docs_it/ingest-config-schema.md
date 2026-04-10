@@ -78,7 +78,6 @@ ingest:
 
     artifacts:
       original_file: true
-      extracted_text: true
       document_metadata: true
       sidecar_metadata: true
 

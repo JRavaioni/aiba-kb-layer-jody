@@ -86,12 +86,6 @@ class FilesystemBackend(PersistenceBackend):
             original_path.write_bytes(document.raw_bytes)
             log.debug(f"Persisted original file: {original_path}")
 
-        if output_config.artifacts_extracted_text and document.extracted_text:
-            # Save extracted text
-            text_path = doc_dir / "extracted.txt"
-            text_path.write_text(document.extracted_text, encoding="utf-8")
-            log.debug(f"Persisted extracted text: {text_path}")
-        
         if output_config.artifacts_document_metadata or output_config.artifacts_sidecar_metadata:
             # Save metadata as: sc_<FULL_DOCUMENT_ID>.json
             # INGESTION REQUIREMENT: Sidecar metadata must follow naming convention
@@ -190,18 +184,6 @@ class FilesystemBackend(PersistenceBackend):
             rd_path = doc_dir / expected_rd_filename
             if not rd_path.exists():
                 issues.append(f"Missing related documents index: {expected_rd_filename}")
-        
-        # Check extracted text (should exist for text-extractable formats)
-        if output_config.artifacts_extracted_text:
-            text_path = doc_dir / "extracted.txt"
-            if document.extracted_text and not text_path.exists():
-                issues.append("Missing extracted.txt despite having extracted text")
-            elif not document.extracted_text and document.metadata.format in ['txt', 'md', 'html', 'htm']:
-                log.warning(
-                    "Missing extracted text for %s format on document %s",
-                    document.metadata.format,
-                    document.metadata.doc_id,
-                )
         
         if issues:
             issue_text = "; ".join(issues)
