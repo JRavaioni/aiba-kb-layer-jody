@@ -80,7 +80,8 @@ pipeline-ingestion/
 
 ### ✅ Gestione Errori Robusta
 - Tracciamento errori per documento (non fallisce intero batch)
-- Manifest dettagliato con successi e fallimenti
+- Warning per documento registrati nel manifest (es. testo non estraibile)
+- Manifest dettagliato con successi, fallimenti e warning
 - Adatto per elaborazione batch su larga scala
 
 ### ✅ Pipeline Analizzatore - Configurabile (NO Parsing)
@@ -113,6 +114,7 @@ manifest = service.ingest("input/")
 
 print(f"Ingestiti: {len(manifest.ingested)}")
 print(f"Errori: {len(manifest.errors)}")
+print(f"Warning: {manifest.total_warnings}")
 ```
 
 ### Pattern Builder

@@ -149,8 +149,16 @@ class IngestManifest:
     started_at: datetime = field(default_factory=lambda: datetime.now(UTC))
     completed_at: Optional[datetime] = None
     
+    # Per-document warnings: logical_path → list of reason strings
+    warnings: Dict[str, List[str]] = field(default_factory=dict)
+    
     # Deduplication tracking
     duplicates_found: int = 0
+    
+    @property
+    def total_warnings(self) -> int:
+        """Total number of warning entries across all documents."""
+        return sum(len(v) for v in self.warnings.values())
     
     @property
     def total_input(self) -> int:
@@ -168,10 +176,12 @@ class IngestManifest:
         return {
             "ingested": self.ingested,
             "errors": self.errors,
+            "warnings": self.warnings,
             "summary": {
                 "total_input": self.total_input,
                 "successfully_ingested": len(self.ingested),
                 "failed": len(self.errors),
+                "total_warnings": self.total_warnings,
                 "duplicates_found": self.duplicates_found,
                 "success_rate": self.success_rate,
             },

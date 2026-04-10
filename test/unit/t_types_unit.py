@@ -66,5 +66,23 @@ def test_manifest_summary_and_timestamps_are_computed():
     assert payload["summary"]["successfully_ingested"] == 2
     assert payload["summary"]["failed"] == 1
     assert payload["summary"]["duplicates_found"] == 1
+    assert payload["summary"]["total_warnings"] == 0
     assert payload["summary"]["success_rate"] > 0
     assert payload["timestamps"]["duration_seconds"] == 3.0
+    assert payload["warnings"] == {}
+
+
+def test_manifest_warnings_structure():
+    manifest = IngestManifest(
+        ingested={"ok.txt": "id1"},
+        errors={},
+        warnings={"doc/a.txt": ["Text extraction failed (txt)"], "doc/b.html": ["Text extraction failed (html)"]},
+    )
+
+    assert manifest.total_warnings == 2
+
+    payload = manifest.to_dict()
+    assert payload["summary"]["total_warnings"] == 2
+    assert "warnings" in payload
+    assert payload["warnings"]["doc/a.txt"] == ["Text extraction failed (txt)"]
+    assert payload["warnings"]["doc/b.html"] == ["Text extraction failed (html)"]

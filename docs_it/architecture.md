@@ -124,7 +124,7 @@ Directory Input
                     ├── source.json
                     └── related.json
       ↓
-   Manifest (mapping: logical_path → doc_id, errori)
+   Manifest (mapping: logical_path → doc_id, errori, warning per documento)
 ```
 
 ## Design Basato su Configurazione
@@ -259,7 +259,7 @@ ingest:
 ### 4. **Gestione Errori Per-Documento**
 **Perché?**
 - Un documento cattivo non fallisce intera run
-- Manifest traccia cosa ha avuto successo/fallito
+- Manifest traccia cosa ha avuto successo/fallito/warning
 - Adatto per elaborazione batch su larga scala
 
 **Trade-off**: Senza fail-fast, bug possono essere più difficili da debug.

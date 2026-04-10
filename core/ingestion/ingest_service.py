@@ -137,7 +137,9 @@ class IngestService:
                     # Validate text extraction for other supported formats (warnings only for now)
                     text_extraction_required = doc_ref.format in ['txt', 'md', 'html', 'htm', 'xml', 'json']
                     if text_extraction_required and not loaded.extracted_text:
+                        warning_reason = f"Text extraction failed ({doc_ref.format})"
                         log.warning(f"Text extraction failed for {doc_ref.logical_path} ({doc_ref.format})")
+                        manifest.warnings.setdefault(doc_ref.logical_path, []).append(warning_reason)
                         # For now, continue processing but mark as warning
                         # Could be changed to raise exception for strict validation
                     

@@ -53,5 +53,7 @@ class TestIngestionE2E:
 
             assert "ingested" in data
             assert "errors" in data
+            assert "warnings" in data
             assert "summary" in data
             assert data["summary"]["total_input"] == (len(manifest.ingested) + len(manifest.errors))
+            assert "total_warnings" in data["summary"]

@@ -33,7 +33,8 @@ Esempio:
 
 **Manifest Accurato**
 - Tutti i documenti ingestiti sono listati in manifest.json
-- Stato (success/fail) registrato correttamente
+- Stato (success/fail/warning) registrato correttamente
+- Warning per documento inclusi nella sezione `warnings` con motivo
 - Se violato: Perdita tracciamento
 
 ---
