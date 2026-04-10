@@ -93,7 +93,6 @@ class IngestedDocument:
     metadata: DocumentMetadata
     raw_bytes: bytes
     extracted_text: Optional[str] = None
-    analyzer_output: Dict[str, Any] = field(default_factory=dict)
     
     def to_dict(self) -> Dict[str, Any]:
         """Serialize to dictionary for storage."""
@@ -108,7 +107,6 @@ class IngestedDocument:
             "source_file_size": self.metadata.source_file_size,
             "ingested_at": self.metadata.ingested_at.isoformat(),
             "sidecar_metadata": self.metadata.sidecar_metadata,
-            "analyzer_output": self.analyzer_output,
         }
 
 

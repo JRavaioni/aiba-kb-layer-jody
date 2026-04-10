@@ -24,19 +24,18 @@ def test_ingested_document_to_dict_contains_expected_fields():
         metadata=metadata,
         raw_bytes=b"hello",
         extracted_text="hello",
-        analyzer_output={"text_extractor": {"status": "success"}},
     )
 
     data = doc.to_dict()
     assert data["doc_id"] == "doc1"
     assert data["logical_path"] == "a/b.txt"
     assert data["sidecar_metadata"] == {"k": "v"}
-    assert "text_extractor" in data["analyzer_output"]
+    assert "analyzer_output" not in data
 
 
 def test_analyzer_result_to_dict_roundtrip_shape():
     result = AnalyzerResult(
-        analyzer_name="json_formatter",
+        analyzer_name="text_validator",
         status="success",
         payload={"formatted": True},
         warnings=["w1"],
@@ -45,7 +44,7 @@ def test_analyzer_result_to_dict_roundtrip_shape():
     )
     as_dict = result.to_dict()
 
-    assert as_dict["analyzer_name"] == "json_formatter"
+    assert as_dict["analyzer_name"] == "text_validator"
     assert as_dict["status"] == "success"
     assert as_dict["payload"]["formatted"] is True
     assert as_dict["warnings"] == ["w1"]

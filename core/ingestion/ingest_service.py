@@ -162,8 +162,8 @@ class IngestService:
                         extracted_text=loaded.extracted_text,
                     )
                     
-                    # Run analyzers
-                    document.analyzer_output = self.analyzer_pipeline.run(document)
+                    # Run internal non-parsing text validation without persisting analyzer output.
+                    self.analyzer_pipeline.run(document)
 
                     # Keep metadata aligned with analyzer-updated text.
                     document.metadata.extracted_text_length = len(document.extracted_text) if document.extracted_text else 0

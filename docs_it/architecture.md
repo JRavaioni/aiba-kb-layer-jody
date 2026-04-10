@@ -117,7 +117,7 @@ Directory Input
       ↓
   IngestedDocument (metadata + raw_bytes + extracted_text)
       ↓
-  AnalyzerPipeline → analyzer_output (Dict[str, Any])
+  Validazione Testo Base (interna, nessun analyzer_output persistito)
       ↓
   Persistence ────→ {output_dir}/b784e2c8dbba8d15/
                     ├── b784e2c8dbba8d15.html
@@ -171,8 +171,7 @@ ingest:
   metadata:
     enabled: false  # Disabilita scoperta metadati sidecar
   
-  analyzers:
-    enabled: false  # Disabilita tutta post-elaborazione
+Nota: il controllo testo base e interno e non espone sezione `analyzers` nello YAML.
 ```
 
 ## Architettura Plugin
@@ -196,9 +195,9 @@ ingest:
     strategy: mia_strategy
 ```
 
-### Analizzatori Disponibili
+### Validazione Testo Disponibile
 
-La pipeline supporta gli analizzatori built-in definiti nel progetto e configurati in YAML.
+Il sistema esegue solo una validazione testo base interna, senza configurazione YAML dedicata.
 
 ### Backend Persistenza Personalizzati
 

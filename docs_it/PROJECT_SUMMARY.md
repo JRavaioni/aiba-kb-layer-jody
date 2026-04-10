@@ -20,7 +20,7 @@ pipeline-ingestion/
 │       ├── loader.py                # Estrazione testo multi-formato
 │       ├── sidecar.py               # Scoperta metadati
 │       ├── id_generator.py          # Generazione ID deterministica
-│       ├── analyzers.py             # Post-elaborazione pipeline
+│       ├── analyzers.py             # Validazione testuale (NO parsing)
 │       ├── backends.py              # Persistenza (pluggabile)
 │       ├── ingest_service.py        # Orchestratore principale
 │       └── builder.py               # Pattern factory
@@ -75,7 +75,7 @@ pipeline-ingestion/
 
 ### ✅ Architettura Plugin
 - **Generatori ID Personalizzati**: Registra a runtime
-- **Analizzatori Built-in**: Validazione testo, parsing HTML/XML, formattazione JSON
+- **Analizzatori Built-in**: Solo validazione testo (nessun parsing/strutturazione)
 - **Zero Breaking Changes**: Plugin non modificano core
 
 ### ✅ Gestione Errori Robusta
@@ -83,10 +83,10 @@ pipeline-ingestion/
 - Manifest dettagliato con successi e fallimenti
 - Adatto per elaborazione batch su larga scala
 
-### ✅ Pipeline Analizzatore - Configurabile
+### ✅ Pipeline Analizzatore - Configurabile (NO Parsing)
 - Post-elaborazione documenti
 - Validazione testo, rimozione null-byte
-- Esegue pipeline configurabile di analizzatori built-in
+- Esegue solo analizzatori non di parsing
 - Disabilitato per default (nessun overhead)
 
 ### ✅ Struttura Output
@@ -124,7 +124,6 @@ service = (
     .with_output_dir("output/")
     .with_config_value("input.max_depth", 20)
     .with_config_value("loader.max_text_length", 500000)
-    .enable_analyzers(True)
     .build()
 )
 
@@ -165,7 +164,7 @@ ingest:
     strategy: sha256-16
 ```
 
-### Completo (Tutti formati + metadati + analisi)
+### Completo (Tutti formati + metadati, senza parsing analyzer)
 ```yaml
 ingest:
   input:
@@ -175,8 +174,6 @@ ingest:
     enabled: true
     max_archive_depth: 3
   metadata:
-    enabled: true
-  analyzers:
     enabled: true
 ```
 
@@ -204,7 +201,7 @@ ingest:
 | **Loader** | Normalizza contenuto documenti | `loader.*` |
 | **MetadataLoader** | Scopre metadati accoppiati | `metadata.*` |
 | **IDGenerator** | Assegna ID deterministici | `id_generation.*` |
-| **AnalyzerPipeline** | Post-elaborazione opzionale | `analyzers.*` |
+| **Validazione Testo Base** | Controllo interno testo estratto, non configurato via YAML | interno |
 | **Persistence** | Archivia documenti, manifest | `output.*` |
 
 ### Flusso Dati
@@ -216,8 +213,8 @@ Riferimenti Documento
 Testo Estratto + Metadati
    ↓ IDGenerator
 ID Documento
-   ↓ AnalyzerPipeline
-Risultati Analisi
+  ↓ Validazione Testo Base (interna)
+Controlli Testo
    ↓ Persistence
 Directory Output + Manifest
 ```
@@ -349,7 +346,7 @@ Dopo ingestione, documenti sono pronti per:
 - ✅ `loader.py` - Estrazione testo multi-formato
 - ✅ `sidecar.py` - Scoperta metadati
 - ✅ `id_generator.py` - ID deterministici/random
-- ✅ `analyzers.py` - Pipeline post-elaborazione
+- ✅ `analyzers.py` - Pipeline validazione testuale (NO parsing)
 - ✅ `backends.py` - Interfaccia persistenza + filesystem
 - ✅ `ingest_service.py` - Orchestratore principale
 - ✅ `builder.py` - Pattern factory

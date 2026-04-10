@@ -1,4 +1,4 @@
-"""Unit tests for analyzer implementations introduced by parsing refactor."""
+"""Unit tests for non-parsing analyzer implementations."""
 
 from datetime import UTC, datetime
 from pathlib import Path
@@ -6,7 +6,8 @@ import sys
 
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
-from core.ingestion.analyzers import HtmlParserAnalyzer, JsonFormatterAnalyzer, XmlParserAnalyzer
+from core.ingestion.analyzers import AnalyzerPipeline, TextExtractorAnalyzer
+from core.ingestion.config import AnalyzerConfig
 from core.ingestion.types import DocumentMetadata, IngestedDocument
 
 
@@ -22,49 +23,44 @@ def _document(fmt: str, text: str | None) -> IngestedDocument:
     return IngestedDocument(metadata=metadata, raw_bytes=(text or "").encode("utf-8"), extracted_text=text)
 
 
-def test_html_parser_extracts_visible_text():
-    analyzer = HtmlParserAnalyzer({"remove_scripts": True, "strip_whitespace": True})
-    doc = _document("html", "<html><body><h1>Title</h1><script>bad()</script><p>Body</p></body></html>")
+def test_text_extractor_removes_null_bytes_when_enabled():
+    analyzer = TextExtractorAnalyzer({"min_length": 1, "remove_nulls": True})
+    doc = _document("txt", "abc\x00def")
 
     result = analyzer.analyze(doc)
 
     assert result.status == "success"
-    assert doc.extracted_text is not None
-    assert "Title" in doc.extracted_text
-    assert "Body" in doc.extracted_text
-    assert "bad()" not in doc.extracted_text
+    assert result.payload["null_bytes_removed"] == 1
+    assert doc.extracted_text == "abcdef"
 
 
-def test_xml_parser_flattens_text_content():
-    analyzer = XmlParserAnalyzer({"parser": "xml", "strip_whitespace": True})
-    doc = _document("xml", "<root><a>Hello</a><b>World</b></root>")
+def test_text_extractor_marks_short_text_as_invalid():
+    analyzer = TextExtractorAnalyzer({"min_length": 10, "remove_nulls": False})
+    doc = _document("txt", "short")
 
     result = analyzer.analyze(doc)
 
     assert result.status == "success"
-    assert doc.extracted_text is not None
-    assert "Hello" in doc.extracted_text
-    assert "World" in doc.extracted_text
+    assert result.payload["text_valid"] is False
+    assert "below minimum" in result.payload["validation_message"]
 
 
-def test_json_formatter_pretty_prints_valid_json():
-    analyzer = JsonFormatterAnalyzer({"indent": 2, "ensure_ascii": False})
-    doc = _document("json", '{"a":1,"b":2}')
+def test_pipeline_unknown_parsing_analyzer_is_skipped():
+    pipeline = AnalyzerPipeline(
+        AnalyzerConfig(
+            enabled=True,
+            pipeline=[{"name": "unsupported_analyzer", "enabled": True, "config": {}}],
+            on_analyzer_error="skip",
+        )
+    )
+    doc = _document("html", "<html><body>Hello</body></html>")
 
-    result = analyzer.analyze(doc)
-
-    assert result.status == "success"
-    assert doc.extracted_text is not None
-    assert "\n" in doc.extracted_text
-    assert '  "a": 1' in doc.extracted_text
+    result = pipeline.run(doc)
+    assert result["unsupported_analyzer"]["status"] == "skipped"
+    assert "Unknown analyzer" in result["unsupported_analyzer"]["warnings"][0]
 
 
-def test_json_formatter_warns_on_invalid_json():
-    analyzer = JsonFormatterAnalyzer({"indent": 2, "ensure_ascii": False})
-    doc = _document("json", '{"a":}')
-
-    result = analyzer.analyze(doc)
-
-    assert result.status == "success"
-    assert result.payload["formatted"] is False
-    assert len(result.warnings) == 1
+def test_pipeline_disabled_returns_empty_results():
+    pipeline = AnalyzerPipeline(AnalyzerConfig(enabled=False, pipeline=[]))
+    doc = _document("txt", "plain text")
+    assert pipeline.run(doc) == {}

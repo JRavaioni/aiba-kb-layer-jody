@@ -26,7 +26,6 @@ def _doc(fmt: str = "txt", text: str | None = "hello") -> IngestedDocument:
         metadata=metadata,
         raw_bytes=b"raw-content",
         extracted_text=text,
-        analyzer_output={"text_extractor": {"status": "success"}},
     )
 
 

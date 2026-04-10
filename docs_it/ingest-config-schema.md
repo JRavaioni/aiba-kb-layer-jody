@@ -83,20 +83,6 @@ ingest:
       sidecar_metadata: true
 
   # ============================================================================
-  # ANALIZZATORI (ELABORAZIONE OPZIONALE)
-  # ============================================================================
-  analyzers:
-    enabled: true
-    pipeline:
-      - name: text_extractor
-        enabled: true
-        config:
-          min_length: 10
-          remove_nulls: true
-
-    on_analyzer_error: skip  # skip, fail_document, fail_all
-
-  # ============================================================================
   # LOGGING & DEBUGGING
   # ============================================================================
   logging:
@@ -326,49 +312,15 @@ Controlla output e persistenza.
 - **Default**: `true`
 - **Descrizione**: Salva metadati sidecar scoperti
 
-### Sezione `analyzers`
+### Validazione Testo Base
 
-Controlla pipeline analizzatori.
+Il sistema esegue un controllo testo base interno non configurato via YAML.
 
-#### `enabled` (booleano)
-- **Default**: `true`
-- **Descrizione**: Abilita pipeline analizzatori
-
-#### `pipeline` (array di oggetti)
-- **Descrizione**: Lista analizzatori da eseguire
-- **Struttura**:
-  ```yaml
-  - name: "nome_analizzatore"
-    enabled: true
-    config:
-      chiave: valore
-  ```
-- **Vincoli**:
-  - ogni elemento deve essere un oggetto/dizionario
-  - `name` deve essere una stringa non vuota
-  - `enabled`, se presente, deve essere booleano
-  - `config`, se presente, deve essere un dizionario
-  - i nomi analyzer devono essere univoci nella pipeline
-
-#### `on_analyzer_error` (stringa)
-- **Default**: `skip`
-- **Descrizione**: Comportamento su errore analizzatore
-- **Valori validi**: `skip`, `fail_document`, `fail_all`
-
-#### Contratto output `analyzer_output`
-- Ogni analyzer produce un oggetto strutturato con i campi:
-  - `analyzer_name`
-  - `status`
-  - `payload`
-  - `warnings`
-  - `errors`
-  - `metrics`
-- `metrics` include almeno:
-  - `duration_seconds`
-  - `document_id`
-  - `logical_path`
-  - `format`
-  - `extracted_text_length`
+Comportamento:
+- puo rimuovere null byte dal testo estratto
+- puo verificare che la lunghezza del testo non sia nulla o anomala
+- non produce alcun blocco `analyzer_output` negli artifact persistiti
+- non esegue parsing o strutturazione di HTML, XML o JSON
 
 ### Sezione `logging`
 
@@ -435,8 +387,6 @@ ingest:
   metadata:
     enabled: true
     base_paths: [".", "../metadata"]
-  analyzers:
-    enabled: true
   logging:
     level: DEBUG
     file: logs/ingest.log

@@ -1,4 +1,4 @@
-"""Unit tests for analyzer-level feature switches."""
+"""Unit tests for analyzer pipeline behavior without parsing analyzers."""
 
 from datetime import UTC, datetime
 from pathlib import Path
@@ -23,13 +23,12 @@ def _doc(fmt: str, text: str | None) -> IngestedDocument:
     return IngestedDocument(metadata=metadata, raw_bytes=(text or "").encode("utf-8"), extracted_text=text)
 
 
-def test_html_parser_skipped_when_global_switch_off() -> None:
+def test_removed_parsing_analyzer_is_reported_as_unknown() -> None:
     pipeline = AnalyzerPipeline(
         AnalyzerConfig(
             enabled=True,
-            html_parsing_enabled=False,
             pipeline=[
-                {"name": "html_parser", "enabled": True, "config": {"remove_scripts": True, "strip_whitespace": True}},
+                {"name": "removed_parser", "enabled": True, "config": {"remove_scripts": True, "strip_whitespace": True}},
                 {"name": "text_extractor", "enabled": True, "config": {"min_length": 1, "remove_nulls": True}},
             ],
             on_analyzer_error="skip",
@@ -41,6 +40,6 @@ def test_html_parser_skipped_when_global_switch_off() -> None:
 
     result = pipeline.run(doc)
 
-    assert result["html_parser"]["status"] == "skipped"
-    assert "disabled" in result["html_parser"]["warnings"][0].lower()
+    assert result["removed_parser"]["status"] == "skipped"
+    assert "unknown analyzer" in result["removed_parser"]["warnings"][0].lower()
     assert doc.extracted_text == html_raw

@@ -18,7 +18,6 @@ def _minimal_config(input_dir: Path) -> dict:
     return {
         "input": {"dirs": [str(input_dir)], "supported_formats": ["txt"]},
         "output": {"backend": "filesystem"},
-        "analyzers": {"enabled": True, "pipeline": []},
     }
 
 
@@ -32,12 +31,6 @@ def test_builder_with_config_value_updates_nested_field(tmp_path: Path):
     builder = IngestBuilder.from_dict(_minimal_config(tmp_path))
     builder.with_config_value("input.max_depth", 3)
     assert builder.config.input.max_depth == 3
-
-
-def test_builder_enable_analyzers_switch(tmp_path: Path):
-    builder = IngestBuilder.from_dict(_minimal_config(tmp_path))
-    builder.enable_analyzers(False)
-    assert builder.config.analyzers.enabled is False
 
 
 def test_builder_custom_components_update_strategy_fields(tmp_path: Path):
@@ -74,7 +67,6 @@ def test_create_ingest_service_from_yaml(tmp_path: Path):
                 "exclude_paths": config.input.exclude_paths,
             },
             "output": {"backend": config.output.backend},
-            "analyzers": {"enabled": True, "pipeline": []},
         }
     }
 

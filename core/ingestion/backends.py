@@ -101,8 +101,6 @@ class FilesystemBackend(PersistenceBackend):
             if hasattr(document.metadata.ingested_at, 'isoformat'):
                 metadata_dict['ingested_at'] = document.metadata.ingested_at.isoformat()
             
-            metadata_dict['analyzer_output'] = document.analyzer_output
-            
             meta_filename = f"sc_{document.metadata.doc_id}.json"
             meta_path = doc_dir / meta_filename
             with open(meta_path, "w", encoding="utf-8") as f:

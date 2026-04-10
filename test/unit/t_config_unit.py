@@ -51,20 +51,6 @@ def test_from_yaml_loads_ingest_section(tmp_path: Path):
     assert config.analyzers.enabled is True
 
 
-def test_validate_rejects_non_bool_html_switch():
-    config = IngestConfig.from_dict(
-        {
-            "analyzers": {
-                "html_parsing_enabled": "yes",
-                "pipeline": [],
-            }
-        }
-    )
-
-    errors = config.validate()
-    assert any("html_parsing_enabled" in err for err in errors)
-
-
 def test_validate_rejects_non_list_pipeline():
     config = IngestConfig.from_dict(
         {

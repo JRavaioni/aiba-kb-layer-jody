@@ -5,7 +5,6 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from time import perf_counter
 from typing import Dict, Any, cast
-import json
 import logging
 
 from .types import IngestedDocument # analyzers operate on the post-ingestion document representation
@@ -132,190 +131,6 @@ class TextExtractorAnalyzer(Analyzer):
         )
 
 
-class HtmlParserAnalyzer(Analyzer):
-    """Parse raw HTML into readable text for downstream analyzers."""
-    # parsing post-ingestion: delete script/style, extract text, strip whitespace
-    def __init__(self, config: Dict[str, Any]):
-        if not isinstance(config, dict):
-            raise AnalyzerConfigurationException(
-                "Analyzer config for 'html_parser' must be a dictionary"
-            )
-
-        self.remove_scripts = config.get("remove_scripts", True)
-        self.strip_whitespace = config.get("strip_whitespace", True)
-
-        if not isinstance(self.remove_scripts, bool):
-            raise AnalyzerConfigurationException(
-                "Analyzer config 'remove_scripts' must be a boolean"
-            )
-        if not isinstance(self.strip_whitespace, bool):
-            raise AnalyzerConfigurationException(
-                "Analyzer config 'strip_whitespace' must be a boolean"
-            )
-
-    def analyze(self, document: IngestedDocument) -> AnalyzerResult:
-        if document.metadata.format not in ["html", "htm"]:
-            return AnalyzerResult(
-                analyzer_name="html_parser",
-                status="skipped",
-                payload={"reason": "format_not_html"},
-            )
-
-        if not document.extracted_text:
-            return AnalyzerResult(
-                analyzer_name="html_parser",
-                status="success",
-                payload={"text_length": 0, "parsed": False},
-                warnings=["No source text to parse"],
-            )
-
-        try:
-            from bs4 import BeautifulSoup
-        except ImportError as e:
-            raise AnalyzerExecutionException(f"beautifulsoup4 not installed: {e}")
-
-        soup = BeautifulSoup(document.extracted_text, "html.parser")
-        removed_count = 0
-        if self.remove_scripts:
-            targets = soup.find_all(["script", "style"])
-            removed_count = len(targets)
-            for node in targets:
-                node.decompose()
-
-        parsed_text = soup.get_text()
-        if self.strip_whitespace:
-            lines = [line.strip() for line in parsed_text.split("\n") if line.strip()]
-            parsed_text = "\n".join(lines)
-
-        document.extracted_text = parsed_text.strip() if parsed_text and parsed_text.strip() else None
-
-        return AnalyzerResult(
-            analyzer_name="html_parser",
-            status="success",
-            payload={
-                "parsed": True,
-                "removed_script_style_count": removed_count,
-                "text_length": len(document.extracted_text) if document.extracted_text else 0,
-            },
-        )
-
-
-class XmlParserAnalyzer(Analyzer):
-    """Parse raw XML into readable text for downstream analyzers."""
-
-    def __init__(self, config: Dict[str, Any]):
-        if not isinstance(config, dict):
-            raise AnalyzerConfigurationException(
-                "Analyzer config for 'xml_parser' must be a dictionary"
-            )
-
-        parser_name = config.get("parser", "xml")
-        self.parser = parser_name if parser_name in ["xml", "html.parser"] else "xml"
-        self.strip_whitespace = config.get("strip_whitespace", True)
-
-        if not isinstance(self.strip_whitespace, bool):
-            raise AnalyzerConfigurationException(
-                "Analyzer config 'strip_whitespace' must be a boolean"
-            )
-
-    def analyze(self, document: IngestedDocument) -> AnalyzerResult:
-        if document.metadata.format != "xml":
-            return AnalyzerResult(
-                analyzer_name="xml_parser",
-                status="skipped",
-                payload={"reason": "format_not_xml"},
-            )
-
-        if not document.extracted_text:
-            return AnalyzerResult(
-                analyzer_name="xml_parser",
-                status="success",
-                payload={"text_length": 0, "parsed": False},
-                warnings=["No source text to parse"],
-            )
-
-        try:
-            from bs4 import BeautifulSoup
-        except ImportError as e:
-            raise AnalyzerExecutionException(f"beautifulsoup4 not installed: {e}")
-
-        soup = BeautifulSoup(document.extracted_text, self.parser)
-        parsed_text = soup.get_text()
-        if self.strip_whitespace:
-            lines = [line.strip() for line in parsed_text.split("\n") if line.strip()]
-            parsed_text = "\n".join(lines)
-
-        document.extracted_text = parsed_text.strip() if parsed_text and parsed_text.strip() else None
-
-        return AnalyzerResult(
-            analyzer_name="xml_parser",
-            status="success",
-            payload={
-                "parsed": True,
-                "text_length": len(document.extracted_text) if document.extracted_text else 0,
-            },
-        )
-
-
-class JsonFormatterAnalyzer(Analyzer):
-    """Format JSON text to a deterministic pretty-printed representation."""
-    # check the format, if not json skip
-    # if the json is valid, pretty print it with configured indent (configuration can be find the ingest.yaml file)
-    # if the json is invalid, return a warning but do not fail the analyzer
-    def __init__(self, config: Dict[str, Any]):
-        if not isinstance(config, dict):
-            raise AnalyzerConfigurationException(
-                "Analyzer config for 'json_formatter' must be a dictionary"
-            )
-
-        self.indent = config.get("indent", 2)
-        self.ensure_ascii = config.get("ensure_ascii", False)
-
-        if not isinstance(self.indent, int) or self.indent < 0:
-            raise AnalyzerConfigurationException(
-                "Analyzer config 'indent' must be a non-negative integer"
-            )
-        if not isinstance(self.ensure_ascii, bool):
-            raise AnalyzerConfigurationException(
-                "Analyzer config 'ensure_ascii' must be a boolean"
-            )
-
-    def analyze(self, document: IngestedDocument) -> AnalyzerResult:
-        if document.metadata.format != "json":
-            return AnalyzerResult(
-                analyzer_name="json_formatter",
-                status="skipped",
-                payload={"reason": "format_not_json"},
-            )
-
-        if not document.extracted_text:
-            return AnalyzerResult(
-                analyzer_name="json_formatter",
-                status="success",
-                payload={"formatted": False, "text_length": 0},
-                warnings=["No source text to format"],
-            )
-
-        try:
-            parsed = json.loads(document.extracted_text)
-        except json.JSONDecodeError as e:
-            return AnalyzerResult(
-                analyzer_name="json_formatter",
-                status="success",
-                payload={"formatted": False, "text_length": len(document.extracted_text)},
-                warnings=[f"Invalid JSON source: {e}"],
-            )
-
-        formatted = json.dumps(parsed, indent=self.indent, ensure_ascii=self.ensure_ascii)
-        document.extracted_text = formatted
-
-        return AnalyzerResult(
-            analyzer_name="json_formatter",
-            status="success",
-            payload={"formatted": True, "text_length": len(formatted)},
-        )
-
-
 class AnalyzerPipeline:
     """
     Executes a pipeline of analyzers in sequence.
@@ -330,10 +145,7 @@ class AnalyzerPipeline:
         self._validate_pipeline_definition()
     
     def _register_builtin_analyzers(self) -> None:
-        """Register built-in analyzers."""
-        self._register_analyzer("html_parser", HtmlParserAnalyzer)
-        self._register_analyzer("xml_parser", XmlParserAnalyzer)
-        self._register_analyzer("json_formatter", JsonFormatterAnalyzer)
+        """Register built-in non-parsing analyzers."""
         self._register_analyzer("text_extractor", TextExtractorAnalyzer)
     
     def _register_analyzer(self, name: str, analyzer_class: type) -> None:
@@ -432,17 +244,6 @@ class AnalyzerPipeline:
             name = name_value
             enabled = analyzer_config.get("enabled", True)
 
-            # Global switch: allow turning HTML parsing on/off from YAML without
-            # editing the pipeline list.
-            if name == "html_parser" and not self.config.html_parsing_enabled:
-                results[name] = AnalyzerResult(
-                    analyzer_name=name,
-                    status="skipped",
-                    warnings=["HTML parsing disabled by analyzers.html_parsing_enabled=false"],
-                    metrics=self._base_metrics(document, 0.0),
-                ).to_dict()
-                continue
-            
             if not enabled:
                 results[name] = AnalyzerResult(
                     analyzer_name=name,

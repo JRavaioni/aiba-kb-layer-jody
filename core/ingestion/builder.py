@@ -118,19 +118,6 @@ class IngestBuilder:
         self.config.output.backend = "custom"
         return self
     
-    def enable_analyzers(self, enabled: bool = True) -> IngestBuilder:
-        """
-        Enable or disable analyzer pipeline.
-        
-        Args:
-            enabled: Whether to enable analyzers
-        
-        Returns:
-            Self for chaining
-        """
-        self.config.analyzers.enabled = enabled
-        return self
-    
     def build(self) -> IngestService:
         """
         Build IngestService instance.

@@ -108,39 +108,6 @@ ingest:
       sidecar_metadata: true
   
   # ============================================================================
-  # ANALYZERS (OPTIONAL PROCESSING)
-  # ============================================================================
-  analyzers:
-    enabled: true
-    html_parsing_enabled: true
-    pipeline:
-      - name: html_parser
-        enabled: true
-        config:
-          remove_scripts: true
-          strip_whitespace: true
-
-      - name: xml_parser
-        enabled: true
-        config:
-          parser: xml
-          strip_whitespace: true
-
-      - name: json_formatter
-        enabled: true
-        config:
-          indent: 2
-          ensure_ascii: false
-
-      - name: text_extractor
-        enabled: true
-        config:
-          min_length: 10
-          remove_nulls: true
-    
-    on_analyzer_error: skip  # skip, fail_document, fail_all
-  
-  # ============================================================================
   # LOGGING & DEBUGGING
   # ============================================================================
   logging:

@@ -99,8 +99,9 @@ class OutputConfig:
 class AnalyzerConfig:
     """Analyzer pipeline configuration."""
     enabled: bool = True
-    html_parsing_enabled: bool = True
-    pipeline: List[Dict[str, Any]] = field(default_factory=list)
+    pipeline: List[Dict[str, Any]] = field(default_factory=lambda: [
+        {"name": "text_extractor", "enabled": True, "config": {"min_length": 10, "remove_nulls": True}}
+    ])
     on_analyzer_error: str = "skip"  # skip, fail_document, fail_all
 
 
@@ -242,7 +243,6 @@ class IngestConfig:
             analyzer_data = data["analyzers"]
             config.analyzers = AnalyzerConfig(
                 enabled=analyzer_data.get("enabled", config.analyzers.enabled),
-                html_parsing_enabled=analyzer_data.get("html_parsing_enabled", config.analyzers.html_parsing_enabled),
                 pipeline=analyzer_data.get("pipeline", []),
                 on_analyzer_error=analyzer_data.get("on_analyzer_error", "skip"),
             )
@@ -395,9 +395,6 @@ class IngestConfig:
         
         if self.analyzers.on_analyzer_error not in ["skip", "fail_document", "fail_all"]:
             errors.append(f"Invalid analyzers.on_analyzer_error: {self.analyzers.on_analyzer_error}")
-
-        if not isinstance(self.analyzers.html_parsing_enabled, bool):
-            errors.append("analyzers.html_parsing_enabled must be a boolean")
 
         if not isinstance(self.analyzers.pipeline, list):
             errors.append("analyzers.pipeline must be a list")
