@@ -86,12 +86,6 @@ class OutputConfig:
     """Output/persistence configuration."""
     backend: str = "filesystem"  # filesystem, database, custom
     filesystem: FilesystemBackendConfig = field(default_factory=FilesystemBackendConfig)
-    
-    # Artifacts to persist
-    artifacts_original_file: bool = True
-    artifacts_document_metadata: bool = True
-    artifacts_sidecar_metadata: bool = True
-    artifacts_related_index: bool = True
 
 
 @dataclass
@@ -226,14 +220,9 @@ class IngestConfig:
                     manifest_filename=fs_data.get("manifest_filename", fs_config.manifest_filename),
                 )
             
-            artifacts_data = output_data.get("artifacts", {})
             config.output = OutputConfig(
                 backend=output_data.get("backend", config.output.backend),
                 filesystem=fs_config,
-                artifacts_original_file=artifacts_data.get("original_file", True),
-                artifacts_document_metadata=artifacts_data.get("document_metadata", True),
-                artifacts_sidecar_metadata=artifacts_data.get("sidecar_metadata", True),
-                artifacts_related_index=artifacts_data.get("related_index", True),
             )
         
         # Analyzers

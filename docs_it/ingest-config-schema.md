@@ -76,11 +76,6 @@ ingest:
       create_manifest: true
       manifest_filename: manifest.json
 
-    artifacts:
-      original_file: true
-      document_metadata: true
-      sidecar_metadata: true
-
   # ============================================================================
   # LOGGING & DEBUGGING
   # ============================================================================
@@ -293,23 +288,16 @@ Controlla output e persistenza.
 - **Default**: `manifest.json`
 - **Descrizione**: Nome file manifest
 
-#### Sottosezione `artifacts`
+#### Struttura Output Fissa
 
-##### `original_file` (booleano)
-- **Default**: `true`
-- **Descrizione**: Salva file originale
+La struttura output non e configurabile tramite sezione `artifacts`.
 
-##### `extracted_text` (booleano)
-- **Default**: `true`
-- **Descrizione**: Salva testo estratto
+Per ogni documento il backend filesystem produce sempre:
+- file originale `<doc_id>.<ext>`
+- metadati sidecar `sc_<doc_id>.json`
+- indice relazioni `rd_<doc_id>.json`
 
-##### `document_metadata` (booleano)
-- **Default**: `true`
-- **Descrizione**: Salva metadati documento
-
-##### `sidecar_metadata` (booleano)
-- **Default**: `true`
-- **Descrizione**: Salva metadati sidecar scoperti
+Il manifest globale viene controllato dai soli parametri della sezione `filesystem`.
 
 ### Validazione Testo Base
 

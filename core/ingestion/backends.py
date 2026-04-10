@@ -78,32 +78,25 @@ class FilesystemBackend(PersistenceBackend):
         doc_dir = self.output_dir / dir_name
         doc_dir.mkdir(parents=True, exist_ok=True)
         
-        # Persist artifacts based on config
-        if output_config.artifacts_original_file:
-            extension = f".{document.metadata.format}" if fs_config.preserve_extension and document.metadata.format else ""
-            original_filename = f"{document.metadata.doc_id}{extension}"
-            original_path = doc_dir / original_filename
-            original_path.write_bytes(document.raw_bytes)
-            log.debug(f"Persisted original file: {original_path}")
+        extension = f".{document.metadata.format}" if fs_config.preserve_extension and document.metadata.format else ""
+        original_filename = f"{document.metadata.doc_id}{extension}"
+        original_path = doc_dir / original_filename
+        original_path.write_bytes(document.raw_bytes)
+        log.debug(f"Persisted original file: {original_path}")
 
-        if output_config.artifacts_document_metadata or output_config.artifacts_sidecar_metadata:
-            # Save metadata as: sc_<FULL_DOCUMENT_ID>.json
-            # INGESTION REQUIREMENT: Sidecar metadata must follow naming convention
-            metadata_dict = document.metadata.__dict__.copy()
-            
-            # Convert datetime to ISO format
-            if hasattr(document.metadata.ingested_at, 'isoformat'):
-                metadata_dict['ingested_at'] = document.metadata.ingested_at.isoformat()
-            
-            meta_filename = f"sc_{document.metadata.doc_id}.json"
-            meta_path = doc_dir / meta_filename
-            with open(meta_path, "w", encoding="utf-8") as f:
-                json.dump(metadata_dict, f, indent=2, default=str)
-            log.debug(f"Persisted sidecar metadata: {meta_path}")
-        
+        # Save metadata as: sc_<FULL_DOCUMENT_ID>.json
+        metadata_dict = document.metadata.__dict__.copy()
+        if hasattr(document.metadata.ingested_at, 'isoformat'):
+            metadata_dict['ingested_at'] = document.metadata.ingested_at.isoformat()
+
+        meta_filename = f"sc_{document.metadata.doc_id}.json"
+        meta_path = doc_dir / meta_filename
+        with open(meta_path, "w", encoding="utf-8") as f:
+            json.dump(metadata_dict, f, indent=2, default=str)
+        log.debug(f"Persisted sidecar metadata: {meta_path}")
+
         # Create related documents index: rd_<FULL_DOCUMENT_ID>.json
-        if output_config.artifacts_related_index:
-            self._create_related_documents_index(doc_dir, document)
+        self._create_related_documents_index(doc_dir, document)
         
         # Validate required artifacts were created
         self._validate_artifacts(doc_dir, document, output_config)
@@ -164,26 +157,21 @@ class FilesystemBackend(PersistenceBackend):
         """
         issues = []
         
-        # Check sidecar metadata with new naming: sc_<FULL_DOCUMENT_ID>.json
-        if output_config.artifacts_document_metadata or output_config.artifacts_sidecar_metadata:
-            expected_meta_filename = f"sc_{document.metadata.doc_id}.json"
-            meta_path = doc_dir / expected_meta_filename
-            if not meta_path.exists():
-                issues.append(f"Missing sidecar metadata: {expected_meta_filename}")
+        expected_meta_filename = f"sc_{document.metadata.doc_id}.json"
+        meta_path = doc_dir / expected_meta_filename
+        if not meta_path.exists():
+            issues.append(f"Missing sidecar metadata: {expected_meta_filename}")
 
-        if output_config.artifacts_original_file:
-            extension = f".{document.metadata.format}" if output_config.filesystem.preserve_extension and document.metadata.format else ""
-            expected_original_filename = f"{document.metadata.doc_id}{extension}"
-            original_path = doc_dir / expected_original_filename
-            if not original_path.exists():
-                issues.append(f"Missing original file: {expected_original_filename}")
+        extension = f".{document.metadata.format}" if output_config.filesystem.preserve_extension and document.metadata.format else ""
+        expected_original_filename = f"{document.metadata.doc_id}{extension}"
+        original_path = doc_dir / expected_original_filename
+        if not original_path.exists():
+            issues.append(f"Missing original file: {expected_original_filename}")
         
-        # Check related documents index: rd_<FULL_DOCUMENT_ID>.json
-        if output_config.artifacts_related_index:
-            expected_rd_filename = f"rd_{document.metadata.doc_id}.json"
-            rd_path = doc_dir / expected_rd_filename
-            if not rd_path.exists():
-                issues.append(f"Missing related documents index: {expected_rd_filename}")
+        expected_rd_filename = f"rd_{document.metadata.doc_id}.json"
+        rd_path = doc_dir / expected_rd_filename
+        if not rd_path.exists():
+            issues.append(f"Missing related documents index: {expected_rd_filename}")
         
         if issues:
             issue_text = "; ".join(issues)

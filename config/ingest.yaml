@@ -100,11 +100,6 @@ ingest:
       preserve_extension: true
       create_manifest: true
       manifest_filename: manifest.json
-    
-    artifacts:
-      original_file: true
-      document_metadata: true
-      sidecar_metadata: true
   
   # ============================================================================
   # LOGGING & DEBUGGING
