@@ -1,5 +1,7 @@
 # Modulo Ingestione - Architettura & Design
 
+Nota: per il nuovo sottosistema di generazione ID configurabile vedi anche `docs_it/ARCHITETTURA.md` e `docs_it/CONFIGURAZIONE_ID_GENERATION.md`.
+
 ## Panoramica
 
 Il modulo di ingestione per standardizzare documenti da varie fonti e formati in una struttura output normalizzata.

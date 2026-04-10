@@ -8,6 +8,8 @@ from pathlib import Path
 from typing import Optional, List, Dict, Any
 import logging
 
+from .types import IDGenerationConfig, InvalidIDGenerationConfig
+
 try:
     import yaml
 except ImportError:
@@ -35,14 +37,6 @@ class ZipExtractionConfig:
     enabled: bool = True
     max_archive_depth: int = 3
     exclude_patterns_in_archive: List[str] = field(default_factory=list)
-
-
-@dataclass
-class IDGenerationConfig:
-    """Document ID generation configuration."""
-    strategy: str = "sha256-16"  # sha256-16, sha256-32, uuid4, custom
-    prefix: str = "doc_"
-    suffix: str = ""
 
 
 @dataclass
@@ -186,11 +180,7 @@ class IngestConfig:
         # ID generation
         if "id_generation" in data:
             id_data = data["id_generation"]
-            config.id_generation = IDGenerationConfig(
-                strategy=id_data.get("strategy", config.id_generation.strategy),
-                prefix=id_data.get("prefix", config.id_generation.prefix),
-                suffix=id_data.get("suffix", config.id_generation.suffix),
-            )
+            config.id_generation = cls._parse_id_generation_config(id_data)
         
         # Loader
         if "loader" in data:
@@ -275,15 +265,130 @@ class IngestConfig:
                 num_workers=adv_data.get("num_workers", 1),
                 streaming_mode=adv_data.get("streaming_mode", False),
             )
+
+        cls._validate_id_generation_config(config.id_generation)
         
         return config
+
+    @staticmethod
+    def _parse_id_generation_config(id_data: Dict[str, Any]) -> IDGenerationConfig:
+        """Parse ID generation settings, supporting both new and legacy keys."""
+        strategy = id_data.get("strategy", "sha256-16")
+        prefix = id_data.get("prefix", "")
+        suffix = id_data.get("suffix", "")
+
+        hash_length_bytes = id_data.get("hash_length_bytes")
+        hash_digits = id_data.get("hash_digits")
+
+        naming_strategy = id_data.get("naming_strategy", "hash_only")
+        incremental_prefix = id_data.get("incremental_prefix", "DOC")
+        incremental_pad_digits = id_data.get("incremental_pad_digits", 6)
+        enabled_hash = id_data.get("enabled_hash", True)
+        enabled_incremental = id_data.get("enabled_incremental", False)
+
+        # If no explicit limit is provided, derive digit count from legacy strategy.
+        if hash_digits is None and hash_length_bytes is None:
+            if strategy == "sha256-16":
+                hash_digits = 16
+            elif strategy == "sha256-32":
+                hash_digits = 32
+
+        return IDGenerationConfig(
+            strategy=strategy,
+            prefix=prefix,
+            suffix=suffix,
+            hash_length_bytes=hash_length_bytes,
+            hash_digits=hash_digits,
+            naming_strategy=naming_strategy,
+            incremental_prefix=incremental_prefix,
+            incremental_pad_digits=incremental_pad_digits,
+            enabled_hash=enabled_hash,
+            enabled_incremental=enabled_incremental,
+        )
+
+    @staticmethod
+    def _validate_id_generation_config(config: IDGenerationConfig) -> None:
+        def fail(message: str) -> None:
+            log.error("Invalid id_generation configuration: %s", message)
+            raise InvalidIDGenerationConfig(message)
+
+        # Non-blocking precedence warnings for potentially ambiguous hash sizing config.
+        if config.hash_digits is not None and config.hash_length_bytes is not None:
+            log.warning(
+                "id_generation: both hash_digits and hash_length_bytes are set; "
+                "hash_digits takes precedence"
+            )
+        elif config.hash_digits is not None:
+            log.warning(
+                "id_generation: hash_digits is set; strategy-derived hash length is overridden"
+            )
+        elif config.hash_length_bytes is not None:
+            log.warning(
+                "id_generation: hash_length_bytes is set; strategy-derived hash length is overridden"
+            )
+
+        if not isinstance(config.enabled_hash, bool):
+            fail("enabled_hash must be a boolean")
+        if not isinstance(config.enabled_incremental, bool):
+            fail("enabled_incremental must be a boolean")
+
+        if not config.enabled_hash and not config.enabled_incremental:
+            fail("both enabled_hash and enabled_incremental are false")
+
+        if config.strategy not in {"sha256-16", "sha256-32"}:
+            fail("strategy must be one of: sha256-16, sha256-32")
+
+        if config.hash_length_bytes is not None:
+            if not isinstance(config.hash_length_bytes, int):
+                fail("hash_length_bytes must be an integer")
+            if config.hash_length_bytes < 4 or config.hash_length_bytes > 32:
+                fail("hash_length_bytes must be between 4 and 32")
+
+        if config.hash_digits is not None:
+            if not isinstance(config.hash_digits, int):
+                fail("hash_digits must be an integer")
+            if config.hash_digits < 8 or config.hash_digits > 64:
+                fail("hash_digits must be between 8 and 64")
+            if config.hash_digits % 2 != 0:
+                fail("hash_digits must be an even number")
+
+        if not isinstance(config.incremental_pad_digits, int):
+            fail("incremental_pad_digits must be an integer")
+        if config.incremental_pad_digits < 1 or config.incremental_pad_digits > 10:
+            fail("incremental_pad_digits must be between 1 and 10")
+
+        allowed_strategies = {
+            "hash_only",
+            "incremental_only",
+            "hash_then_incremental",
+            "incremental_then_hash",
+        }
+        if config.naming_strategy not in allowed_strategies:
+            fail(
+                f"Invalid naming_strategy: {config.naming_strategy}. "
+                f"Allowed values: {sorted(allowed_strategies)}"
+            )
+
+        if config.naming_strategy == "hash_only" and not config.enabled_hash:
+            fail("naming_strategy=hash_only requires enabled_hash=true")
+
+        if config.naming_strategy == "incremental_only" and not config.enabled_incremental:
+            fail("naming_strategy=incremental_only requires enabled_incremental=true")
+
+        if config.naming_strategy in {"hash_then_incremental", "incremental_then_hash"}:
+            if not (config.enabled_hash and config.enabled_incremental):
+                fail(
+                    f"naming_strategy={config.naming_strategy} requires enabled_hash=true and enabled_incremental=true"
+                )
     
     def validate(self) -> List[str]:
         """Validate configuration. Returns list of errors (empty if valid)."""
         errors = []
-        
-        if self.id_generation.strategy not in ["sha256-16", "sha256-32", "uuid4", "custom"]:
-            errors.append(f"Invalid id_generation.strategy: {self.id_generation.strategy}")
+
+        try:
+            self._validate_id_generation_config(self.id_generation)
+        except InvalidIDGenerationConfig as exc:
+            errors.append(str(exc))
         
         if self.output.backend not in ["filesystem", "database", "custom"]:
             errors.append(f"Invalid output.backend: {self.output.backend}")

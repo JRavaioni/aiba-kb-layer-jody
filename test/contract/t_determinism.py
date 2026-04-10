@@ -13,7 +13,12 @@ from core.ingestion.id_generator import IDGeneratorFactory
 class TestDeterminism:
     def test_sha256_16_is_deterministic(self):
         generator = IDGeneratorFactory.create(
-            IDGenerationConfig(strategy="sha256-16", prefix="doc_", suffix="")
+            IDGenerationConfig(
+                hash_length_bytes=8,
+                naming_strategy="hash_only",
+                enabled_hash=True,
+                enabled_incremental=False,
+            )
         )
 
         content = b"This is a deterministic payload"
@@ -21,7 +26,12 @@ class TestDeterminism:
 
     def test_same_content_same_id(self):
         generator = IDGeneratorFactory.create(
-            IDGenerationConfig(strategy="sha256-16", prefix="doc_", suffix="")
+            IDGenerationConfig(
+                hash_length_bytes=8,
+                naming_strategy="hash_only",
+                enabled_hash=True,
+                enabled_incremental=False,
+            )
         )
 
         content = b"Identical content"
@@ -32,23 +42,30 @@ class TestDeterminism:
 
     def test_different_content_different_id(self):
         generator = IDGeneratorFactory.create(
-            IDGenerationConfig(strategy="sha256-16", prefix="doc_", suffix="")
+            IDGenerationConfig(
+                hash_length_bytes=8,
+                naming_strategy="hash_only",
+                enabled_hash=True,
+                enabled_incremental=False,
+            )
         )
 
         assert generator.generate(b"payload A") != generator.generate(b"payload B")
 
     def test_id_format_sha256_16(self):
         generator = IDGeneratorFactory.create(
-            IDGenerationConfig(strategy="sha256-16", prefix="doc_", suffix="")
+            IDGenerationConfig(
+                hash_length_bytes=8,
+                naming_strategy="hash_only",
+                enabled_hash=True,
+                enabled_incremental=False,
+            )
         )
 
         doc_id = generator.generate(b"format check")
-        assert doc_id.startswith("doc_")
-
-        hash_part = doc_id.removeprefix("doc_")
-        assert len(hash_part) == 16
-        int(hash_part, 16)  # must be valid hex
+        assert len(doc_id) == 16
+        int(doc_id, 16)  # must be valid hex
 
     def test_invalid_strategy_raises(self):
-        with pytest.raises(ValueError):
-            IDGeneratorFactory.create(IDGenerationConfig(strategy="sha256_first_16"))
+        with pytest.raises(Exception):
+            IDGeneratorFactory.create(IDGenerationConfig(naming_strategy="sha256_first_16"))

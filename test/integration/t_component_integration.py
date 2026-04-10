@@ -46,7 +46,14 @@ def test_loader_id_backend_integration_persists_under_generated_id(tmp_path: Pat
     )
 
     loaded = DocumentLoader(LoaderConfig()).load(file_ref)
-    generator = IDGeneratorFactory.create(IDGenerationConfig(strategy="sha256-16", prefix="", suffix=""))
+    generator = IDGeneratorFactory.create(
+        IDGenerationConfig(
+            hash_length_bytes=8,
+            naming_strategy="hash_only",
+            enabled_hash=True,
+            enabled_incremental=False,
+        )
+    )
     doc_id = generator.generate(loaded.raw_bytes)
 
     metadata = DocumentMetadata(

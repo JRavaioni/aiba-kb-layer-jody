@@ -101,8 +101,6 @@ class IngestBuilder:
             Self for chaining
         """
         self._custom_id_generator = generator
-        # Update config strategy to custom
-        self.config.id_generation.strategy = "custom"
         return self
     
     def with_backend(self, backend: PersistenceBackend) -> IngestBuilder:

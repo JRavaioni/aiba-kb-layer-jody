@@ -27,6 +27,27 @@ class DocumentRef:
     basename: str
 
 
+@dataclass
+class IDGenerationConfig:
+    """Configuration for document ID generation strategies."""
+
+    # Legacy SHA controls kept for backward compatibility
+    strategy: str = "sha256-16"
+    prefix: str = ""
+    suffix: str = ""
+
+    # New hash sizing controls
+    hash_length_bytes: Optional[int] = None
+    hash_digits: Optional[int] = None
+
+    # New switching controls
+    naming_strategy: str = "hash_only"
+    incremental_prefix: str = "DOC"
+    incremental_pad_digits: int = 6
+    enabled_hash: bool = True
+    enabled_incremental: bool = False
+
+
 @dataclass(frozen=True)
 class ScanResult:
     """
@@ -205,4 +226,14 @@ class LoadException(IngestException):
 
 class PersistenceException(IngestException):
     """Exception during document storage."""
+    pass
+
+
+class InvalidIDGenerationConfig(IngestException):
+    """Raised when ID generation configuration parameters are invalid."""
+    pass
+
+
+class IDGenerationException(IngestException):
+    """Raised when runtime ID generation fails."""
     pass

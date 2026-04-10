@@ -25,6 +25,7 @@ from .types import (
     IngestManifest,
     IngestException,
     LoadException,
+    IDGenerationException,
 )
 from ..utils.directory_keeper import ensure_keepme_file
 
@@ -73,9 +74,7 @@ class IngestService:
                     sidecar_base_paths.append(Path(path_str))
         
         self.metadata_loader = MetadataLoader(config.metadata, sidecar_base_paths)
-        self.id_generator = None
-        if config.id_generation.strategy != "custom":
-            self.id_generator = IDGeneratorFactory.create(config.id_generation)
+        self.id_generator = IDGeneratorFactory.create(config.id_generation)
         self.analyzer_pipeline = AnalyzerPipeline(config.analyzers)
         self.persistence = None
         if config.output.backend != "custom":
@@ -138,24 +137,9 @@ class IngestService:
                         # For now, continue processing but mark as warning
                         # Could be changed to raise exception for strict validation
                     
-                    # Generate deterministic ID
+                    # Generate deterministic/document-local ID according to configured strategy.
                     source_file_hash = self._compute_hash(loaded.raw_bytes)
-                    if self.config.id_generation.strategy == "sha256-32":
-                        hash_component = source_file_hash
-                        doc_id = (
-                            f"{self.config.id_generation.prefix}"
-                            f"{hash_component}"
-                            f"{self.config.id_generation.suffix}"
-                        )
-                    elif self.config.id_generation.strategy == "sha256-16":
-                        hash_component = source_file_hash[:16]
-                        doc_id = (
-                            f"{self.config.id_generation.prefix}"
-                            f"{hash_component}"
-                            f"{self.config.id_generation.suffix}"
-                        )
-                    else:
-                        doc_id = self.id_generator.generate(loaded.raw_bytes)
+                    doc_id = self.id_generator.generate(loaded.raw_bytes)
                     
                     # Load sidecar metadata
                     sidecar_data = self.metadata_loader.load(doc_ref.real_path)
@@ -198,6 +182,10 @@ class IngestService:
 
                 except (AnalyzerConfigurationException, AnalyzerInputException, AnalyzerExecutionException) as e:
                     log.error(f"Failed to ingest {doc_ref.logical_path}: {e}", exc_info=True)
+                    manifest.errors[doc_ref.logical_path] = str(e)
+
+                except IDGenerationException as e:
+                    log.error(f"Failed to generate ID for {doc_ref.logical_path}: {e}", exc_info=True)
                     manifest.errors[doc_ref.logical_path] = str(e)
 
                 except IngestException:

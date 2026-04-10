@@ -45,7 +45,7 @@ def test_builder_custom_components_update_strategy_fields(tmp_path: Path):
     builder.with_id_generator(UUID4IDGenerator(builder.config.id_generation))
     builder.with_backend(FilesystemBackend(tmp_path))
 
-    assert builder.config.id_generation.strategy == "custom"
+    assert builder._custom_id_generator is not None
     assert builder.config.output.backend == "custom"
 
 

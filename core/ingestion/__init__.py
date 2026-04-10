@@ -13,6 +13,7 @@ This module provides a complete document ingestion system:
 
 from .config import IngestConfig
 from .types import (
+    IDGenerationConfig,
     DocumentRef,
     ScanResult,
     DocumentMetadata,
@@ -27,12 +28,17 @@ from .types import (
     LoadException,
     ScanException,
     PersistenceException,
+    InvalidIDGenerationConfig,
+    IDGenerationException,
 )
 from .ingest_service import IngestService
 from .builder import IngestBuilder, create_ingest_service
 from .id_generator import (
     IDGenerator,
     IDGeneratorFactory,
+    HashIDGenerator,
+    IncrementalIDGenerator,
+    CompoundIDGenerator,
     SHA256IDGenerator,
     UUID4IDGenerator,
 )
@@ -53,6 +59,7 @@ from .analyzers import (
 __all__ = [
     # Configuration
     "IngestConfig",
+    "IDGenerationConfig",
     
     # Core types
     "DocumentRef",
@@ -71,6 +78,8 @@ __all__ = [
     "LoadException",
     "ScanException",
     "PersistenceException",
+    "InvalidIDGenerationConfig",
+    "IDGenerationException",
     
     # Main service
     "IngestService",
@@ -82,6 +91,9 @@ __all__ = [
     # ID generation
     "IDGenerator",
     "IDGeneratorFactory",
+    "HashIDGenerator",
+    "IncrementalIDGenerator",
+    "CompoundIDGenerator",
     "SHA256IDGenerator",
     "UUID4IDGenerator",
     

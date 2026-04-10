@@ -39,9 +39,16 @@ ingest:
   # ID GENERATION (DETERMINISTIC)
   # ============================================================================
   id_generation:
-    strategy: sha256-32  # Deterministic: sha256-16, sha256-32
-    prefix: ""  # NO PREFIX - use full document ID only
+    strategy: sha256-16  # Legacy preserved: sha256-16 or sha256-32
+    prefix: ""
     suffix: ""
+    hash_digits: 16  # Optional exact SHA hex digits limit (8-64, even)
+    hash_length_bytes: null  # Optional alternative to hash_digits (bytes 4-32)
+    naming_strategy: hash_only  # hash_only, incremental_only, hash_then_incremental, incremental_then_hash
+    incremental_prefix: "DOC"
+    incremental_pad_digits: 6
+    enabled_hash: true
+    enabled_incremental: false
   
   # ============================================================================
   # DOCUMENT LOADING & TEXT EXTRACTION

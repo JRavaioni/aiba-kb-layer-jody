@@ -3,9 +3,12 @@
 from pathlib import Path
 import sys
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 from core.ingestion.config import IngestConfig
+from core.ingestion.types import InvalidIDGenerationConfig
 
 
 class TestYamlConfig:
@@ -13,7 +16,12 @@ class TestYamlConfig:
         config = IngestConfig.from_dict(
             {
                 "input": {"dirs": ["ingestion_test_data/raw"]},
-                "id_generation": {"strategy": "sha256-16"},
+                "id_generation": {
+                    "hash_length_bytes": 16,
+                    "naming_strategy": "hash_only",
+                    "enabled_hash": True,
+                    "enabled_incremental": False,
+                },
                 "output": {"backend": "filesystem"},
                 "analyzers": {"enabled": True, "pipeline": []},
             }
@@ -21,18 +29,17 @@ class TestYamlConfig:
 
         errors = config.validate()
         assert errors == []
-        assert config.id_generation.strategy == "sha256-16"
+        assert config.id_generation.naming_strategy == "hash_only"
+        assert config.id_generation.hash_length_bytes == 16
 
     def test_invalid_id_generation_strategy_fails_validation(self):
-        config = IngestConfig.from_dict(
-            {
-                "id_generation": {"strategy": "sha256_first_16"},
-                "analyzers": {"enabled": True, "pipeline": []},
-            }
-        )
-
-        errors = config.validate()
-        assert any("id_generation.strategy" in e for e in errors)
+        with pytest.raises(InvalidIDGenerationConfig):
+            IngestConfig.from_dict(
+                {
+                    "id_generation": {"naming_strategy": "sha256_first_16"},
+                    "analyzers": {"enabled": True, "pipeline": []},
+                }
+            )
 
     def test_duplicate_analyzer_names_fail_validation(self):
         config = IngestConfig.from_dict(

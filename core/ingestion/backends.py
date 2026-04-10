@@ -81,6 +81,13 @@ class FilesystemBackend(PersistenceBackend):
         ensure_keepme_file(doc_dir)
         
         # Persist artifacts based on config
+        if output_config.artifacts_original_file:
+            extension = f".{document.metadata.format}" if fs_config.preserve_extension and document.metadata.format else ""
+            original_filename = f"{document.metadata.doc_id}{extension}"
+            original_path = doc_dir / original_filename
+            original_path.write_bytes(document.raw_bytes)
+            log.debug(f"Persisted original file: {original_path}")
+
         if output_config.artifacts_extracted_text and document.extracted_text:
             # Save extracted text
             text_path = doc_dir / "extracted.txt"
@@ -173,6 +180,13 @@ class FilesystemBackend(PersistenceBackend):
             meta_path = doc_dir / expected_meta_filename
             if not meta_path.exists():
                 issues.append(f"Missing sidecar metadata: {expected_meta_filename}")
+
+        if output_config.artifacts_original_file:
+            extension = f".{document.metadata.format}" if output_config.filesystem.preserve_extension and document.metadata.format else ""
+            expected_original_filename = f"{document.metadata.doc_id}{extension}"
+            original_path = doc_dir / expected_original_filename
+            if not original_path.exists():
+                issues.append(f"Missing original file: {expected_original_filename}")
         
         # Check related documents index: rd_<FULL_DOCUMENT_ID>.json
         if output_config.artifacts_related_index:
