@@ -99,6 +99,8 @@ output/
     rd_b784e2c8dbba8d15.json  # Documenti correlati - prefisso rd_
 ```
 
+  Nota: il sistema non crea piu file sentinella `.keepme`. Le cartelle vengono gestite senza autogenerazione di file placeholder, sia per directory nuove sia per directory gia esistenti.
+
 ---
 
 ## 📖 Utilizzo

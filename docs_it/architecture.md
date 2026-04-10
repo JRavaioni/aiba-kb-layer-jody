@@ -6,6 +6,8 @@ Nota: per il nuovo sottosistema di generazione ID configurabile vedi anche `docs
 
 Il modulo di ingestione per standardizzare documenti da varie fonti e formati in una struttura output normalizzata.
 
+Nota operativa: il sistema non usa piu file `.keepme` e non ne esegue autogenerazione, ne in cartelle nuove ne in cartelle gia esistenti.
+
 ### Principio Core
 
 Tutto il comportamento di ingestione è parametrizzato in YAML. Nessuna logica client-specifica, nessun path hardcoded, nessuna assunzione dominio-specifica.

@@ -4,6 +4,8 @@
 
 Il sottosistema ID generation e stato esteso per supportare strategie hash, incrementali e composte con fallback.
 
+Nota operativa: la pipeline non crea file `.keepme` e non mantiene logiche di autogenerazione placeholder nelle directory di output.
+
 Componenti principali:
 - `IDGenerationConfig` (tipi e parametri)
 - `IDGeneratorFactory` (selezione strategia)

@@ -27,7 +27,6 @@ from .types import (
     LoadException,
     IDGenerationException,
 )
-from ..utils.directory_keeper import ensure_keepme_file
 
 if TYPE_CHECKING:
     from .id_generator import IDGenerator
@@ -52,7 +51,6 @@ class IngestService:
         self.config = config
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(parents=True, exist_ok=True)
-        ensure_keepme_file(self.output_dir)
         
         # Validate config
         errors = config.validate()

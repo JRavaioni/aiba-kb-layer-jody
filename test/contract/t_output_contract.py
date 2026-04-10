@@ -66,7 +66,7 @@ class TestOutputContract:
             service.ingest(input_dir)
 
             root_files = [p.name for p in output_dir.iterdir() if p.is_file()]
-            assert sorted(root_files) == [".keepme", "manifest.json"]
+            assert sorted(root_files) == ["manifest.json"]
 
     def test_document_file_naming_convention(self):
         with tempfile.TemporaryDirectory() as tmp_in, tempfile.TemporaryDirectory() as tmp_out:
