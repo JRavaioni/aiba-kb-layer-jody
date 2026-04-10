@@ -94,6 +94,7 @@ class DocumentScanner:
                 input_dir,
                 logical_prefix="",
                 depth=0,
+                archive_depth=0,
                 context=ctx,
             )
         except Exception as e:
@@ -105,6 +106,7 @@ class DocumentScanner:
         directory: Path,
         logical_prefix: str,
         depth: int,
+        archive_depth: int,
         context: ScanContext,
     ) -> Iterator[ScanResult]:
         """
@@ -142,6 +144,7 @@ class DocumentScanner:
                     entry,
                     logical_prefix_new,
                     depth + 1,
+                    archive_depth,
                     context,
                 )
             
@@ -152,6 +155,7 @@ class DocumentScanner:
                         entry,
                         logical_prefix,
                         depth,
+                        archive_depth,
                         context,
                     )
                 else:
@@ -165,6 +169,7 @@ class DocumentScanner:
         zip_path: Path,
         logical_prefix: str,
         depth: int,
+        archive_depth: int,
         context: ScanContext,
     ) -> Iterator[ScanResult]:
         """
@@ -183,8 +188,8 @@ class DocumentScanner:
         )
         
         # Check ZIP nesting depth
-        archive_depth = depth - (zip_path.parent.parts.__len__())  # Rough estimate
-        if archive_depth > self.zip_config.max_archive_depth:
+        next_archive_depth = archive_depth + 1
+        if next_archive_depth > self.zip_config.max_archive_depth:
             log.warning(f"ZIP nesting depth exceeded at {zip_path}")
             return
         
@@ -207,6 +212,7 @@ class DocumentScanner:
                     temp_path,
                     zip_logical,
                     depth + 1,
+                    next_archive_depth,
                     context,
                 )
         

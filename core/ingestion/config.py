@@ -98,6 +98,7 @@ class OutputConfig:
     artifacts_extracted_text: bool = True
     artifacts_document_metadata: bool = True
     artifacts_sidecar_metadata: bool = True
+    artifacts_related_index: bool = True
 
 
 @dataclass
@@ -243,6 +244,7 @@ class IngestConfig:
                 artifacts_extracted_text=artifacts_data.get("extracted_text", True),
                 artifacts_document_metadata=artifacts_data.get("document_metadata", True),
                 artifacts_sidecar_metadata=artifacts_data.get("sidecar_metadata", True),
+                artifacts_related_index=artifacts_data.get("related_index", True),
             )
         
         # Analyzers

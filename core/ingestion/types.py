@@ -34,13 +34,13 @@ class ScanResult:
 
     - context: scan context used for temp directory lifecycle
     - document: discovered document reference
-    """
-    context: ScanContext
+    """ 
+    context: ScanContext # track the temporary directories created during scanning
     document: DocumentRef
 
 
 @dataclass
-class DocumentMetadata:
+class DocumentMetadata: # DocumentRecord in DataCuration
     """
     Extracted and generated metadata for a document.
     """
@@ -67,7 +67,7 @@ class DocumentMetadata:
 @dataclass
 class IngestedDocument:
     """
-    Complete representation of an ingested document.
+    Complete representation of an ingested document after the pipeline ingestion.
     """
     metadata: DocumentMetadata
     raw_bytes: bytes
@@ -95,9 +95,6 @@ class IngestedDocument:
 class AnalyzerResult:
     """
     Structured result of a single analyzer execution.
-
-    This is serializable through ``to_dict`` and is intended to be stored in
-    ``IngestedDocument.analyzer_output``.
     """
     analyzer_name: str
     status: str

@@ -10,7 +10,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 from core.ingestion.backends import FilesystemBackend, PersistenceBackendFactory
 from core.ingestion.config import OutputConfig
-from core.ingestion.types import DocumentMetadata, IngestManifest, IngestedDocument, PersistenceException
+from core.ingestion.types import DocumentMetadata, IngestManifest, IngestedDocument
 
 
 def _doc(fmt: str = "txt", text: str | None = "hello") -> IngestedDocument:
@@ -43,12 +43,16 @@ def test_filesystem_backend_persist_writes_required_artifacts(tmp_path: Path):
     assert (doc_dir / "rd_abc123def4567890.json").exists()
 
 
-def test_filesystem_backend_raises_when_text_expected_but_missing(tmp_path: Path):
+def test_filesystem_backend_allows_missing_text_with_warning(tmp_path: Path):
     backend = FilesystemBackend(tmp_path)
     output_config = OutputConfig()
 
-    with pytest.raises(PersistenceException):
-        backend.persist(_doc(fmt="txt", text=None), output_config)
+    relative_dir = backend.persist(_doc(fmt="txt", text=None), output_config)
+    doc_dir = tmp_path / relative_dir
+
+    assert doc_dir.exists()
+    assert not (doc_dir / "extracted.txt").exists()
+    assert (doc_dir / "sc_abc123def4567890.json").exists()
 
 
 def test_save_manifest_respects_create_manifest_flag(tmp_path: Path):

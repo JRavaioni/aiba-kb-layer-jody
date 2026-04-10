@@ -1,6 +1,5 @@
 """
 Analyzer interface and implementations.
-Optional processing plugins that enhance ingested documents.
 """
 from __future__ import annotations
 from abc import ABC, abstractmethod
@@ -9,12 +8,13 @@ from typing import Dict, Any, cast
 import json
 import logging
 
-from .types import IngestedDocument
+from .types import IngestedDocument # analyzers operate on the post-ingestion document representation
 from .types import (
     AnalyzerConfigurationException,
     AnalyzerExecutionException,
     AnalyzerInputException,
     AnalyzerResult,
+    IngestException,
 )
 from .config import AnalyzerConfig
 
@@ -517,7 +517,9 @@ class AnalyzerPipeline:
                 if self.config.on_analyzer_error == "fail_document":
                     raise analyzer_error
                 elif self.config.on_analyzer_error == "fail_all":
-                    raise analyzer_error
+                    raise IngestException(
+                        f"Analyzer '{name}' failed and on_analyzer_error=fail_all"
+                    ) from analyzer_error
                 # else: skip and continue
         
         return results

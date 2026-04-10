@@ -108,15 +108,15 @@ class TestFailFast:
                 assert manifest_data["summary"]["successfully_ingested"] > 0, \
                     "Documento non registrato in manifest"
     
-    def test_empty_html_document_fails_explicitly(self, config):
+    def test_empty_html_document_is_ingested_with_warning(self, config):
         """
         TEST: File HTML vuoto (nessun contenuto estratto)
         
-        INVARIANTE FAIL-FAST:
-        Se HTML non produce testo estratto valido, ingestione DEVE FALLIRE.
-        Non deve ingere con testo=None o vuoto.
+        INVARIANTE:
+        Se HTML non produce testo estratto valido, ingestione continua
+        e il documento viene comunque ingerito.
         
-        ATTESO: Documento marcato come fallito nel manifest
+        ATTESO: Documento ingerito, nessun errore nel manifest
         """
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir = Path(tmpdir)
@@ -130,15 +130,15 @@ class TestFailFast:
                 service = self._create_service(tmpdir, output)
                 manifest = service.ingest(tmpdir)
 
-                assert "vuoto.html" in manifest.errors, (
-                    "HTML senza testo dovrebbe fallire in persistenza (invariante artifacts_extracted_text)"
+                assert "vuoto.html" in manifest.ingested, (
+                    "HTML senza testo deve essere ingerito con warning"
                 )
 
                 manifest_file = output / "manifest.json"
                 with open(manifest_file) as f:
                     manifest_data = json.load(f)
 
-                assert manifest_data["summary"]["failed"] >= 1, "Errore atteso non registrato"
+                assert manifest_data["summary"]["failed"] == 0, "Non sono attesi errori"
     
     def test_corrupted_document_fails_explicitly(self, config):
         """

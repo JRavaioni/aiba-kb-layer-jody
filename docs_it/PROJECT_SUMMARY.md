@@ -76,7 +76,6 @@ pipeline-ingestion/
 ### ✅ Architettura Plugin
 - **Generatori ID Personalizzati**: Registra a runtime
 - **Analizzatori Built-in**: Validazione testo, parsing HTML/XML, formattazione JSON
-- **Backend Personalizzati**: Archivia su database, cloud, S3, ecc.
 - **Zero Breaking Changes**: Plugin non modificano core
 
 ### ✅ Gestione Errori Robusta
@@ -84,13 +83,13 @@ pipeline-ingestion/
 - Manifest dettagliato con successi e fallimenti
 - Adatto per elaborazione batch su larga scala
 
-### ✅ Pipeline Analizzatore (Opzionale)
+### ✅ Pipeline Analizzatore - Configurabile
 - Post-elaborazione documenti
 - Validazione testo, rimozione null-byte
 - Esegue pipeline configurabile di analizzatori built-in
 - Disabilitato per default (nessun overhead)
 
-### ✅ Struttura Output Pulita
+### ✅ Struttura Output
 ```
 output/
   manifest.json
@@ -104,7 +103,7 @@ output/
 
 ## 📖 Utilizzo
 
-### Base (Raccomandato)
+### Base
 ```python
 from core.ingestion import create_ingest_service
 
@@ -116,7 +115,7 @@ print(f"Ingestiti: {len(manifest.ingested)}")
 print(f"Errori: {len(manifest.errors)}")
 ```
 
-### Pattern Builder (Avanzato)
+### Pattern Builder
 ```python
 from core.ingestion import IngestBuilder
 
@@ -152,8 +151,6 @@ service = (
 
 manifest = service.ingest("input/")
 ```
-
-Nota: `.env.example` e' un template operativo/documentale. Il runtime corrente usa YAML + parametri CLI come fonte di configurazione.
 
 ---
 

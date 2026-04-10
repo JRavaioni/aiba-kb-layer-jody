@@ -4,7 +4,7 @@ Coordinates scanning, loading, analysis, and persistence.
 """
 from __future__ import annotations
 from pathlib import Path
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
 import logging
 import hashlib
 from datetime import datetime, UTC
@@ -18,12 +18,19 @@ from .analyzers import AnalyzerPipeline
 from .backends import PersistenceBackendFactory
 from .types import (
     IngestedDocument,
+    AnalyzerConfigurationException,
+    AnalyzerExecutionException,
+    AnalyzerInputException,
     DocumentMetadata,
     IngestManifest,
     IngestException,
     LoadException,
 )
 from ..utils.directory_keeper import ensure_keepme_file
+
+if TYPE_CHECKING:
+    from .id_generator import IDGenerator
+    from .backends import PersistenceBackend
 
 log = logging.getLogger(__name__)
 
@@ -66,11 +73,23 @@ class IngestService:
                     sidecar_base_paths.append(Path(path_str))
         
         self.metadata_loader = MetadataLoader(config.metadata, sidecar_base_paths)
-        self.id_generator = IDGeneratorFactory.create(config.id_generation)
+        self.id_generator = None
+        if config.id_generation.strategy != "custom":
+            self.id_generator = IDGeneratorFactory.create(config.id_generation)
         self.analyzer_pipeline = AnalyzerPipeline(config.analyzers)
-        self.persistence = PersistenceBackendFactory.create(config.output, output_dir)
+        self.persistence = None
+        if config.output.backend != "custom":
+            self.persistence = PersistenceBackendFactory.create(config.output, output_dir)
         
         log.info(f"Initialized IngestService with output_dir={output_dir}, sidecar_base_paths={[str(p) for p in sidecar_base_paths]}")
+
+    def set_id_generator(self, generator: IDGenerator) -> None:
+        """Inject custom ID generator after service construction."""
+        self.id_generator = generator
+
+    def set_persistence_backend(self, backend: PersistenceBackend) -> None:
+        """Inject custom persistence backend after service construction."""
+        self.persistence = backend
     
     def ingest(
         self,
@@ -91,6 +110,11 @@ class IngestService:
             IngestManifest with results
         """
         input_dir = Path(input_dir)
+        if self.id_generator is None:
+            raise IngestException("ID generator not configured")
+        if self.persistence is None:
+            raise IngestException("Persistence backend not configured")
+
         manifest = IngestManifest()
         scan_context = None
         
@@ -108,14 +132,30 @@ class IngestService:
                     loaded = self.loader.load(doc_ref)
                     
                     # Validate text extraction for other supported formats (warnings only for now)
-                    text_extraction_required = doc_ref.format in ['txt', 'md']
+                    text_extraction_required = doc_ref.format in ['txt', 'md', 'html', 'htm', 'xml', 'json']
                     if text_extraction_required and not loaded.extracted_text:
                         log.warning(f"Text extraction failed for {doc_ref.logical_path} ({doc_ref.format})")
                         # For now, continue processing but mark as warning
                         # Could be changed to raise exception for strict validation
                     
                     # Generate deterministic ID
-                    doc_id = self.id_generator.generate(loaded.raw_bytes)
+                    source_file_hash = self._compute_hash(loaded.raw_bytes)
+                    if self.config.id_generation.strategy == "sha256-32":
+                        hash_component = source_file_hash
+                        doc_id = (
+                            f"{self.config.id_generation.prefix}"
+                            f"{hash_component}"
+                            f"{self.config.id_generation.suffix}"
+                        )
+                    elif self.config.id_generation.strategy == "sha256-16":
+                        hash_component = source_file_hash[:16]
+                        doc_id = (
+                            f"{self.config.id_generation.prefix}"
+                            f"{hash_component}"
+                            f"{self.config.id_generation.suffix}"
+                        )
+                    else:
+                        doc_id = self.id_generator.generate(loaded.raw_bytes)
                     
                     # Load sidecar metadata
                     sidecar_data = self.metadata_loader.load(doc_ref.real_path)
@@ -128,7 +168,7 @@ class IngestService:
                         format=doc_ref.format,
                         extracted_text_length=loaded.text_length,
                         pages_count=loaded.pages_count,
-                        source_file_hash=self._compute_hash(loaded.raw_bytes),
+                        source_file_hash=source_file_hash,
                         source_file_size=len(loaded.raw_bytes),
                         sidecar_metadata=sidecar_data or {},
                     )
@@ -155,6 +195,13 @@ class IngestService:
                 except LoadException as e:
                     log.error(f"Failed to load {doc_ref.logical_path}: {e}")
                     manifest.errors[doc_ref.logical_path] = str(e)
+
+                except (AnalyzerConfigurationException, AnalyzerInputException, AnalyzerExecutionException) as e:
+                    log.error(f"Failed to ingest {doc_ref.logical_path}: {e}", exc_info=True)
+                    manifest.errors[doc_ref.logical_path] = str(e)
+
+                except IngestException:
+                    raise
                 
                 except Exception as e:
                     log.error(f"Failed to ingest {doc_ref.logical_path}: {e}", exc_info=True)

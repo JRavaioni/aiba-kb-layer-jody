@@ -166,21 +166,7 @@ class DocumentLoader:
     
     def _load_text(self, data: bytes) -> Optional[str]:
         """Load plain text file."""
-        try:
-            # Try encodings in order
-            for encoding in self.config.encoding_fallback:
-                try:
-                    text = data.decode(encoding)
-                    return text if text.strip() else None
-                except (UnicodeDecodeError, LookupError):
-                    continue
-            
-            # If all fail, use replacement chars
-            return data.decode("utf-8", errors="replace")
-        
-        except Exception as e:
-            log.warning(f"Failed to decode text file: {e}")
-            return None
+        return self._decode_text(data, "text")
     
     def _load_docx(self, data: bytes) -> Optional[str]:
         """Extract text from DOCX."""
@@ -206,25 +192,8 @@ class DocumentLoader:
             return None
     
     def _load_markdown(self, data: bytes) -> Optional[str]:
-        """
-        Extract text from Markdown.
-        Markdown is essentially plain text with formatting, so we just decode it.
-        """
-        try:
-            # Try encodings in order
-            for encoding in self.config.encoding_fallback:
-                try:
-                    text = data.decode(encoding)
-                    return text if text.strip() else None
-                except (UnicodeDecodeError, LookupError):
-                    continue
-            
-            # If all fail, use replacement chars
-            return data.decode("utf-8", errors="replace")
-        
-        except Exception as e:
-            log.warning(f"Failed to decode markdown file: {e}")
-            return None
+        """Decode markdown bytes without semantic parsing."""
+        return self._decode_text(data, "markdown")
     
     def _load_xml(self, data: bytes) -> Optional[str]:
         """Decode XML bytes without semantic parsing."""

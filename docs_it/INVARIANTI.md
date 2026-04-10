@@ -88,7 +88,7 @@ Esempio:
 ### 4. INVARIANTI FUNZIONALI
 
 **Fail-Fast su Documento Invalido**
-- Documento senza contenuto estratto → **FALLATO** esplicitamente
+- Documento senza contenuto estratto → **FAIL** esplicitamente
 - Non "passed" silenziosamente con testo=null
 - Errore registrato in manifest
 - Se violato: Documenti invalidi ingeri come validi
@@ -99,7 +99,7 @@ Esempio:
 - Nessun file loose in output_dir root
 - Se violato: Sistemi downstream rompono
 
-**Una Sola Verità di Configurazione**
+**Configurazione**
 - Config YAML parametrizza TUTTO
 - Nessuna logica hardcoded
 - Override runtime possibile

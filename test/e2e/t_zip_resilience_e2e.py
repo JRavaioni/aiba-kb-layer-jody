@@ -50,13 +50,13 @@ def test_ingest_continues_when_one_document_fails(tmp_path: Path):
     input_dir.mkdir()
 
     (input_dir / "ok.txt").write_text("valid content", encoding="utf-8")
-    # Empty/whitespace txt causes missing extracted text artifact and a per-doc failure.
+    # Empty/whitespace txt now logs a warning but does not fail ingestion.
     (input_dir / "bad.txt").write_text("   \n  ", encoding="utf-8")
 
     manifest = _service_for(input_dir, output_dir).ingest(input_dir)
 
-    assert len(manifest.ingested) == 1
-    assert len(manifest.errors) == 1
+    assert len(manifest.ingested) == 2
+    assert len(manifest.errors) == 0
     assert "ok.txt" in manifest.ingested
-    assert "bad.txt" in manifest.errors
+    assert "bad.txt" in manifest.ingested
     assert (output_dir / "manifest.json").exists()

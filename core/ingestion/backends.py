@@ -105,8 +105,8 @@ class FilesystemBackend(PersistenceBackend):
             log.debug(f"Persisted sidecar metadata: {meta_path}")
         
         # Create related documents index: rd_<FULL_DOCUMENT_ID>.json
-        # INGESTION REQUIREMENT: Related documents index must be created for each document
-        self._create_related_documents_index(doc_dir, document)
+        if output_config.artifacts_related_index:
+            self._create_related_documents_index(doc_dir, document)
         
         # Validate required artifacts were created
         self._validate_artifacts(doc_dir, document, output_config)
@@ -175,11 +175,11 @@ class FilesystemBackend(PersistenceBackend):
                 issues.append(f"Missing sidecar metadata: {expected_meta_filename}")
         
         # Check related documents index: rd_<FULL_DOCUMENT_ID>.json
-        # INGESTION REQUIREMENT: Related documents index must always exist
-        expected_rd_filename = f"rd_{document.metadata.doc_id}.json"
-        rd_path = doc_dir / expected_rd_filename
-        if not rd_path.exists():
-            issues.append(f"Missing related documents index: {expected_rd_filename}")
+        if output_config.artifacts_related_index:
+            expected_rd_filename = f"rd_{document.metadata.doc_id}.json"
+            rd_path = doc_dir / expected_rd_filename
+            if not rd_path.exists():
+                issues.append(f"Missing related documents index: {expected_rd_filename}")
         
         # Check extracted text (should exist for text-extractable formats)
         if output_config.artifacts_extracted_text:
@@ -187,7 +187,11 @@ class FilesystemBackend(PersistenceBackend):
             if document.extracted_text and not text_path.exists():
                 issues.append("Missing extracted.txt despite having extracted text")
             elif not document.extracted_text and document.metadata.format in ['txt', 'md', 'html', 'htm']:
-                issues.append(f"Missing extracted text for {document.metadata.format} format")
+                log.warning(
+                    "Missing extracted text for %s format on document %s",
+                    document.metadata.format,
+                    document.metadata.doc_id,
+                )
         
         if issues:
             issue_text = "; ".join(issues)

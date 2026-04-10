@@ -147,9 +147,12 @@ class IngestBuilder:
             raise ValueError("Output directory not set. Use with_output_dir()")
         
         service = IngestService(self.config, self._output_dir)
-        
-        # TODO: Inject custom components if provided
-        # This would require modifying IngestService to support dependency injection
+
+        if self._custom_id_generator is not None:
+            service.set_id_generator(self._custom_id_generator)
+
+        if self._custom_backend is not None:
+            service.set_persistence_backend(self._custom_backend)
         
         return service
 

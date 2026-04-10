@@ -107,9 +107,6 @@ class MetadataLoader:
                 return metadata
         
         return None
-        
-        log.debug(f"No metadata found for {file_path}")
-        return None
     
     def _apply_strategy(
         self,
