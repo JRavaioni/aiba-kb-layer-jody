@@ -27,6 +27,7 @@ input/
 output/
 logs/
 temp/
+ingestion_test_data/
 
 # Python
 *.py[cod]
