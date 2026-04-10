@@ -20,6 +20,7 @@ ingest:
   zip_extraction:
     enabled: true
     max_archive_depth: 3
+    temp_dir: null
     exclude_patterns_in_archive: ["__MACOSX/*", "*.DS_Store"]
 
   # ============================================================================
@@ -84,14 +85,6 @@ ingest:
     file: null   # "logs/ingest.log"
     include_timings: false
 
-  # ============================================================================
-  # AVANZATE / PERFORMANCE
-  # ============================================================================
-  advanced:
-    temp_dir: null  # Usa temp di sistema se null
-    max_files: 0    # 0 = nessun limite
-    num_workers: 1  # Single-threaded per default
-    streaming_mode: false
 ```
 
 ## Riferimento Dettagliato
@@ -157,6 +150,15 @@ Controlla l'estrazione di archivi ZIP.
 - **Esempio**:
   ```yaml
   max_archive_depth: 2
+  ```
+
+#### `temp_dir` (stringa/null)
+- **Default**: `null`
+- **Descrizione**: Directory radice in cui vengono creati i workspace temporanei per l'estrazione ZIP
+- **Comportamento**: Se valorizzato viene usato come root temp ZIP; se `null`, il sistema usa la temp di sistema
+- **Esempio**:
+  ```yaml
+  temp_dir: "temp/zip-work"
   ```
 
 #### `exclude_patterns_in_archive` (array di stringhe)
@@ -325,26 +327,6 @@ Controlla logging e debugging.
 #### `include_timings` (booleano)
 - **Default**: `false`
 - **Descrizione**: Includi timing nelle operazioni
-
-### Sezione `advanced`
-
-Impostazioni avanzate/performance.
-
-#### `temp_dir` (stringa/null)
-- **Default**: `null`
-- **Descrizione**: Directory temporanea (null = sistema)
-
-#### `max_files` (intero)
-- **Default**: `0`
-- **Descrizione**: Numero massimo file (0 = illimitato)
-
-#### `num_workers` (intero)
-- **Default**: `1`
-- **Descrizione**: Parametro riservato; la pipeline corrente opera in modalita single-threaded
-
-#### `streaming_mode` (booleano)
-- **Default**: `false`
-- **Descrizione**: Parametro riservato per estensioni future
 
 ## Esempi Configurazione
 

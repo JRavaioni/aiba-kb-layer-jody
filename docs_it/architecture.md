@@ -167,6 +167,7 @@ ingest:
 ingest:
   zip_extraction:
     enabled: false  # Disabilita supporto ZIP
+    temp_dir: temp/zip-work  # Root temp dedicata per l'estrazione ZIP
   
   metadata:
     enabled: false  # Disabilita scoperta metadati sidecar
@@ -313,24 +314,10 @@ pytest --cov=core/ingestion test/
 - Facile da debug
 - Adatto per la maggior parte casi d'uso
 
-### Elaborazione Parallela (Futuro)
-```yaml
-ingest:
-  advanced:
-    num_workers: 4  # Non implementato ancora
-```
-
 ### Efficienza Memoria
 - Byte documento letti una volta
 - Testo estratto e archiviato (dimensione limitata)
 - Directory temp auto-pulite
-
-### Scalabilità
-```yaml
-ingest:
-  advanced:
-    max_files: 10000  # Elabora in batch
-```
 
 ## Troubleshooting
 
@@ -355,12 +342,11 @@ ingest:
 ### Problema: Uso memoria alto
 **Controlla**:
 - Limite `loader.max_text_length`
-- `advanced.streaming_mode` per file grandi (futuro)
-- `advanced.num_workers` non troppo alto
+- Input molto grandi e profondita ZIP annidata
 
 ## Miglioramenti Futuri
 
-- [ ] Elaborazione parallela (num_workers > 1)
+- [ ] Elaborazione parallela
 - [ ] Modalità streaming per documenti enormi
 - [ ] Backend persistenza database
 - [ ] Analizzatore OCR (immagine → testo)

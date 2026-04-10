@@ -31,6 +31,7 @@ ingest:
   zip_extraction:
     enabled: true
     max_archive_depth: 3
+    temp_dir: null  # Directory temporanea per ZIP; se null usa la temp di sistema
     exclude_patterns_in_archive:
       - "__MACOSX/*"
       - "*.DS_Store"
@@ -109,11 +110,3 @@ ingest:
     file: null  # "logs/ingest.log"
     include_timings: false
   
-  # ============================================================================
-  # ADVANCED / PERFORMANCE
-  # ============================================================================
-  advanced:
-    temp_dir: null  # Uses system temp if null
-    max_files: 0    # 0 = no limit
-    num_workers: 1  # Single-threaded by default
-    streaming_mode: false

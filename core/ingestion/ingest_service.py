@@ -116,10 +116,16 @@ class IngestService:
         scan_context = None
         
         log.info(f"Starting ingestion from {input_dir}")
+
+        resolved_temp_root_dir = self._resolve_temp_root_dir(temp_root_dir)
+        if resolved_temp_root_dir is not None:
+            log.info(f"ZIP extraction temp root: {resolved_temp_root_dir}")
+        else:
+            log.info("ZIP extraction temp root: system temporary directory")
         
         try:
             # Scan for documents
-            for scan_result in self.scanner.scan(input_dir, temp_root_dir):
+            for scan_result in self.scanner.scan(input_dir, resolved_temp_root_dir):
                 scan_context = scan_result.context
                 doc_ref = scan_result.document
                 try:
@@ -236,3 +242,13 @@ class IngestService:
         h = hashlib.new(algorithm)
         h.update(data)
         return h.hexdigest()
+
+    def _resolve_temp_root_dir(self, temp_root_dir: Optional[Path]) -> Optional[Path]:
+        """Resolve temporary root with explicit override first, then ZIP configuration."""
+        if temp_root_dir is not None:
+            return Path(temp_root_dir)
+
+        if self.config.zip_extraction.temp_dir:
+            return Path(self.config.zip_extraction.temp_dir)
+
+        return None

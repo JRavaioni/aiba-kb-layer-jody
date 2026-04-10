@@ -81,10 +81,18 @@ class DocumentScanner:
         input_dir = Path(input_dir)
         if not input_dir.exists():
             raise ScanException(f"Input directory not found: {input_dir}")
+
+        resolved_temp_root_dir = (
+            Path(temp_root_dir)
+            if temp_root_dir is not None
+            else (Path(self.zip_config.temp_dir) if self.zip_config.temp_dir else None)
+        )
+        if resolved_temp_root_dir is not None:
+            resolved_temp_root_dir.mkdir(parents=True, exist_ok=True)
         
         ctx = ScanContext(
             temp_dirs=[],
-            temp_root_dir=Path(temp_root_dir) if temp_root_dir else None,
+            temp_root_dir=resolved_temp_root_dir,
         )
         
         try:

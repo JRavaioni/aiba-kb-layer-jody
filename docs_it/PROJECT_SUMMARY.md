@@ -173,6 +173,7 @@ ingest:
   zip_extraction:
     enabled: true
     max_archive_depth: 3
+    temp_dir: temp/zip-work
   metadata:
     enabled: true
 ```

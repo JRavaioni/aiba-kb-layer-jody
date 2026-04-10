@@ -3,6 +3,7 @@
 from datetime import UTC, datetime
 from pathlib import Path
 import sys
+from types import MethodType
 
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
@@ -124,3 +125,32 @@ def test_metadata_sidecar_integration_persists_sidecar_data(tmp_path: Path):
 
     assert "team-a" in content
     assert "priority" in content
+
+
+def test_service_prefers_explicit_temp_dir_argument_over_zip_temp_dir(tmp_path: Path):
+    input_dir = tmp_path / "in"
+    output_dir = tmp_path / "out"
+    input_dir.mkdir()
+
+    zip_temp_dir = tmp_path / "zip-temp"
+    explicit_temp_dir = tmp_path / "explicit-temp"
+    config = IngestConfig.from_dict(
+        {
+            "input": {"dirs": [str(input_dir)], "supported_formats": ["txt"]},
+            "zip_extraction": {"enabled": True, "temp_dir": str(zip_temp_dir)},
+            "metadata": {"enabled": False},
+            "analyzers": {"enabled": False, "pipeline": []},
+        }
+    )
+
+    service = IngestService(config, output_dir)
+    captured: dict[str, Path | None] = {"temp_root_dir": None}
+
+    def fake_scan(self, scan_input_dir: Path, temp_root_dir=None):
+        captured["temp_root_dir"] = temp_root_dir
+        return iter(())
+
+    service.scanner.scan = MethodType(fake_scan, service.scanner)
+    service.ingest(input_dir, temp_root_dir=explicit_temp_dir)
+
+    assert captured["temp_root_dir"] == explicit_temp_dir

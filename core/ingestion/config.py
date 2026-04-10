@@ -37,6 +37,7 @@ class ZipExtractionConfig:
     enabled: bool = True
     max_archive_depth: int = 3
     exclude_patterns_in_archive: List[str] = field(default_factory=list)
+    temp_dir: Optional[str] = None
 
 
 @dataclass
@@ -107,15 +108,6 @@ class LoggingConfig:
 
 
 @dataclass
-class AdvancedConfig:
-    """Advanced/performance configuration."""
-    temp_dir: Optional[str] = None
-    max_files: int = 0
-    num_workers: int = 1
-    streaming_mode: bool = False
-
-
-@dataclass
 class IngestConfig:
     """Complete ingestion configuration."""
     input: InputConfig = field(default_factory=InputConfig)
@@ -126,7 +118,6 @@ class IngestConfig:
     output: OutputConfig = field(default_factory=OutputConfig)
     analyzers: AnalyzerConfig = field(default_factory=AnalyzerConfig)
     logging: LoggingConfig = field(default_factory=LoggingConfig)
-    advanced: AdvancedConfig = field(default_factory=AdvancedConfig)
     
     @classmethod
     def from_yaml(cls, yaml_path: Path) -> IngestConfig:
@@ -169,6 +160,7 @@ class IngestConfig:
                 enabled=zip_data.get("enabled", config.zip_extraction.enabled),
                 max_archive_depth=zip_data.get("max_archive_depth", config.zip_extraction.max_archive_depth),
                 exclude_patterns_in_archive=zip_data.get("exclude_patterns_in_archive", []),
+                temp_dir=zip_data.get("temp_dir", config.zip_extraction.temp_dir),
             )
         
         # ID generation
@@ -243,16 +235,6 @@ class IngestConfig:
                 include_timings=log_data.get("include_timings", False),
             )
         
-        # Advanced
-        if "advanced" in data:
-            adv_data = data["advanced"]
-            config.advanced = AdvancedConfig(
-                temp_dir=adv_data.get("temp_dir"),
-                max_files=adv_data.get("max_files", 0),
-                num_workers=adv_data.get("num_workers", 1),
-                streaming_mode=adv_data.get("streaming_mode", False),
-            )
-
         cls._validate_id_generation_config(config.id_generation)
         
         return config
@@ -379,6 +361,14 @@ class IngestConfig:
         
         if self.output.backend not in ["filesystem", "database", "custom"]:
             errors.append(f"Invalid output.backend: {self.output.backend}")
+
+        if self.zip_extraction.temp_dir is not None:
+            if not isinstance(self.zip_extraction.temp_dir, str) or not self.zip_extraction.temp_dir.strip():
+                errors.append("zip_extraction.temp_dir must be a non-empty string or null")
+            else:
+                temp_dir_path = Path(self.zip_extraction.temp_dir)
+                if temp_dir_path.exists() and not temp_dir_path.is_dir():
+                    errors.append("zip_extraction.temp_dir must point to a directory, not a file")
         
         if self.analyzers.on_analyzer_error not in ["skip", "fail_document", "fail_all"]:
             errors.append(f"Invalid analyzers.on_analyzer_error: {self.analyzers.on_analyzer_error}")

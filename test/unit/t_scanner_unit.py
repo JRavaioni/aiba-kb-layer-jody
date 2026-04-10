@@ -83,6 +83,28 @@ def test_scan_zip_extracts_and_preserves_logical_prefix(tmp_path: Path):
     assert "bundle/nested/page.html" in paths
 
 
+def test_scan_zip_uses_configured_temp_root(tmp_path: Path):
+    zip_path = tmp_path / "bundle.zip"
+    with zipfile.ZipFile(zip_path, "w") as zf:
+        zf.writestr("inside.txt", "hello")
+
+    temp_root = tmp_path / "zip-temp-root"
+    scanner = DocumentScanner(
+        InputConfig(supported_formats=["txt"]),
+        ZipExtractionConfig(enabled=True, max_archive_depth=3, temp_dir=str(temp_root)),
+    )
+
+    iterator = scanner.scan(tmp_path)
+    first_result = next(iterator)
+
+    assert first_result.document.logical_path == "bundle/inside.txt"
+    assert first_result.context.temp_dirs
+    assert first_result.context.temp_dirs[0].parent == temp_root
+    assert temp_root.exists()
+
+    list(iterator)
+
+
 def test_scan_missing_input_dir_raises(tmp_path: Path):
     scanner = DocumentScanner(InputConfig(supported_formats=["txt"]), ZipExtractionConfig())
     with pytest.raises(ScanException):
