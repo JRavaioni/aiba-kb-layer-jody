@@ -34,6 +34,7 @@ if TYPE_CHECKING:
     from .backends import PersistenceBackend
 
 log = logging.getLogger(__name__)
+step_log = logging.getLogger("pipeline.steps")
 PIPELINE_WARNING_KEY = "__pipeline__"
 _CURRENT_DOC_LOGICAL_PATH: ContextVar[Optional[str]] = ContextVar(
     "ingest_current_doc_logical_path",
@@ -60,6 +61,16 @@ class _ManifestWarningHandler(logging.Handler):
         warning_list = self._manifest.warnings.setdefault(logical_path, [])
         if reason not in warning_list:
             warning_list.append(reason)
+
+        entity = record.name.split(".")[-1] if record.name else "pipeline"
+        if logical_path == PIPELINE_WARNING_KEY:
+            step_log.warning(
+                f"STEP warning status=WARNING entity={entity} file=<pipeline> reason={reason}"
+            )
+        else:
+            step_log.warning(
+                f"STEP warning status=WARNING entity={entity} file={logical_path} reason={reason}"
+            )
 
 
 class IngestService:
@@ -142,13 +153,17 @@ class IngestService:
         manifest = IngestManifest()
         scan_context = None
         
-        log.info(f"Starting ingestion from {input_dir}")
+        step_log.info(f"STEP ingest_run status=STARTED file={input_dir}")
 
         resolved_temp_root_dir = self._resolve_temp_root_dir(temp_root_dir)
         if resolved_temp_root_dir is not None:
-            log.info(f"ZIP extraction temp root: {resolved_temp_root_dir}")
+            step_log.info(
+                f"STEP zip_temp_dir status=SUCCESS file={input_dir} reason=temp_root={resolved_temp_root_dir}"
+            )
         else:
-            log.info("ZIP extraction temp root: system temporary directory")
+            step_log.info(
+                f"STEP zip_temp_dir status=SUCCESS file={input_dir} reason=temp_root=system"
+            )
         
         warning_handler = _ManifestWarningHandler(manifest)
         warning_handler.setFormatter(logging.Formatter("%(message)s"))
@@ -219,29 +234,37 @@ class IngestService:
                     log.info(f"Ingested: {doc_ref.logical_path} → {doc_id}")
                 
                 except LoadException as e:
-                    log.error(f"Failed to load {doc_ref.logical_path}: {e}")
+                    step_log.error(
+                        f"STEP document_load status=FAILED entity=load file={doc_ref.logical_path} reason={e}"
+                    )
                     manifest.errors[doc_ref.logical_path] = str(e)
 
                 except (AnalyzerConfigurationException, AnalyzerInputException, AnalyzerExecutionException) as e:
-                    log.error(f"Failed to ingest {doc_ref.logical_path}: {e}", exc_info=True)
+                    step_log.error(
+                        f"STEP analyzer status=FAILED entity=analyzer file={doc_ref.logical_path} reason={e}"
+                    )
                     manifest.errors[doc_ref.logical_path] = str(e)
 
                 except IDGenerationException as e:
-                    log.error(f"Failed to generate ID for {doc_ref.logical_path}: {e}", exc_info=True)
+                    step_log.error(
+                        f"STEP id_generation status=FAILED entity=id_generator file={doc_ref.logical_path} reason={e}"
+                    )
                     manifest.errors[doc_ref.logical_path] = str(e)
 
                 except IngestException:
                     raise
                 
                 except Exception as e:
-                    log.error(f"Failed to ingest {doc_ref.logical_path}: {e}", exc_info=True)
+                    step_log.error(
+                        f"STEP document_ingest status=FAILED entity=ingestion file={doc_ref.logical_path} reason={e}"
+                    )
                     manifest.errors[doc_ref.logical_path] = str(e)
 
                 finally:
                     _CURRENT_DOC_LOGICAL_PATH.reset(token)
         
         except IngestException as e:
-            log.error(f"Ingestion failed: {e}", exc_info=True)
+            step_log.error(f"STEP ingest_run status=FAILED entity=pipeline file={input_dir} reason={e}")
             raise
         
         finally:
@@ -257,14 +280,19 @@ class IngestService:
             try:
                 self.persistence.save_manifest(manifest, self.config.output)
             except Exception as e:
-                log.error(f"Failed to save manifest: {e}")
+                step_log.error(
+                    f"STEP manifest_save status=FAILED entity=manifest file={self.output_dir} reason={e}"
+                )
         
         # Log summary
-        log.info(
-            f"Ingestion complete. "
-            f"Success: {len(manifest.ingested)}, "
-            f"Errors: {len(manifest.errors)}, "
-            f"Success rate: {manifest.success_rate:.1f}%"
+        status = "SUCCESS" if not manifest.errors else "WARNING"
+        step_log.info(
+            "STEP ingest_run status=%s ingested=%s errors=%s warnings=%s success_rate=%.1f",
+            status,
+            len(manifest.ingested),
+            len(manifest.errors),
+            manifest.total_warnings,
+            manifest.success_rate,
         )
         
         return manifest

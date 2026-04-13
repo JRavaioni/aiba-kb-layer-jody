@@ -107,5 +107,5 @@ ingest:
   # ============================================================================
   logging:
     level: INFO  # DEBUG, INFO, WARNING, ERROR
-    file: null  # "logs/ingest.log"
+    file: "logs/ingest.log"
     include_timings: false
