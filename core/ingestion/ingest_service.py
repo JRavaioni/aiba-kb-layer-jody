@@ -8,6 +8,7 @@ from typing import Optional, TYPE_CHECKING
 import logging
 import hashlib
 from datetime import datetime, UTC
+from contextvars import ContextVar
 
 from .config import IngestConfig
 from .scanner import DocumentScanner
@@ -33,6 +34,32 @@ if TYPE_CHECKING:
     from .backends import PersistenceBackend
 
 log = logging.getLogger(__name__)
+PIPELINE_WARNING_KEY = "__pipeline__"
+_CURRENT_DOC_LOGICAL_PATH: ContextVar[Optional[str]] = ContextVar(
+    "ingest_current_doc_logical_path",
+    default=None,
+)
+
+
+class _ManifestWarningHandler(logging.Handler):
+    """Collect WARNING logs and persist detailed reasons into ingest manifest."""
+
+    def __init__(self, manifest: IngestManifest):
+        super().__init__(level=logging.WARNING)
+        self._manifest = manifest
+
+    def emit(self, record: logging.LogRecord) -> None:
+        if record.levelno < logging.WARNING:
+            return
+
+        reason = record.getMessage().strip()
+        if not reason:
+            return
+
+        logical_path = _CURRENT_DOC_LOGICAL_PATH.get() or PIPELINE_WARNING_KEY
+        warning_list = self._manifest.warnings.setdefault(logical_path, [])
+        if reason not in warning_list:
+            warning_list.append(reason)
 
 
 class IngestService:
@@ -123,11 +150,17 @@ class IngestService:
         else:
             log.info("ZIP extraction temp root: system temporary directory")
         
+        warning_handler = _ManifestWarningHandler(manifest)
+        warning_handler.setFormatter(logging.Formatter("%(message)s"))
+        ingest_logger = logging.getLogger("core.ingestion")
+        ingest_logger.addHandler(warning_handler)
+
         try:
             # Scan for documents
             for scan_result in self.scanner.scan(input_dir, resolved_temp_root_dir):
                 scan_context = scan_result.context
                 doc_ref = scan_result.document
+                token = _CURRENT_DOC_LOGICAL_PATH.set(doc_ref.logical_path)
                 try:
                     log.debug(f"Processing: {doc_ref.logical_path}")
                     
@@ -137,9 +170,12 @@ class IngestService:
                     # Validate text extraction for other supported formats (warnings only for now)
                     text_extraction_required = doc_ref.format in ['txt', 'md', 'html', 'htm', 'xml', 'json']
                     if text_extraction_required and not loaded.extracted_text:
-                        warning_reason = f"Text extraction failed ({doc_ref.format})"
-                        log.warning(f"Text extraction failed for {doc_ref.logical_path} ({doc_ref.format})")
-                        manifest.warnings.setdefault(doc_ref.logical_path, []).append(warning_reason)
+                        warning_reason = (
+                            f"Text extraction produced no usable text for {doc_ref.logical_path} "
+                            f"({doc_ref.format}); file_size_bytes={len(loaded.raw_bytes)} "
+                            f"and extracted content is empty or whitespace"
+                        )
+                        log.warning(warning_reason)
                         # For now, continue processing but mark as warning
                         # Could be changed to raise exception for strict validation
                     
@@ -200,12 +236,16 @@ class IngestService:
                 except Exception as e:
                     log.error(f"Failed to ingest {doc_ref.logical_path}: {e}", exc_info=True)
                     manifest.errors[doc_ref.logical_path] = str(e)
+
+                finally:
+                    _CURRENT_DOC_LOGICAL_PATH.reset(token)
         
         except IngestException as e:
             log.error(f"Ingestion failed: {e}", exc_info=True)
             raise
         
         finally:
+            ingest_logger.removeHandler(warning_handler)
             # Clean up scanner temp dirs once the scan has completed.
             if scan_context is not None:
                 scan_context.cleanup()

@@ -41,7 +41,7 @@ ingest:
   # ============================================================================
   id_generation:
     strategy: sha256-16  # Legacy preserved: sha256-16 or sha256-32
-    prefix: ""
+    prefix: "DOC_"
     suffix: ""
     hash_digits: 16  # Optional exact SHA hex digits limit (8-64, even)
     hash_length_bytes: null  # Optional alternative to hash_digits (bytes 4-32)
